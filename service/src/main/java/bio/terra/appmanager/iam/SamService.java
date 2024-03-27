@@ -1,9 +1,9 @@
 package bio.terra.appmanager.iam;
 
+import bio.terra.appmanager.model.SystemStatusSystems;
 import bio.terra.common.iam.BearerToken;
 import bio.terra.common.sam.SamRetry;
 import bio.terra.common.sam.exception.SamExceptionFactory;
-import bio.terra.appmanager.model.SystemStatusSystems;
 import java.util.List;
 import org.broadinstitute.dsde.workbench.client.sam.ApiException;
 import org.broadinstitute.dsde.workbench.client.sam.model.SystemStatus;

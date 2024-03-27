@@ -1,9 +1,8 @@
 package bio.terra.appmanager.iam;
 
-import bio.terra.common.tracing.OkHttpClientTracingInterceptor;
 import bio.terra.appmanager.config.SamConfiguration;
+import bio.terra.common.tracing.OkHttpClientTracingInterceptor;
 import io.opentelemetry.api.OpenTelemetry;
-import io.opencensus.trace.Tracing;
 import java.util.Optional;
 import okhttp3.OkHttpClient;
 import org.broadinstitute.dsde.workbench.client.sam.ApiClient;
