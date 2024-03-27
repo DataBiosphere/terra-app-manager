@@ -9,15 +9,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import bio.terra.common.iam.BearerToken;
-import bio.terra.common.iam.BearerTokenFactory;
-import bio.terra.common.iam.SamUser;
-import bio.terra.common.iam.SamUserFactory;
 import bio.terra.appmanager.config.SamConfiguration;
 import bio.terra.appmanager.controller.ExampleController;
 import bio.terra.appmanager.iam.SamService;
 import bio.terra.appmanager.model.Example;
 import bio.terra.appmanager.service.ExampleService;
+import bio.terra.common.iam.BearerToken;
+import bio.terra.common.iam.BearerTokenFactory;
+import bio.terra.common.iam.SamUser;
+import bio.terra.common.iam.SamUserFactory;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import jakarta.servlet.http.HttpServletRequest;

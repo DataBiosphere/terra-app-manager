@@ -1,13 +1,13 @@
 package bio.terra.appmanager.controller;
 
-import bio.terra.common.iam.BearerTokenFactory;
-import bio.terra.common.iam.SamUser;
-import bio.terra.common.iam.SamUserFactory;
 import bio.terra.appmanager.api.ExampleApi;
 import bio.terra.appmanager.config.SamConfiguration;
 import bio.terra.appmanager.iam.SamService;
 import bio.terra.appmanager.model.Example;
 import bio.terra.appmanager.service.ExampleService;
+import bio.terra.common.iam.BearerTokenFactory;
+import bio.terra.common.iam.SamUser;
+import bio.terra.common.iam.SamUserFactory;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Tag;
 import jakarta.servlet.http.HttpServletRequest;
