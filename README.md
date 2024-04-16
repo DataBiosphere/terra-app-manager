@@ -48,6 +48,12 @@ http://localhost:8080
 ./scripts/run docker
 ```
 
+## Service swagger endpoints
+
+Existing deployed versions of this service are:
+
+- https://appmanager.dsde-dev.broadinstitute.org
+
 ## Next steps
 
 Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for more information about the process of
