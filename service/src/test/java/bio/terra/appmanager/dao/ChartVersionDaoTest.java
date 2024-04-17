@@ -24,15 +24,16 @@ public class ChartVersionDaoTest extends BaseDaoTest {
   @Test
   void testSingleVersionUpsert() {
     String chartName = "chart-name-here";
-    ChartVersion version = createVersion(chartName);
+    String chartVersion = "chart-version-here";
+    ChartVersion version = createVersion(chartName, chartVersion);
 
     versionDao.upsert(version);
     List<ChartVersion> storedVersions = versionDao.get(List.of(chartName), false);
 
     assertEquals(1, storedVersions.size());
     ChartVersion storedVersion = storedVersions.get(0);
-    assertEquals(chartName, storedVersion.getChartName());
-    assertNotEquals(version.getActiveAt(), storedVersion.getActiveAt());
+    assertEquals(chartName, storedVersion.chartName());
+    assertNotEquals(version.activeAt(), storedVersion.activeAt());
   }
 
   @Test
@@ -52,20 +53,20 @@ public class ChartVersionDaoTest extends BaseDaoTest {
     assertEquals(2, storedVersions.size());
     ChartVersion targetVersion = getByChartVersion(storedVersions, chartVersion1);
     assertNotNull(targetVersion);
-    assertEquals(version1.getChartVersion(), targetVersion.getChartVersion());
-    assertNotNull(targetVersion.getInactiveAt());
+    assertEquals(version1.chartVersion(), targetVersion.chartVersion());
+    assertNotNull(targetVersion.inactiveAt());
 
     targetVersion = getByChartVersion(storedVersions, chartVersion2);
     assertNotNull(targetVersion);
-    assertEquals(version2.getChartVersion(), targetVersion.getChartVersion());
-    assertNull(targetVersion.getInactiveAt());
+    assertEquals(version2.chartVersion(), targetVersion.chartVersion());
+    assertNull(targetVersion.inactiveAt());
   }
 
   @Nullable
   private static ChartVersion getByChartVersion(
       List<ChartVersion> storedVersions, String chartVersion) {
     return storedVersions.stream()
-        .filter(version -> chartVersion.equals(version.getChartVersion()))
+        .filter(version -> chartVersion.equals(version.chartVersion()))
         .findFirst()
         .orElse(null);
   }
@@ -73,7 +74,7 @@ public class ChartVersionDaoTest extends BaseDaoTest {
   @Nullable
   private static ChartVersion getByChartName(List<ChartVersion> storedVersions, String chartName) {
     return storedVersions.stream()
-        .filter(version -> chartName.equals(version.getChartVersion()))
+        .filter(version -> chartName.equals(version.chartVersion()))
         .findFirst()
         .orElse(null);
   }
@@ -109,20 +110,16 @@ public class ChartVersionDaoTest extends BaseDaoTest {
     assertEquals(2, storedVersions.size());
 
     List<ChartVersion> targetCharts =
-        storedVersions.stream()
-            .filter(version -> chartName1.equals(version.getChartName()))
-            .toList();
+        storedVersions.stream().filter(version -> chartName1.equals(version.chartName())).toList();
     assertEquals(1, targetCharts.size());
     ChartVersion targetVersion = targetCharts.get(0);
-    assertEquals(chartVersion1_2, targetVersion.getChartVersion());
+    assertEquals(chartVersion1_2, targetVersion.chartVersion());
 
     targetCharts =
-        storedVersions.stream()
-            .filter(version -> chartName2.equals(version.getChartName()))
-            .toList();
+        storedVersions.stream().filter(version -> chartName2.equals(version.chartName())).toList();
     assertEquals(1, targetCharts.size());
     targetVersion = targetCharts.get(0);
-    assertEquals(chartVersion2_2, targetVersion.getChartVersion());
+    assertEquals(chartVersion2_2, targetVersion.chartVersion());
   }
 
   @Test
@@ -162,22 +159,12 @@ public class ChartVersionDaoTest extends BaseDaoTest {
   @Test
   void testMultiDelete() {}
 
-  private ChartVersion createVersion(String chartName) {
-    return createVersion(chartName, null, null, null, null);
-  }
-
   private ChartVersion createVersion(String chartName, String chartVersion) {
     return createVersion(chartName, chartVersion, null, null, null);
   }
 
   private ChartVersion createVersion(
       String chartName, String chartVersion, String appVersion, Date activeAt, Date inactiveAt) {
-    ChartVersion version = new ChartVersion();
-    version.setChartName(chartName);
-    version.setChartVersion(chartVersion);
-    version.setAppVersion(appVersion);
-    version.setActiveAt(activeAt);
-    version.setInactiveAt(inactiveAt);
-    return version;
+    return new ChartVersion(chartName, chartVersion, appVersion, activeAt, inactiveAt);
   }
 }

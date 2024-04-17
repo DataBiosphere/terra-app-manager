@@ -3,9 +3,9 @@ package bio.terra.appmanager.service;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+import bio.terra.appmanager.api.model.SystemStatus;
+import bio.terra.appmanager.api.model.SystemStatusSystems;
 import bio.terra.appmanager.config.StatusCheckConfiguration;
-import bio.terra.appmanager.model.SystemStatus;
-import bio.terra.appmanager.model.SystemStatusSystems;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 

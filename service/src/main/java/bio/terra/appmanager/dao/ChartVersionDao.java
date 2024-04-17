@@ -30,17 +30,14 @@ public class ChartVersionDao {
    */
   @WithSpan
   public void upsert(ChartVersion version) {
-    inmemStore.computeIfAbsent(version.getChartName(), chartName -> new Stack<>());
-    Stack<ChartVersion> chartVersions = inmemStore.get(version.getChartName());
+    inmemStore.computeIfAbsent(version.chartName(), chartName -> new Stack<>());
+    Stack<ChartVersion> chartVersions = inmemStore.get(version.chartName());
 
     // make sure the activeDate and inactiveDate(s) are the same date/time
     Date currentDate = new Date();
-    inactivateExistingVersions(version.getChartName(), chartVersions, currentDate);
+    inactivateExistingVersion(chartVersions, currentDate);
 
-    // we are doing this to not have unintended side effect - like storing in a database
-    ChartVersion localVersion = cloneChartVersion(version);
-    localVersion.setActiveAt(currentDate);
-    chartVersions.push(localVersion);
+    chartVersions.push(version.activate(currentDate));
   }
 
   /**
@@ -86,28 +83,18 @@ public class ChartVersionDao {
     inmemStore.forEach(
         (chartName, chartVersions) -> {
           if (chartNames.contains(chartName)) {
-            inactivateExistingVersions(chartName, chartVersions, currentDate);
+            inactivateExistingVersion(chartVersions, currentDate);
           }
         });
   }
 
-  private static ChartVersion cloneChartVersion(ChartVersion source) {
-    ChartVersion target = new ChartVersion();
-    target.setChartName(source.getChartName());
-    target.setChartVersion(source.getChartVersion());
-    target.setAppVersion(source.getAppVersion());
-    target.setActiveAt(source.getActiveAt());
-    target.setInactiveAt(source.getInactiveAt());
-    return target;
-  }
-
-  private static void inactivateExistingVersions(
-      String chartName, Stack<ChartVersion> chartVersions, Date inactiveDate) {
-    chartVersions.forEach(
-        version -> {
-          if (version.getChartName().equals(chartName) && version.getInactiveAt() == null) {
-            version.setInactiveAt(inactiveDate);
-          }
-        });
+  private static void inactivateExistingVersion(
+      Stack<ChartVersion> chartVersions, Date inactiveDate) {
+    if (chartVersions.empty()) {
+      return; // nothing to invalidate
+    }
+    ChartVersion currentVersion = chartVersions.pop();
+    ChartVersion inactiveVersion = currentVersion.inactivate(inactiveDate);
+    chartVersions.push(inactiveVersion);
   }
 }
