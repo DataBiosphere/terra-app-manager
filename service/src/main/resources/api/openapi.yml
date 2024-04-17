@@ -43,6 +43,7 @@ paths:
       tags: [ admin ]
       summary: Create new ChartVersion(s) to track
       operationId: createChartVersions
+      security: [ ] # TODO: remove this to turn on "security"
       requestBody:
         required: true
         content:
@@ -50,88 +51,10 @@ paths:
             schema:
               $ref: '#/components/schemas/ChartArray'
       responses:
-        '204':
+        '201':
           description: ChartVersion(s) have been successfully created
         '403':
           description: Request did not come from an admin
-        '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/example/v1/message:
-    get:
-      summary: Gets your message
-      tags: [ example ]
-      operationId: getMessage
-      responses:
-        '200':
-          description: Your message
-          content:
-            application/json:
-              schema:
-                type: string
-        '404':
-          description: You don't have a message
-        '500':
-          $ref: '#/components/responses/ServerError'
-    post:
-      summary: Stores your message
-      tags: [ example ]
-      operationId: setMessage
-      requestBody:
-        content:
-          'application/json':
-            schema:
-              type: string
-        required: true
-      responses:
-        '204':
-          description: Message saved
-        '500':
-          $ref: '#/components/responses/ServerError'
-  /api/example/v1/{resourceType}/{resourceId}/{action}:
-    get:
-      summary: Checks sam access
-      tags: [ example ]
-      operationId: getAction
-      parameters:
-        - name: resourceType
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: resourceId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: action
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: action access
-          content:
-            application/json:
-              schema:
-                type: boolean
-        '500':
-          $ref: '#/components/responses/ServerError'
-  /api/example/v1/counter:
-    post:
-      summary: increment a metrics counter
-      tags: [ example ]
-      operationId: incrementCounter
-      requestBody:
-        description: tag for counter
-        content:
-          application/json:
-            schema:
-              type: string
-      responses:
-        '204':
-          description: success
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -213,6 +136,7 @@ components:
 
     ChartVersion:
       type: object
+      required: [ chartName ]
       properties:
         chartName:
           type: string

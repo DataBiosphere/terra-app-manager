@@ -1,6 +1,5 @@
 package bio.terra.appmanager.controller;
 
-import bio.terra.appmanager.api.ExampleApi;
 import bio.terra.appmanager.config.SamConfiguration;
 import bio.terra.appmanager.iam.SamService;
 import bio.terra.appmanager.model.Example;
@@ -16,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class ExampleController implements ExampleApi {
+public class ExampleController {
 
   public static final String EXAMPLE_COUNTER_TAG = "tag";
   public static final String EXAMPLE_COUNTER_NAME = "example.counter";
@@ -50,14 +49,12 @@ public class ExampleController implements ExampleApi {
   }
 
   /** Example of getting user information from sam. */
-  @Override
   public ResponseEntity<String> getMessage() {
     var user = getUser();
     return ResponseEntity.of(
         this.exampleService.getExampleForUser(user.getSubjectId()).map(Example::message));
   }
 
-  @Override
   public ResponseEntity<Void> setMessage(String body) {
     var user = getUser();
     this.exampleService.saveExample(new Example(user.getSubjectId(), body));
@@ -65,13 +62,11 @@ public class ExampleController implements ExampleApi {
   }
 
   /** Example of getting the bearer token and using it to make a Sam (or other service) api call */
-  @Override
   public ResponseEntity<Boolean> getAction(String resourceType, String resourceId, String action) {
     var bearerToken = bearerTokenFactory.from(request);
     return ResponseEntity.ok(samService.getAction(resourceType, resourceId, action, bearerToken));
   }
 
-  @Override
   public ResponseEntity<Void> incrementCounter(String tag) {
     Metrics.globalRegistry
         .counter(EXAMPLE_COUNTER_NAME, List.of(Tag.of(EXAMPLE_COUNTER_TAG, tag)))
