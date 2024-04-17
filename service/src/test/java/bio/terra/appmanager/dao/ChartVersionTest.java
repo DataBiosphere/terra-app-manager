@@ -180,5 +180,4 @@ public class ChartVersionTest extends BaseDaoTest {
     version.setInactiveAt(inactiveAt);
     return version;
   }
-
 }

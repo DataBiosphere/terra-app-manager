@@ -108,7 +108,7 @@ From here, run the following command to validate and generate the necessary `ser
 [`client/` code](./client/build/swagger-code/src/main/java/bio/terra/appmanager).
 
 ```shell
-/scripts/build -t project
+./scripts/build -t project
 ```
 
 ## Additional questions
