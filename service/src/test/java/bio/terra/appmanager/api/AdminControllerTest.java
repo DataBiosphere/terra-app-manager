@@ -26,17 +26,18 @@ import org.springframework.test.web.servlet.MockMvc;
 @ContextConfiguration(classes = AdminController.class)
 @WebMvcTest
 public class AdminControllerTest {
-  @MockBean
-  ChartService serviceMock;
+  @MockBean ChartService serviceMock;
 
-  @Autowired
-  private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-  private SamUser testUser = new SamUser("test@email", UUID.randomUUID().toString(), new BearerToken(UUID.randomUUID().toString()));
+  private SamUser testUser =
+      new SamUser(
+          "test@email",
+          UUID.randomUUID().toString(),
+          new BearerToken(UUID.randomUUID().toString()));
 
   @BeforeEach
-  void beforeEach() {
-  }
+  void beforeEach() {}
 
   @Test
   void testGetMessageOk() throws Exception {
@@ -44,14 +45,33 @@ public class AdminControllerTest {
     String chartVersion = "chart-version-here";
     ArgumentCaptor<List<ChartVersion>> argument = ArgumentCaptor.forClass(List.class);
 
-    mockMvc.perform(post("/api/admin/v1/charts/versions").contentType(MediaType.APPLICATION_JSON).content("[{" + "\"chartName\": \"" + chartName + "\"," + "\"chartVersion\": \"" + chartVersion + "\"" + "}]")).andExpect(status().isNoContent());
+    mockMvc
+        .perform(
+            post("/api/admin/v1/charts/versions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "[{"
+                        + "\"chartName\": \""
+                        + chartName
+                        + "\","
+                        + "\"chartVersion\": \""
+                        + chartVersion
+                        + "\""
+                        + "}]"))
+        .andExpect(status().isNoContent());
 
     verify(serviceMock).createVersion(argument.capture());
     assert (argument.getValue().size() == 1);
     verifyChartVersion(argument.getValue().get(0), chartName, chartVersion, null, null, null);
   }
 
-  private void verifyChartVersion(ChartVersion version, String chartName, String chartVersion, String appVersion, Date activeAt, Date inactiveAt) {
+  private void verifyChartVersion(
+      ChartVersion version,
+      String chartName,
+      String chartVersion,
+      String appVersion,
+      Date activeAt,
+      Date inactiveAt) {
     assertEquals(version.getChartName(), chartName);
     assertEquals(version.getChartVersion(), chartVersion);
     assertEquals(version.getAppVersion(), appVersion);
