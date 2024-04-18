@@ -6,9 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import bio.terra.appmanager.api.model.SystemStatus;
 import bio.terra.appmanager.config.VersionConfiguration;
 import bio.terra.appmanager.controller.PublicApiController;
-import bio.terra.appmanager.model.SystemStatus;
 import bio.terra.appmanager.service.StatusService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

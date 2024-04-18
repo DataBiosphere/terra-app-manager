@@ -1,8 +1,8 @@
 package bio.terra.appmanager.service;
 
+import bio.terra.appmanager.api.model.SystemStatus;
+import bio.terra.appmanager.api.model.SystemStatusSystems;
 import bio.terra.appmanager.config.StatusCheckConfiguration;
-import bio.terra.appmanager.model.SystemStatus;
-import bio.terra.appmanager.model.SystemStatusSystems;
 import com.google.common.annotations.VisibleForTesting;
 import jakarta.annotation.PostConstruct;
 import java.time.Instant;

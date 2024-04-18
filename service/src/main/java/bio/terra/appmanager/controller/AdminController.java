@@ -1,7 +1,7 @@
 package bio.terra.appmanager.controller;
 
 import bio.terra.appmanager.api.AdminApi;
-import bio.terra.appmanager.model.ChartVersion;
+import bio.terra.appmanager.api.model.ChartVersion;
 import bio.terra.appmanager.service.ChartService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,10 @@ public class AdminController implements AdminApi {
   @Override
   public ResponseEntity<Void> createChartVersions(List<ChartVersion> body) {
 
-    this.chartService.createVersion(body);
+    ;
+
+    this.chartService.createVersions(
+        body.stream().map((bio.terra.appmanager.model.ChartVersion::fromApi)).toList());
     return ResponseEntity.noContent().build();
   }
 }

@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import bio.terra.appmanager.controller.AdminController;
-import bio.terra.appmanager.model.ChartVersion;
 import bio.terra.appmanager.service.ChartService;
 import bio.terra.common.iam.BearerToken;
 import bio.terra.common.iam.SamUser;
@@ -43,7 +42,8 @@ public class AdminControllerTest {
   void testGetMessageOk() throws Exception {
     String chartName = "chart-name-here";
     String chartVersion = "chart-version-here";
-    ArgumentCaptor<List<ChartVersion>> argument = ArgumentCaptor.forClass(List.class);
+    ArgumentCaptor<List<bio.terra.appmanager.model.ChartVersion>> argument =
+        ArgumentCaptor.forClass(List.class);
 
     mockMvc
         .perform(
@@ -60,22 +60,22 @@ public class AdminControllerTest {
                         + "}]"))
         .andExpect(status().isNoContent());
 
-    verify(serviceMock).createVersion(argument.capture());
+    verify(serviceMock).createVersions(argument.capture());
     assert (argument.getValue().size() == 1);
     verifyChartVersion(argument.getValue().get(0), chartName, chartVersion, null, null, null);
   }
 
   private void verifyChartVersion(
-      ChartVersion version,
+      bio.terra.appmanager.model.ChartVersion version,
       String chartName,
       String chartVersion,
       String appVersion,
       Date activeAt,
       Date inactiveAt) {
-    assertEquals(version.getChartName(), chartName);
-    assertEquals(version.getChartVersion(), chartVersion);
-    assertEquals(version.getAppVersion(), appVersion);
-    assertEquals(version.getActiveAt(), activeAt);
-    assertEquals(version.getInactiveAt(), inactiveAt);
+    assertEquals(version.chartName(), chartName);
+    assertEquals(version.chartVersion(), chartVersion);
+    assertEquals(version.appVersion(), appVersion);
+    assertEquals(version.activeAt(), activeAt);
+    assertEquals(version.inactiveAt(), inactiveAt);
   }
 }

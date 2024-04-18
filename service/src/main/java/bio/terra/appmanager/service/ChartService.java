@@ -24,7 +24,7 @@ public class ChartService {
    * @param versions non-null list of <tt>ChartVersion</tt>s
    */
   @WriteTransaction
-  public void createVersion(List<ChartVersion> versions) {
+  public void createVersions(List<ChartVersion> versions) {
     if (versions == null || versions.size() < 1) {
       // TODO: handle the error condition here
     }
