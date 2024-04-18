@@ -154,10 +154,65 @@ public class ChartVersionDaoTest extends BaseDaoTest {
   }
 
   @Test
-  void testDelete() {}
+  void testDelete() {
+    String chartName1 = "chart-name-here";
+    String chartVersion1_1 = "chart-version-here-1";
+    ChartVersion version1_1 = createVersion(chartName1, chartVersion1_1);
+
+    versionDao.upsert(version1_1);
+    versionDao.delete(List.of(chartName1));
+    List<ChartVersion> deletedVersions = versionDao.get(true);
+
+    assertEquals(1, deletedVersions.size());
+    ChartVersion deletedVersion = deletedVersions.get(0);
+    assertNotNull(deletedVersion.inactiveAt());
+  }
 
   @Test
-  void testMultiDelete() {}
+  void testMultiDelete() {
+    final String chartName1 = "chart-name-here";
+    String chartVersion1_1 = "chart-version-here-1";
+    String chartVersion1_2 = "chart-version-here-too";
+    ChartVersion version1_1 = createVersion(chartName1, chartVersion1_1);
+    ChartVersion version1_2 = createVersion(chartName1, chartVersion1_2);
+
+    final String chartName2 = "chart-version-here-too";
+    String chartVersion2_1 = "chart-version-here-3";
+    String chartVersion2_2 = "chart-version-here-four";
+    ChartVersion version2_1 = createVersion(chartName2, chartVersion2_1);
+    ChartVersion version2_2 = createVersion(chartName2, chartVersion2_2);
+
+    final String chartName3 = "chart-version-here-again";
+    String chartVersion3_1 = "chart-version-here-5";
+    String chartVersion3_2 = "chart-version-here-six";
+    ChartVersion version3_1 = createVersion(chartName3, chartVersion3_1);
+    ChartVersion version3_2 = createVersion(chartName3, chartVersion3_2);
+
+    versionDao.upsert(version1_1);
+    versionDao.upsert(version1_2);
+    versionDao.upsert(version2_1);
+    versionDao.upsert(version2_2);
+    versionDao.upsert(version3_1);
+    versionDao.upsert(version3_2);
+
+    versionDao.delete(List.of(chartName1, chartName2));
+
+    List<ChartVersion> allVersions = versionDao.get(true);
+    for (ChartVersion version : allVersions) {
+      switch (version.chartName()) {
+        case chartName1:
+        case chartName2:
+          assertNotNull(version.inactiveAt());
+          break;
+        case chartName3:
+          if (chartVersion3_2.equals(version.chartVersion())) {
+            assertNull(version.inactiveAt());
+          } else {
+            assertNotNull(version.inactiveAt());
+          }
+      }
+    }
+  }
 
   private ChartVersion createVersion(String chartName, String chartVersion) {
     return createVersion(chartName, chartVersion, null, null, null);
