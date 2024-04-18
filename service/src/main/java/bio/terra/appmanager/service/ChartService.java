@@ -3,6 +3,7 @@ package bio.terra.appmanager.service;
 import bio.terra.appmanager.dao.ChartVersionDao;
 import bio.terra.appmanager.model.ChartVersion;
 import bio.terra.common.db.WriteTransaction;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,7 @@ public class ChartService {
    * @param versions non-null list of <tt>ChartVersion</tt>s
    */
   @WriteTransaction
-  public void createVersions(List<ChartVersion> versions) {
-    if (versions == null || versions.size() < 1) {
-      // TODO: handle the error condition here
-    }
+  public void createVersions(@NotNull List<ChartVersion> versions) {
     versions.forEach((version) -> chartVersionDao.upsert(version));
     chartVersionDao
         .get(true)

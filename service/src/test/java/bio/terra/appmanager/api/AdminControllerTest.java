@@ -7,14 +7,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import bio.terra.appmanager.controller.AdminController;
 import bio.terra.appmanager.service.ChartService;
-import bio.terra.common.iam.BearerToken;
-import bio.terra.common.iam.SamUser;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,21 +29,24 @@ public class AdminControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
-  private SamUser testUser =
-      new SamUser(
-          "test@email",
-          UUID.randomUUID().toString(),
-          new BearerToken(UUID.randomUUID().toString()));
+  @Captor ArgumentCaptor<List<bio.terra.appmanager.model.ChartVersion>> capture_chartVersions;
+
+  private AutoCloseable closeable;
 
   @BeforeEach
-  void beforeEach() {}
+  public void open() {
+    closeable = MockitoAnnotations.openMocks(this);
+  }
+
+  @AfterEach
+  public void release() throws Exception {
+    closeable.close();
+  }
 
   @Test
   void testGetMessageOk() throws Exception {
     String chartName = "chart-name-here";
     String chartVersion = "chart-version-here";
-    ArgumentCaptor<List<bio.terra.appmanager.model.ChartVersion>> argument =
-        ArgumentCaptor.forClass(List.class);
 
     mockMvc
         .perform(
@@ -60,9 +63,10 @@ public class AdminControllerTest {
                         + "}]"))
         .andExpect(status().isNoContent());
 
-    verify(serviceMock).createVersions(argument.capture());
-    assert (argument.getValue().size() == 1);
-    verifyChartVersion(argument.getValue().get(0), chartName, chartVersion, null, null, null);
+    verify(serviceMock).createVersions(capture_chartVersions.capture());
+    assert (capture_chartVersions.getValue().size() == 1);
+    verifyChartVersion(
+        capture_chartVersions.getValue().get(0), chartName, chartVersion, null, null, null);
   }
 
   private void verifyChartVersion(
