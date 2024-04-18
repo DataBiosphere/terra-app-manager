@@ -4,7 +4,6 @@ import bio.terra.appmanager.model.ChartVersion;
 import com.google.common.annotations.VisibleForTesting;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -66,9 +65,7 @@ public class ChartVersionDao {
    */
   @WithSpan
   public List<ChartVersion> get(@NotNull List<String> chartNames, boolean includeAll) {
-    List<ChartVersion> chartVersions = new ArrayList<>();
-
-    chartVersions =
+    List<ChartVersion> chartVersions =
         inmemStore.entrySet().stream()
             .filter(
                 entry -> {
