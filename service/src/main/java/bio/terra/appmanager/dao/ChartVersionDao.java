@@ -67,10 +67,7 @@ public class ChartVersionDao {
   public List<ChartVersion> get(@NotNull List<String> chartNames, boolean includeAll) {
     List<ChartVersion> chartVersions =
         inmemStore.entrySet().stream()
-            .filter(
-                entry -> {
-                  return chartNames.isEmpty() || chartNames.contains(entry.getKey());
-                })
+            .filter(entry -> chartNames.isEmpty() || chartNames.contains(entry.getKey()))
             .map(entry -> (includeAll) ? (entry.getValue()) : (List.of(entry.getValue().peek())))
             .flatMap(List::stream)
             .toList();
