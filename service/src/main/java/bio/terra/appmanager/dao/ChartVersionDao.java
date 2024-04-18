@@ -3,6 +3,7 @@ package bio.terra.appmanager.dao;
 import bio.terra.appmanager.model.ChartVersion;
 import com.google.common.annotations.VisibleForTesting;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class ChartVersionDao {
    * @return list of {@link ChartVersion}s based on the parameters provided
    */
   public List<ChartVersion> get(boolean includeAll) {
-    return get(null, includeAll);
+    return get(List.of(), includeAll);
   }
 
   /**
@@ -64,18 +65,18 @@ public class ChartVersionDao {
    * @return list of {@link ChartVersion}s based on the parameters provided
    */
   @WithSpan
-  public List<ChartVersion> get(List<String> chartNames, boolean includeAll) {
+  public List<ChartVersion> get(@NotNull List<String> chartNames, boolean includeAll) {
     List<ChartVersion> chartVersions = new ArrayList<>();
-    for (Map.Entry<String, Stack<ChartVersion>> entry : inmemStore.entrySet()) {
-      if (chartNames != null && !chartNames.isEmpty() && !chartNames.contains(entry.getKey())) {
-        continue; // skip this chartVersion if none supplied
-      }
-      if (includeAll) {
-        chartVersions.addAll(entry.getValue());
-      } else {
-        chartVersions.add(entry.getValue().peek());
-      }
-    }
+
+    chartVersions = inmemStore.entrySet().stream()
+            .filter(
+                entry -> {
+                  return chartNames.isEmpty() || chartNames.contains(entry.getKey());
+                })
+            .map(entry -> (includeAll) ? (entry.getValue()) : (List.of(entry.getValue().peek())))
+            .flatMap(List::stream)
+            .toList();
+
     return chartVersions;
   }
 
