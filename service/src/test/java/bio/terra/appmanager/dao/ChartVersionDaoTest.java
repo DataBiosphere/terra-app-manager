@@ -12,7 +12,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ChartVersionDaoTest extends BaseDaoTest {
+class ChartVersionDaoTest extends BaseDaoTest {
   @Autowired ChartVersionDao versionDao;
 
   @AfterEach

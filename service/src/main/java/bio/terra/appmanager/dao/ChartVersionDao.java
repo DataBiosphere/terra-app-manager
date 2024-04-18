@@ -65,14 +65,11 @@ public class ChartVersionDao {
    */
   @WithSpan
   public List<ChartVersion> get(@NotNull List<String> chartNames, boolean includeAll) {
-    List<ChartVersion> chartVersions =
-        inmemStore.entrySet().stream()
-            .filter(entry -> chartNames.isEmpty() || chartNames.contains(entry.getKey()))
-            .map(entry -> (includeAll) ? (entry.getValue()) : (List.of(entry.getValue().peek())))
-            .flatMap(List::stream)
-            .toList();
-
-    return chartVersions;
+    return inmemStore.entrySet().stream()
+        .filter(entry -> chartNames.isEmpty() || chartNames.contains(entry.getKey()))
+        .map(entry -> (includeAll) ? (entry.getValue()) : (List.of(entry.getValue().peek())))
+        .flatMap(List::stream)
+        .toList();
   }
 
   /**
