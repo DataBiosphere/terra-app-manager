@@ -50,7 +50,7 @@ public class ChartVersionDao {
   }
 
   /**
-   * @param chartNames list of chartNames to filter the return results.
+   * @param chartNames non-null list of chartNames to filter the return results.
    * @return list of ACTIVE {@link ChartVersion}s based on the parameters provided
    */
   public List<ChartVersion> get(List<String> chartNames) {
@@ -58,7 +58,7 @@ public class ChartVersionDao {
   }
 
   /**
-   * @param chartNames list of chartNames to filter the return results.
+   * @param chartNames non-null list of chartNames to filter the return results.
    * @param includeAll {@code true} if we should return all versions, including inactive {@link
    *     ChartVersion}s.
    * @return list of {@link ChartVersion}s based on the parameters provided
