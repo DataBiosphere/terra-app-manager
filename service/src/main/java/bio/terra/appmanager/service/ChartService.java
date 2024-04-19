@@ -4,6 +4,7 @@ import bio.terra.appmanager.dao.ChartVersionDao;
 import bio.terra.appmanager.model.ChartVersion;
 import bio.terra.common.db.WriteTransaction;
 import jakarta.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,16 +23,26 @@ public class ChartService {
   /**
    * Create chart entries with associated chart and application versions.
    *
-   * @param versions non-null list of <tt>ChartVersion</tt>s
+   * <p>To do so, we must first invalidate existing {@link ChartVersion}s and then add the new ones.
+   *
+   * @param versions non-null list of {@ ChartVersion}s
    */
   @WriteTransaction
   public void createVersions(@NotNull List<ChartVersion> versions) {
-    versions.forEach((version) -> chartVersionDao.upsert(version));
-    chartVersionDao
-        .get(true)
-        .forEach(
-            version -> {
-              logger.info(version.toString());
-            });
+    Date now = new Date();
+    versions.forEach(
+        version -> {
+          createVersion(version, now);
+        });
+  }
+
+  @WriteTransaction
+  void createVersion(ChartVersion version, Date now) {
+    inactivate(version.chartName(), now);
+    chartVersionDao.create(version.activate(now));
+  }
+
+  void inactivate(String chartName, Date now) {
+    chartVersionDao.delete(List.of(chartName), now);
   }
 }

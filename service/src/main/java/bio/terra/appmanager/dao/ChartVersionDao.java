@@ -3,7 +3,7 @@ package bio.terra.appmanager.dao;
 import bio.terra.appmanager.model.ChartVersion;
 import com.google.common.annotations.VisibleForTesting;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
-import java.util.ArrayList;
+import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +11,13 @@ import java.util.Map;
 import java.util.Stack;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The ChartVersion repository is based on the following assumptions: - there should be only ever
+ * one active {@link ChartVersion} - {@link ChartVersion#activeAt()} and {@link
+ * ChartVersion#inactiveAt()} map to created_at and deleted_at respectively -
+ *
+ * <p>There was a decision in a PR to keep this "dumb" as to managing the semantics.
+ */
 @Repository
 public class ChartVersionDao {
 
@@ -29,15 +36,10 @@ public class ChartVersionDao {
    * @param version {@link ChartVersion} to add to the repository
    */
   @WithSpan
-  public void upsert(ChartVersion version) {
+  public void create(ChartVersion version) {
     inmemStore.computeIfAbsent(version.chartName(), chartName -> new Stack<>());
     Stack<ChartVersion> chartVersions = inmemStore.get(version.chartName());
-
-    // make sure the activeDate and inactiveDate(s) are the same date/time
-    Date currentDate = new Date();
-    inactivateExistingVersion(chartVersions, currentDate);
-
-    chartVersions.push(version.activate(currentDate));
+    chartVersions.push(version);
   }
 
   /**
@@ -46,11 +48,11 @@ public class ChartVersionDao {
    * @return list of {@link ChartVersion}s based on the parameters provided
    */
   public List<ChartVersion> get(boolean includeAll) {
-    return get(null, includeAll);
+    return get(List.of(), includeAll);
   }
 
   /**
-   * @param chartNames list of chartNames to filter the return results.
+   * @param chartNames non-null list of chartNames to filter the return results.
    * @return list of ACTIVE {@link ChartVersion}s based on the parameters provided
    */
   public List<ChartVersion> get(List<String> chartNames) {
@@ -58,25 +60,18 @@ public class ChartVersionDao {
   }
 
   /**
-   * @param chartNames list of chartNames to filter the return results.
+   * @param chartNames non-null list of chartNames to filter the return results.
    * @param includeAll {@code true} if we should return all versions, including inactive {@link
    *     ChartVersion}s.
    * @return list of {@link ChartVersion}s based on the parameters provided
    */
   @WithSpan
-  public List<ChartVersion> get(List<String> chartNames, boolean includeAll) {
-    List<ChartVersion> chartVersions = new ArrayList<>();
-    for (Map.Entry<String, Stack<ChartVersion>> entry : inmemStore.entrySet()) {
-      if (chartNames != null && !chartNames.isEmpty() && !chartNames.contains(entry.getKey())) {
-        continue; // skip this chartVersion if none supplied
-      }
-      if (includeAll) {
-        chartVersions.addAll(entry.getValue());
-      } else {
-        chartVersions.add(entry.getValue().peek());
-      }
-    }
-    return chartVersions;
+  public List<ChartVersion> get(@NotNull List<String> chartNames, boolean includeAll) {
+    return inmemStore.entrySet().stream()
+        .filter(entry -> chartNames.isEmpty() || chartNames.contains(entry.getKey()))
+        .map(entry -> (includeAll) ? (entry.getValue()) : (List.of(entry.getValue().peek())))
+        .flatMap(List::stream)
+        .toList();
   }
 
   /**
@@ -86,12 +81,14 @@ public class ChartVersionDao {
    */
   @WithSpan
   public void delete(List<String> chartNames) {
-    // keep all date/times the same re: transaction
-    Date currentDate = new Date();
+    delete(chartNames, new Date());
+  }
+
+  public void delete(List<String> chartNames, Date now) {
     inmemStore.forEach(
         (chartName, chartVersions) -> {
           if (chartNames.contains(chartName)) {
-            inactivateExistingVersion(chartVersions, currentDate);
+            inactivateExistingVersion(chartVersions, now);
           }
         });
   }
