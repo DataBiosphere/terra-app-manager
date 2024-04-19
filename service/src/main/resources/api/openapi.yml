@@ -53,6 +53,8 @@ paths:
       responses:
         '201':
           description: ChartVersion(s) have been successfully created
+        '400':
+          description: Bad request - invalid ChartVersion(s) provided
         '403':
           description: Request did not come from an admin
         '500':

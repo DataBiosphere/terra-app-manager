@@ -17,11 +17,14 @@ public class AdminController implements AdminApi {
 
   @Override
   public ResponseEntity<Void> createChartVersions(List<ChartVersion> body) {
+    List<bio.terra.appmanager.model.ChartVersion> versions = List.of();
+    try {
+      versions = body.stream().map((bio.terra.appmanager.model.ChartVersion::fromApi)).toList();
+    } catch (NullPointerException npe) {
+      return ResponseEntity.badRequest().build();
+    }
 
-    ;
-
-    this.chartService.createVersions(
-        body.stream().map((bio.terra.appmanager.model.ChartVersion::fromApi)).toList());
+    this.chartService.createVersions(versions);
     return ResponseEntity.noContent().build();
   }
 }

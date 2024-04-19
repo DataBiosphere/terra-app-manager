@@ -23,16 +23,13 @@ public class ChartService {
   /**
    * Create chart entries with associated chart and application versions.
    *
-   * <p>To do so, we must first invalidate existing {@link ChartVersion}s and then add the new ones.
-   *
-   * @param versions non-null list of {@ ChartVersion}s
+   * @param versions non-null list of {@ ChartVersion}s to create
    */
   @WriteTransaction
   public void createVersions(@NotNull List<ChartVersion> versions) {
-    Date now = new Date();
     versions.forEach(
         version -> {
-          createVersion(version, now);
+          createVersion(version, new Date());
         });
   }
 
@@ -42,6 +39,7 @@ public class ChartService {
     chartVersionDao.create(version.activate(now));
   }
 
+  @WriteTransaction
   void inactivate(String chartName, Date now) {
     chartVersionDao.delete(List.of(chartName), now);
   }

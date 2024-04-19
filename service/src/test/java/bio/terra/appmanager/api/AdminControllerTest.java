@@ -2,6 +2,7 @@ package bio.terra.appmanager.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -44,7 +46,7 @@ public class AdminControllerTest {
   }
 
   @Test
-  void testGetMessageOk() throws Exception {
+  void testCreate_204() throws Exception {
     String chartName = "chart-name-here";
     String chartVersion = "chart-version-here";
 
@@ -67,6 +69,27 @@ public class AdminControllerTest {
     assert (capture_chartVersions.getValue().size() == 1);
     verifyChartVersion(
         capture_chartVersions.getValue().get(0), chartName, chartVersion, null, null, null);
+  }
+
+  @Test
+  void testCreate_400() throws Exception {
+    String chartName = "chart-name-here";
+    String chartVersion = "chart-version-here";
+
+    mockMvc
+        .perform(
+            post("/api/admin/v1/charts/versions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("[{" + "\"chartName\": \"" + chartName + "\"" + "}]"))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(serviceMock);
+  }
+
+  @Test
+  @Disabled
+  void testCreate_403() throws Exception {
+    // we need to do this when we put in authorization
   }
 
   private void verifyChartVersion(
