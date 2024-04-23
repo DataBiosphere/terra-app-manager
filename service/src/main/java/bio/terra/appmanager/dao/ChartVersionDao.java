@@ -11,13 +11,6 @@ import java.util.Map;
 import java.util.Stack;
 import org.springframework.stereotype.Repository;
 
-/**
- * The ChartVersion repository is based on the following assumptions: - there should be only ever
- * one active {@link ChartVersion} - {@link ChartVersion#activeAt()} and {@link
- * ChartVersion#inactiveAt()} map to created_at and deleted_at respectively -
- *
- * <p>There was a decision in a PR to keep this "dumb" as to managing the semantics.
- */
 @Repository
 public class ChartVersionDao {
 
@@ -36,10 +29,15 @@ public class ChartVersionDao {
    * @param version {@link ChartVersion} to add to the repository
    */
   @WithSpan
-  public void create(ChartVersion version) {
+  public void upsert(ChartVersion version) {
     inmemStore.computeIfAbsent(version.chartName(), chartName -> new Stack<>());
     Stack<ChartVersion> chartVersions = inmemStore.get(version.chartName());
-    chartVersions.push(version);
+
+    // make sure the activeDate and inactiveDate(s) are the same date/time
+    Date currentDate = new Date();
+    inactivateExistingVersion(chartVersions, currentDate);
+
+    chartVersions.push(version.activate(currentDate));
   }
 
   /**
@@ -81,14 +79,12 @@ public class ChartVersionDao {
    */
   @WithSpan
   public void delete(List<String> chartNames) {
-    delete(chartNames, new Date());
-  }
-
-  public void delete(List<String> chartNames, Date now) {
+    // keep all date/times the same re: transaction
+    Date currentDate = new Date();
     inmemStore.forEach(
         (chartName, chartVersions) -> {
           if (chartNames.contains(chartName)) {
-            inactivateExistingVersion(chartVersions, now);
+            inactivateExistingVersion(chartVersions, currentDate);
           }
         });
   }

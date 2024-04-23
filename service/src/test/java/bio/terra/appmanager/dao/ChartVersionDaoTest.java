@@ -1,11 +1,11 @@
 package bio.terra.appmanager.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import bio.terra.appmanager.model.ChartVersion;
-import java.util.Date;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
@@ -21,19 +21,18 @@ class ChartVersionDaoTest extends BaseDaoTest {
   }
 
   @Test
-  void testSingleVersionCreate() {
+  void testSingleVersionUpsert() {
     String chartName = "chart-name-here";
     String chartVersion = "chart-version-here";
     ChartVersion version = new ChartVersion(chartName, chartVersion);
-    version.activate(new Date());
 
-    versionDao.create(version);
+    versionDao.upsert(version);
     List<ChartVersion> storedVersions = versionDao.get(List.of(chartName), false);
 
     assertEquals(1, storedVersions.size());
     ChartVersion storedVersion = storedVersions.get(0);
     assertEquals(chartName, storedVersion.chartName());
-    assertEquals(version.activeAt(), storedVersion.activeAt());
+    assertNotEquals(version.activeAt(), storedVersion.activeAt());
   }
 
   @Test
@@ -46,8 +45,8 @@ class ChartVersionDaoTest extends BaseDaoTest {
     String chartVersion2 = "chart-version-here-too";
     ChartVersion version2 = new ChartVersion(chartName, chartVersion2);
 
-    versionDao.create(version1.inactivate(new Date()));
-    versionDao.create(version2);
+    versionDao.upsert(version1);
+    versionDao.upsert(version2);
     List<ChartVersion> storedVersions = versionDao.get(List.of(chartName), true);
 
     assertEquals(2, storedVersions.size());
@@ -67,6 +66,14 @@ class ChartVersionDaoTest extends BaseDaoTest {
       List<ChartVersion> storedVersions, String chartVersion) {
     return storedVersions.stream()
         .filter(version -> chartVersion.equals(version.chartVersion()))
+        .findFirst()
+        .orElse(null);
+  }
+
+  @Nullable
+  private static ChartVersion getByChartName(List<ChartVersion> storedVersions, String chartName) {
+    return storedVersions.stream()
+        .filter(version -> chartName.equals(version.chartVersion()))
         .findFirst()
         .orElse(null);
   }
@@ -91,13 +98,12 @@ class ChartVersionDaoTest extends BaseDaoTest {
     ChartVersion version3_1 = new ChartVersion(chartName3, chartVersion3_1);
     ChartVersion version3_2 = new ChartVersion(chartName3, chartVersion3_2);
 
-    Date now = new Date();
-    versionDao.create(version1_1.inactivate(now));
-    versionDao.create(version1_2.activate(now));
-    versionDao.create(version2_1.inactivate(now));
-    versionDao.create(version2_2.activate(now));
-    versionDao.create(version3_1.inactivate(now));
-    versionDao.create(version3_2.activate(now));
+    versionDao.upsert(version1_1);
+    versionDao.upsert(version1_2);
+    versionDao.upsert(version2_1);
+    versionDao.upsert(version2_2);
+    versionDao.upsert(version3_1);
+    versionDao.upsert(version3_2);
 
     List<ChartVersion> storedVersions = versionDao.get((List.of(chartName1, chartName2)), false);
     assertEquals(2, storedVersions.size());
@@ -135,13 +141,12 @@ class ChartVersionDaoTest extends BaseDaoTest {
     ChartVersion version3_1 = new ChartVersion(chartName3, chartVersion3_1);
     ChartVersion version3_2 = new ChartVersion(chartName3, chartVersion3_2);
 
-    Date now = new Date();
-    versionDao.create(version1_1.inactivate(now));
-    versionDao.create(version1_2.activate(now));
-    versionDao.create(version2_1.inactivate(now));
-    versionDao.create(version2_2.activate(now));
-    versionDao.create(version3_1.inactivate(now));
-    versionDao.create(version3_2.activate(now));
+    versionDao.upsert(version1_1);
+    versionDao.upsert(version1_2);
+    versionDao.upsert(version2_1);
+    versionDao.upsert(version2_2);
+    versionDao.upsert(version3_1);
+    versionDao.upsert(version3_2);
 
     List<ChartVersion> storedVersions = versionDao.get(true);
     assertEquals(6, storedVersions.size());
@@ -153,7 +158,7 @@ class ChartVersionDaoTest extends BaseDaoTest {
     String chartVersion1_1 = "chart-version-here-1";
     ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
 
-    versionDao.create(version1_1);
+    versionDao.upsert(version1_1);
     versionDao.delete(List.of(chartName1));
     List<ChartVersion> deletedVersions = versionDao.get(true);
 
@@ -182,13 +187,12 @@ class ChartVersionDaoTest extends BaseDaoTest {
     ChartVersion version3_1 = new ChartVersion(chartName3, chartVersion3_1);
     ChartVersion version3_2 = new ChartVersion(chartName3, chartVersion3_2);
 
-    Date now = new Date();
-    versionDao.create(version1_1.inactivate(now));
-    versionDao.create(version1_2.activate(now));
-    versionDao.create(version2_1.inactivate(now));
-    versionDao.create(version2_2.activate(now));
-    versionDao.create(version3_1.inactivate(now));
-    versionDao.create(version3_2.activate(now));
+    versionDao.upsert(version1_1);
+    versionDao.upsert(version1_2);
+    versionDao.upsert(version2_1);
+    versionDao.upsert(version2_2);
+    versionDao.upsert(version3_1);
+    versionDao.upsert(version3_2);
 
     versionDao.delete(List.of(chartName1, chartName2));
 
