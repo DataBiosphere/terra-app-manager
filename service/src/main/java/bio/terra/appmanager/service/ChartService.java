@@ -23,6 +23,6 @@ public class ChartService {
    */
   @WriteTransaction
   public void createVersions(@NotNull List<ChartVersion> versions) {
-    versions.forEach(version -> chartVersionDao.upsert(version));
+    versions.forEach(chartVersionDao::upsert);
   }
 }
