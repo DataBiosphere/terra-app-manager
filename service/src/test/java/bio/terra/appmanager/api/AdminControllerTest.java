@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ContextConfiguration(classes = AdminController.class)
 @WebMvcTest
-public class AdminControllerTest {
+class AdminControllerTest {
   @MockBean ChartService serviceMock;
 
   @Autowired private MockMvc mockMvc;
@@ -87,7 +87,7 @@ public class AdminControllerTest {
   }
 
   @Test
-  @Disabled
+  @Disabled("Enable when Authorization is implemented")
   void testCreate_403() throws Exception {
     // we need to do this when we put in authorization
   }

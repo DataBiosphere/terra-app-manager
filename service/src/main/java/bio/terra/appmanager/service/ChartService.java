@@ -5,13 +5,10 @@ import bio.terra.appmanager.model.ChartVersion;
 import bio.terra.common.db.WriteTransaction;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChartService {
-  private static final Logger logger = LoggerFactory.getLogger(ChartService.class);
 
   private final ChartVersionDao chartVersionDao;
 
@@ -26,9 +23,6 @@ public class ChartService {
    */
   @WriteTransaction
   public void createVersions(@NotNull List<ChartVersion> versions) {
-    versions.forEach(
-        version -> {
-          chartVersionDao.upsert(version);
-        });
+    versions.forEach(version -> chartVersionDao.upsert(version));
   }
 }
