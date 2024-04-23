@@ -212,5 +212,4 @@ class ChartVersionDaoTest extends BaseDaoTest {
         .findFirst()
         .orElse(null);
   }
-
 }
