@@ -151,6 +151,22 @@ class ChartVersionDaoTest extends BaseDaoTest {
   }
 
   @Test
+  void testDelete_noNames() {
+    final String chartName1 = "chart-name-here";
+    String chartVersion1_1 = "chart-version-here-1";
+    ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
+
+    versionDao.upsert(version1_1);
+    versionDao.delete(List.of());
+    List<ChartVersion> versions = versionDao.get();
+
+    assertNotNull(versions);
+    assertEquals(1, versions.size());
+    assertEquals(chartName1, versions.get(0).chartName());
+    assertEquals(chartVersion1_1, versions.get(0).chartVersion());
+  }
+
+  @Test
   void testMultiDelete() {
     final String chartName1 = "chart-name-here";
     String chartVersion1_1 = "chart-version-here-1";

@@ -41,6 +41,13 @@ public class ChartVersionDao {
   }
 
   /**
+   * @return list of ACTIVE {@link ChartVersion}s
+   */
+  public List<ChartVersion> get() {
+    return get(false);
+  }
+
+  /**
    * @param includeAll {@code true} if we should return all versions, including inactive {@link
    *     ChartVersion}s.
    * @return list of {@link ChartVersion}s based on the parameters provided
