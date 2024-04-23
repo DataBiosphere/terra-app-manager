@@ -37,6 +37,29 @@ paths:
           $ref: '#/components/responses/ServerError'
 
   # README /docs/api_versioning.md
+  #
+  /api/admin/v1/charts/versions:
+    post:
+      tags: [ admin ]
+      summary: Create new ChartVersion(s) to track
+      operationId: createChartVersions
+      security: [ ] # TODO: remove this to turn on "security"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChartArray'
+      responses:
+        '201':
+          description: ChartVersion(s) have been successfully created
+        '400':
+          description: Bad request - invalid ChartVersion(s) provided
+        '403':
+          description: Request did not come from an admin
+        '500':
+          $ref: '#/components/responses/ServerError'
+
   /api/example/v1/message:
     get:
       summary: Gets your message
@@ -190,6 +213,27 @@ components:
           type: string
         build:
           type: string
+
+    ChartVersion:
+      type: object
+      required: [ chartName ]
+      properties:
+        chartName:
+          type: string
+        chartVersion:
+          type: string
+        appVersion:
+          type: string
+        activeAt:
+          type: string
+          format: date-time
+        inactiveAt:
+          type: string
+          format: date-time
+    ChartArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/ChartVersion'
 
   securitySchemes:
     bearerAuth:

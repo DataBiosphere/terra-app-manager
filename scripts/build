@@ -25,7 +25,7 @@ skip_tests=""
 die() { log_error "$*" >&2; echo ""; usage; exit 2; }  # complain to STDERR and exit with error
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
 
-while getopts h-: OPT; do  # allow -h and -- "with arg"
+while getopts th-: OPT; do  # allow -h and -- "with arg"
   # support long options: https://stackoverflow.com/a/28466267/519360
   if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
     OPT="${OPTARG%%=*}"       # extract long option name
@@ -44,6 +44,7 @@ shift $((OPTIND-1)) # remove parsed options and args from $@ list
 
 # process positional arguments (if any)
 BUILDTYPE=$1
+[ -z "${BUILDTYPE}" ] && die "Missing BUILDTYPE: '${BUILDTYPE}'"
 shift 1
 
 # use all trailing arguments as caveats to BUILD command

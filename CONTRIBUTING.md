@@ -90,6 +90,27 @@ start compiling your repo.
 
 (build out this section based on questions asked of the team)
 
+### How do I add a new API endpoint?
+
+New endpoints starts in [openapi.yml](./service/src/main/resources/api/openapi.yml).
+
+Add and/or modify the desired endpoints in this document.
+For documentation on `openapi` document structure,
+[please start here](https://swagger.io/docs/specification/basic-structure/).
+
+> **NOTE: This is our public facing contract.**   
+> Changes to this must be considered carefully for version management.
+> See [API Versioning](./docs/api_versioning.md)
+
+From here, run the following command to validate and generate the necessary `service/`
+[interfaces](./service/build/swagger-code/src/main/java/bio/terra/appmanager/api),
+[models](./service/build/swagger-code/src/main/java/bio/terra/appmanager/model), and
+[`client/` code](./client/build/swagger-code/src/main/java/bio/terra/appmanager).
+
+```shell
+./scripts/build -t project
+```
+
 ## Additional questions
 
 The [Interactive Analysis Team](https://github.com/orgs/DataBiosphere/teams/broad-interactive-analysis)

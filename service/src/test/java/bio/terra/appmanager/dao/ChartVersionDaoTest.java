@@ -61,23 +61,6 @@ class ChartVersionDaoTest extends BaseDaoTest {
     assertNull(targetVersion.inactiveAt());
   }
 
-  @Nullable
-  private static ChartVersion getByChartVersion(
-      List<ChartVersion> storedVersions, String chartVersion) {
-    return storedVersions.stream()
-        .filter(version -> chartVersion.equals(version.chartVersion()))
-        .findFirst()
-        .orElse(null);
-  }
-
-  @Nullable
-  private static ChartVersion getByChartName(List<ChartVersion> storedVersions, String chartName) {
-    return storedVersions.stream()
-        .filter(version -> chartName.equals(version.chartVersion()))
-        .findFirst()
-        .orElse(null);
-  }
-
   @Test
   void testMultiNameGet() {
     String chartName1 = "chart-name-here";
@@ -105,7 +88,7 @@ class ChartVersionDaoTest extends BaseDaoTest {
     versionDao.upsert(version3_1);
     versionDao.upsert(version3_2);
 
-    List<ChartVersion> storedVersions = versionDao.get((List.of(chartName1, chartName2)), false);
+    List<ChartVersion> storedVersions = versionDao.get((List.of(chartName1, chartName2)));
     assertEquals(2, storedVersions.size());
 
     List<ChartVersion> targetCharts =
@@ -168,6 +151,22 @@ class ChartVersionDaoTest extends BaseDaoTest {
   }
 
   @Test
+  void testDelete_noNames() {
+    final String chartName1 = "chart-name-here";
+    String chartVersion1_1 = "chart-version-here-1";
+    ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
+
+    versionDao.upsert(version1_1);
+    versionDao.delete(List.of());
+    List<ChartVersion> versions = versionDao.get();
+
+    assertNotNull(versions);
+    assertEquals(1, versions.size());
+    assertEquals(chartName1, versions.get(0).chartName());
+    assertEquals(chartVersion1_1, versions.get(0).chartVersion());
+  }
+
+  @Test
   void testMultiDelete() {
     final String chartName1 = "chart-name-here";
     String chartVersion1_1 = "chart-version-here-1";
@@ -211,5 +210,22 @@ class ChartVersionDaoTest extends BaseDaoTest {
           }
       }
     }
+  }
+
+  @Nullable
+  private static ChartVersion getByChartVersion(
+      List<ChartVersion> storedVersions, String chartVersion) {
+    return storedVersions.stream()
+        .filter(version -> chartVersion.equals(version.chartVersion()))
+        .findFirst()
+        .orElse(null);
+  }
+
+  @Nullable
+  private static ChartVersion getByChartName(List<ChartVersion> storedVersions, String chartName) {
+    return storedVersions.stream()
+        .filter(version -> chartName.equals(version.chartVersion()))
+        .findFirst()
+        .orElse(null);
   }
 }

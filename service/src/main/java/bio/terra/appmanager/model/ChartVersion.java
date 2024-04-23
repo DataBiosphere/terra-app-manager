@@ -1,10 +1,15 @@
 package bio.terra.appmanager.model;
 
+import jakarta.annotation.Nullable;
 import java.util.Date;
 import java.util.Objects;
 
 public record ChartVersion(
-    String chartName, String chartVersion, String appVersion, Date activeAt, Date inactiveAt) {
+    String chartName,
+    String chartVersion,
+    @Nullable String appVersion,
+    @Nullable Date activeAt,
+    @Nullable Date inactiveAt) {
   public ChartVersion {
     Objects.requireNonNull(chartName);
     Objects.requireNonNull(chartVersion);
@@ -12,6 +17,15 @@ public record ChartVersion(
 
   public ChartVersion(String chartName, String chartVersion) {
     this(chartName, chartVersion, null, null, null);
+  }
+
+  public static ChartVersion fromApi(bio.terra.appmanager.api.model.ChartVersion source) {
+    return new ChartVersion(
+        source.getChartName(),
+        source.getChartVersion(),
+        source.getAppVersion(),
+        source.getActiveAt(),
+        source.getInactiveAt());
   }
 
   public ChartVersion activate(Date activeAt) {
