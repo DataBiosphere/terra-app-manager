@@ -1,9 +1,9 @@
 package bio.terra.appmanager.controller;
 
 import bio.terra.appmanager.api.PublicApi;
+import bio.terra.appmanager.api.model.SystemStatus;
+import bio.terra.appmanager.api.model.VersionProperties;
 import bio.terra.appmanager.config.VersionConfiguration;
-import bio.terra.appmanager.model.SystemStatus;
-import bio.terra.appmanager.model.VersionProperties;
 import bio.terra.appmanager.service.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

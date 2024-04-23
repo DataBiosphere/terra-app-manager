@@ -1,8 +1,8 @@
 package bio.terra.appmanager.service;
 
+import bio.terra.appmanager.api.model.SystemStatusSystems;
 import bio.terra.appmanager.config.StatusCheckConfiguration;
 import bio.terra.appmanager.iam.SamService;
-import bio.terra.appmanager.model.SystemStatusSystems;
 import java.sql.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -17,8 +17,8 @@ generateSwaggerCode {
     language = 'spring'
     components = ['models', 'apis']
     additionalProperties = [
-        modelPackage     : "${artifactGroup}.model",
         apiPackage       : "${artifactGroup}.api",
+        modelPackage     : "${artifactGroup}.api.model",
         dateLibrary      : 'java11',
         java8            : true,
         interfaceOnly    : 'true',

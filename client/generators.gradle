@@ -22,8 +22,8 @@ generateSwaggerCode {
     ]
 
     additionalProperties = [
-        modelPackage  : "${artifactGroup}.model",
         apiPackage    : "${artifactGroup}.api",
+        modelPackage  : "${artifactGroup}.model",
         invokerPackage: "${artifactGroup}.client",
         dateLibrary   : 'java11',
         java8         : 'true',
