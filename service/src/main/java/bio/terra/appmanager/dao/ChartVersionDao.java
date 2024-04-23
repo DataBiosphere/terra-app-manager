@@ -35,7 +35,7 @@ public class ChartVersionDao {
 
     // make sure the activeDate and inactiveDate(s) are the same date/time
     Date currentDate = new Date();
-    inactivateExistingVersion(chartVersions, currentDate);
+    deleteActiveVersions(chartVersions, currentDate);
 
     chartVersions.push(version.activate(currentDate));
   }
@@ -81,16 +81,13 @@ public class ChartVersionDao {
   public void delete(List<String> chartNames) {
     // keep all date/times the same re: transaction
     Date currentDate = new Date();
-    inmemStore.forEach(
-        (chartName, chartVersions) -> {
-          if (chartNames.contains(chartName)) {
-            inactivateExistingVersion(chartVersions, currentDate);
-          }
-        });
+
+    inmemStore.entrySet().stream()
+        .filter(entry -> chartNames.isEmpty() || chartNames.contains(entry.getKey()))
+        .forEach(entry -> deleteActiveVersions(entry.getValue(), currentDate));
   }
 
-  private static void inactivateExistingVersion(
-      Stack<ChartVersion> chartVersions, Date inactiveDate) {
+  private static void deleteActiveVersions(Stack<ChartVersion> chartVersions, Date inactiveDate) {
     if (chartVersions.empty()) {
       return; // nothing to invalidate
     }

@@ -1,13 +1,12 @@
 package bio.terra.appmanager.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 import bio.terra.appmanager.BaseSpringBootTest;
 import bio.terra.appmanager.dao.ChartVersionDao;
 import bio.terra.appmanager.model.ChartVersion;
-import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -35,11 +34,10 @@ class ChartServiceTest extends BaseSpringBootTest {
     ArgumentCaptor<ChartVersion> argument = ArgumentCaptor.forClass(ChartVersion.class);
 
     chartService.createVersions(List.of(version1_1));
-    verify(chartVersionDao, times(1)).delete(eq(List.of(chartName1)), any(Date.class));
-    verify(chartVersionDao, times(1)).create(argument.capture());
+    verify(chartVersionDao, times(1)).upsert(argument.capture());
     assertEquals(version1_1.chartName(), argument.getValue().chartName());
     assertEquals(version1_1.chartVersion(), argument.getValue().chartVersion());
-    assertNotNull(argument.getValue().activeAt());
+    assertNull(argument.getValue().activeAt());
   }
 
   @Test
@@ -54,15 +52,14 @@ class ChartServiceTest extends BaseSpringBootTest {
 
     InOrder inOrder = inOrder(chartVersionDao);
     chartService.createVersions(List.of(version1_1, version1_2));
-    inOrder.verify(chartVersionDao, times(1)).create(argument.capture());
+    inOrder.verify(chartVersionDao, calls(1)).upsert(argument.capture());
     assertEquals(version1_1.chartName(), argument.getValue().chartName());
     assertEquals(version1_1.chartVersion(), argument.getValue().chartVersion());
-    assertNotNull(argument.getValue().activeAt());
+    assertNull(argument.getValue().activeAt());
 
-    inOrder.verify(chartVersionDao, times(1)).delete(eq(List.of(chartName1)), any(Date.class));
-    inOrder.verify(chartVersionDao, times(1)).create(argument.capture());
+    inOrder.verify(chartVersionDao, calls(1)).upsert(argument.capture());
     assertEquals(version1_2.chartName(), argument.getValue().chartName());
     assertEquals(version1_2.chartVersion(), argument.getValue().chartVersion());
-    assertNotNull(argument.getValue().activeAt());
+    assertNull(argument.getValue().activeAt());
   }
 }
