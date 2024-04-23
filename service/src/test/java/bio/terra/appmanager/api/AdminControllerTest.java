@@ -1,6 +1,7 @@
 package bio.terra.appmanager.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -90,7 +91,8 @@ class AdminControllerTest {
   @Disabled("Enable when Authorization is implemented")
   void testCreate_403() throws Exception {
     // we need to do this when we put in authorization
-    assert true == false;
+    // this will fail if someone removes @Disabled(...)
+    assertTrue(true == false);
   }
 
   private void verifyChartVersion(
