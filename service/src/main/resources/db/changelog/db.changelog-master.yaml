@@ -1,4 +1,5 @@
 databaseChangeLog:
+  # TODO: remove this when the first schema is introduced
   - include:
       file: changesets/initial_schema.yaml
       relativeToChangelogFile: true
