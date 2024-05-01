@@ -60,6 +60,28 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /api/admin/v1/charts/versions/{chartNames}:
+    delete:
+      tags: [ admin ]
+      summary: Delete ChartVersions
+      operationId: deleteChartVersions
+      security: [ ] # TODO: remove this to turn on "security"
+      parameters:
+        - name: chartNames
+          in: path
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '201':
+          description: ChartVersion(s) have been successfully deleted
+        '403':
+          description: Request did not come from an admin
+        '500':
+          $ref: '#/components/responses/ServerError'
+
   /api/example/v1/message:
     get:
       summary: Gets your message

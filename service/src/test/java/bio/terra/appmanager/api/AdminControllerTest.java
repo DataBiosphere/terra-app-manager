@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,6 +34,7 @@ class AdminControllerTest {
   @Autowired private MockMvc mockMvc;
 
   @Captor ArgumentCaptor<List<bio.terra.appmanager.model.ChartVersion>> capture_chartVersions;
+  @Captor ArgumentCaptor<List<String>> capture_chartNames;
 
   private AutoCloseable closeable;
 
@@ -75,7 +77,6 @@ class AdminControllerTest {
   @Test
   void testCreate_400() throws Exception {
     String chartName = "chart-name-here";
-    String chartVersion = "chart-version-here";
 
     mockMvc
         .perform(
@@ -90,6 +91,27 @@ class AdminControllerTest {
   @Test
   @Disabled("Enable when Authorization is implemented")
   void testCreate_403() throws Exception {
+    // we need to do this when we put in authorization
+    // this will fail if someone removes @Disabled(...)
+    fail("force whomever removes @Disabled(...) to implement test");
+  }
+
+  @Test
+  void testDelete_204() throws Exception {
+    String chartName = "chart-name-here";
+
+    mockMvc
+        .perform(delete("/api/admin/v1/charts/versions/" + chartName))
+        .andExpect(status().isNoContent());
+
+    verify(serviceMock).deleteVersions(capture_chartNames.capture());
+    assert (capture_chartNames.getValue().size() == 1);
+    assertEquals(capture_chartNames.getValue().get(0), chartName);
+  }
+
+  @Test
+  @Disabled("Enable when Authorization is implemented")
+  void testDelete_403() throws Exception {
     // we need to do this when we put in authorization
     // this will fail if someone removes @Disabled(...)
     fail("force whomever removes @Disabled(...) to implement test");

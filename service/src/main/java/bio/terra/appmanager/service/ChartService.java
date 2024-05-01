@@ -25,4 +25,13 @@ public class ChartService {
   public void createVersions(@NotNull List<ChartVersion> versions) {
     versions.forEach(chartVersionDao::upsert);
   }
+
+  /**
+   * Soft-delete the specified chart entries with associated chartName.
+   *
+   * @param names non-null list of {@ ChartName}s to delete
+   */
+  public void deleteVersions(@NotNull List<String> names) {
+    chartVersionDao.delete(names);
+  }
 }

@@ -27,4 +27,10 @@ public class AdminController implements AdminApi {
     this.chartService.createVersions(versions);
     return ResponseEntity.noContent().build();
   }
+
+  @Override
+  public ResponseEntity<Void> deleteChartVersions(List<String> body) {
+    this.chartService.deleteVersions(body);
+    return ResponseEntity.noContent().build();
+  }
 }
