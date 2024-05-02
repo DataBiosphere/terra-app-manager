@@ -59,6 +59,34 @@ paths:
           description: Request did not come from an admin
         '500':
           $ref: '#/components/responses/ServerError'
+    get:
+      tags: [ admin ]
+      summary: Get ChartVersion(s)
+      operationId: getChartVersions
+      security: [ ] # TODO: remove this to turn on "security"
+      parameters:
+        - in: query
+          name: chartName
+          description: The optional chartName to return. If omitted, will return all chart versions for all charts.
+          schema:
+            $ref: '#/components/schemas/ChartName'
+        - in: query
+          name: includeAll
+          description: If selected and no chartName is provided, will return all chart versions including inactive ones.
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Chart version(s) specified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartArray'
+        '403':
+          description: Request did not come from an admin
+        '500':
+          $ref: '#/components/responses/ServerError'
 
 components:
   responses:
@@ -141,7 +169,7 @@ components:
       required: [ chartName ]
       properties:
         chartName:
-          type: string
+          $ref: '#/components/schemas/ChartName'
         chartVersion:
           type: string
         appVersion:
@@ -156,6 +184,10 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/ChartVersion'
+    ChartName:
+      type: string
+      pattern: '^[a-z]+(-[a-z]+)*$'
+
 
   securitySchemes:
     bearerAuth:

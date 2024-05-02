@@ -2,6 +2,7 @@ package bio.terra.appmanager.service;
 
 import bio.terra.appmanager.dao.ChartVersionDao;
 import bio.terra.appmanager.model.ChartVersion;
+import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -24,5 +25,10 @@ public class ChartService {
   @WriteTransaction
   public void createVersions(@NotNull List<ChartVersion> versions) {
     versions.forEach(chartVersionDao::upsert);
+  }
+
+  @ReadTransaction
+  public List<ChartVersion> getVersions(@NotNull List<String> names, Boolean includeAll) {
+    return chartVersionDao.get(names, includeAll);
   }
 }

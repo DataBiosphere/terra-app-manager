@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,6 +34,7 @@ class AdminControllerTest {
   @Autowired private MockMvc mockMvc;
 
   @Captor ArgumentCaptor<List<bio.terra.appmanager.model.ChartVersion>> capture_chartVersions;
+  @Captor ArgumentCaptor<List<String>> capture_chartNames;
 
   private AutoCloseable closeable;
 
@@ -85,6 +87,55 @@ class AdminControllerTest {
         .andExpect(status().isBadRequest());
 
     verifyNoInteractions(serviceMock);
+  }
+
+  @Test
+  void testGet_200_withNoParams() throws Exception {
+    mockMvc.perform(get("/api/admin/v1/charts/versions")).andExpect(status().isOk());
+
+    verify(serviceMock).getVersions(List.of(), false);
+  }
+
+  @Test
+  void testGet_200_WithNameNoIncludeAll() throws Exception {
+    String chartName = "chart-name-here";
+
+    mockMvc
+        .perform(get("/api/admin/v1/charts/versions").queryParam("chartName", chartName))
+        .andExpect(status().isOk());
+
+    verify(serviceMock).getVersions(List.of(chartName), false);
+  }
+
+  @Test
+  void testGet_200_WithNameAndIncludeAll() throws Exception {
+    String chartName = "chart-name-here";
+
+    mockMvc
+        .perform(
+            get("/api/admin/v1/charts/versions")
+                .queryParam("chartName", chartName)
+                .queryParam("includeAll", "true"))
+        .andExpect(status().isOk());
+
+    verify(serviceMock).getVersions(List.of(chartName), true);
+  }
+
+  @Test
+  void testGet_200_WithNoNameAndIncludeAll() throws Exception {
+    mockMvc
+        .perform(get("/api/admin/v1/charts/versions").queryParam("includeAll", "true"))
+        .andExpect(status().isOk());
+
+    verify(serviceMock).getVersions(List.of(), true);
+  }
+
+  @Test
+  @Disabled("Enable when Authorization is implemented")
+  void testGet_403() throws Exception {
+    // we need to do this when we put in authorization
+    // this will fail if someone removes @Disabled(...)
+    fail("force whomever removes @Disabled(...) to implement test");
   }
 
   @Test
