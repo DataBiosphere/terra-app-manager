@@ -34,7 +34,6 @@ class AdminControllerTest {
   @Autowired private MockMvc mockMvc;
 
   @Captor ArgumentCaptor<List<bio.terra.appmanager.model.ChartVersion>> capture_chartVersions;
-  @Captor ArgumentCaptor<List<String>> capture_chartNames;
 
   private AutoCloseable closeable;
 

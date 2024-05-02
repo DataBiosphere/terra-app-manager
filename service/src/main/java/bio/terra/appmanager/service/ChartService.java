@@ -28,7 +28,7 @@ public class ChartService {
   }
 
   @ReadTransaction
-  public List<ChartVersion> getVersions(@NotNull List<String> names, Boolean includeAll) {
+  public List<ChartVersion> getVersions(@NotNull List<String> names, @NotNull Boolean includeAll) {
     return chartVersionDao.get(names, includeAll);
   }
 }
