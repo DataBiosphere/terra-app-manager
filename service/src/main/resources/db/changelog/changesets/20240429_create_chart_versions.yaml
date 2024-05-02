@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: "20240429_create_chart_versions"
+      author: pate
+      changes:
+        - createTable:
+            tableName: chart_versions
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: chart_name
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: chart_version
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: app_version
+                  type: text
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted_at
+                  type: datetime
+                  constraints:
+                    nullable: true

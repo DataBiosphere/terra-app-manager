@@ -1,28 +1,51 @@
 package bio.terra.appmanager.dao;
 
 import bio.terra.appmanager.model.ChartVersion;
-import com.google.common.annotations.VisibleForTesting;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ChartVersionDao {
 
-  private final Map<String, Stack<ChartVersion>> inmemStore;
+  private static final RowMapper<ChartVersion> CHART_VERSION_ROW_MAPPER =
+      (rs, rowNum) ->
+          new ChartVersion(
+              rs.getString("chart_name"),
+              rs.getString("chart_version"),
+              rs.getString("app_version"),
+              rs.getDate("created_at"),
+              rs.getDate("deleted_at"));
 
-  public ChartVersionDao() {
-    this.inmemStore = new HashMap<>();
+  private final NamedParameterJdbcTemplate jdbcTemplate;
+
+  public ChartVersionDao(NamedParameterJdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
   }
 
-  @VisibleForTesting
-  void clearRepository() {
-    inmemStore.clear();
+  private void deleteActiveVersions(List<String> chartVersionNames, Date inactiveDate) {
+    if (chartVersionNames.isEmpty()) {
+      return; // nothing to invalidate
+    }
+
+    var query =
+        "UPDATE chart_versions"
+            + " SET deleted_at = :deletedAt"
+            + " WHERE chart_name in (:chartNames)"
+            + " AND deleted_at is null";
+
+    var namedParameters =
+        new MapSqlParameterSource()
+            .addValue("deletedAt", inactiveDate)
+            .addValue("chartNames", chartVersionNames);
+
+    jdbcTemplate.update(query, namedParameters);
   }
 
   /**
@@ -30,14 +53,22 @@ public class ChartVersionDao {
    */
   @WithSpan
   public void upsert(ChartVersion version) {
-    inmemStore.computeIfAbsent(version.chartName(), chartName -> new Stack<>());
-    Stack<ChartVersion> chartVersions = inmemStore.get(version.chartName());
-
     // make sure the activeDate and inactiveDate(s) are the same date/time
     Date currentDate = new Date();
-    deleteActiveVersions(chartVersions, currentDate);
+    deleteActiveVersions(List.of(version.chartName()), currentDate);
 
-    chartVersions.push(version.activate(currentDate));
+    var query =
+        "INSERT INTO chart_versions (chart_name, chart_version, app_version, created_at)"
+            + " VALUES (:chartName, :chartVersion, :appVersion, :createdAt)";
+
+    var namedParameters =
+        new MapSqlParameterSource()
+            .addValue("chartName", version.chartName())
+            .addValue("chartVersion", version.chartVersion())
+            .addValue("appVersion", version.appVersion())
+            .addValue("createdAt", currentDate);
+
+    jdbcTemplate.update(query, namedParameters);
   }
 
   /**
@@ -72,11 +103,27 @@ public class ChartVersionDao {
    */
   @WithSpan
   public List<ChartVersion> get(@NotNull List<String> chartNames, boolean includeAll) {
-    return inmemStore.entrySet().stream()
-        .filter(entry -> chartNames.isEmpty() || chartNames.contains(entry.getKey()))
-        .map(entry -> (includeAll) ? (entry.getValue()) : (List.of(entry.getValue().peek())))
-        .flatMap(List::stream)
-        .toList();
+    var query =
+        "SELECT chart_name, chart_version, app_version, created_at, deleted_at"
+            + " FROM chart_versions";
+
+    var namedParameters = new MapSqlParameterSource();
+    var conditions = new ArrayList<String>();
+
+    if (!chartNames.isEmpty()) {
+      conditions.add(" chart_name in (:chartNames)");
+      namedParameters.addValue("chartNames", chartNames);
+    }
+
+    if (!includeAll) {
+      conditions.add(" deleted_at is null");
+    }
+
+    if (!conditions.isEmpty()) {
+      query += " WHERE" + String.join(" AND", conditions);
+    }
+
+    return jdbcTemplate.queryForStream(query, namedParameters, CHART_VERSION_ROW_MAPPER).toList();
   }
 
   /**
@@ -86,20 +133,6 @@ public class ChartVersionDao {
    */
   @WithSpan
   public void delete(List<String> chartNames) {
-    // keep all date/times the same re: transaction
-    Date currentDate = new Date();
-
-    inmemStore.entrySet().stream()
-        .filter(entry -> chartNames.isEmpty() || chartNames.contains(entry.getKey()))
-        .forEach(entry -> deleteActiveVersions(entry.getValue(), currentDate));
-  }
-
-  private static void deleteActiveVersions(Stack<ChartVersion> chartVersions, Date inactiveDate) {
-    if (chartVersions.empty()) {
-      return; // nothing to invalidate
-    }
-    ChartVersion currentVersion = chartVersions.pop();
-    ChartVersion inactiveVersion = currentVersion.inactivate(inactiveDate);
-    chartVersions.push(inactiveVersion);
+    deleteActiveVersions(chartNames, new Date());
   }
 }
