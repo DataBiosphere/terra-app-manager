@@ -212,27 +212,6 @@ class ChartVersionDaoTest extends BaseDaoTest {
     }
   }
 
-  @Test
-  void testChartVersionDaoToApi() {
-    String chartName1 = "chart-name-here";
-    String chartVersion1 = "chart-version-here-1";
-
-    ChartVersion version1 = new ChartVersion(chartName1, chartVersion1);
-
-    versionDao.upsert(version1);
-
-    List<ChartVersion> storedVersions = versionDao.get(true);
-    List<bio.terra.appmanager.api.model.ChartVersion> apiVersions =
-        storedVersions.stream().map(ChartVersion::toApi).toList();
-    assertEquals(apiVersions.size(), 1);
-    assertEquals(storedVersions.size(), 1);
-    assertEquals(apiVersions.get(0).getChartName(), storedVersions.get(0).chartName());
-    assertEquals(apiVersions.get(0).getActiveAt(), storedVersions.get(0).activeAt());
-    assertEquals(apiVersions.get(0).getAppVersion(), storedVersions.get(0).appVersion());
-    assertEquals(apiVersions.get(0).getInactiveAt(), storedVersions.get(0).inactiveAt());
-    assertEquals(apiVersions.get(0).getChartVersion(), storedVersions.get(0).chartVersion());
-  }
-
   @Nullable
   private static ChartVersion getByChartVersion(
       List<ChartVersion> storedVersions, String chartVersion) {

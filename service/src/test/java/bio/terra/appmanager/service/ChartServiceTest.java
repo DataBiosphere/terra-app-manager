@@ -73,8 +73,6 @@ class ChartServiceTest extends BaseSpringBootTest {
 
     InOrder inOrder = inOrder(chartVersionDao);
     chartService.getVersions(chartNameList, includeAll);
-    inOrder.verify(chartVersionDao, calls(1)).get(argument1.capture(), argument2.capture());
-    assertEquals(chartNameList, argument1.getValue());
-    assertEquals(includeAll, argument2.getValue());
+    inOrder.verify(chartVersionDao, calls(1)).get(eq(chartNameList), eq(includeAll));
   }
 }
