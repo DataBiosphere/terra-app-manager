@@ -27,6 +27,13 @@ public class ChartService {
     versions.forEach(chartVersionDao::upsert);
   }
 
+  /**
+   * Get chart versions by name
+   *
+   * @param names The names of charts to retrieve the versions of
+   * @param includeAll Whether to include inactive versions of that chart
+   * @return A list of chart versions specified
+   */
   @ReadTransaction
   public List<ChartVersion> getVersions(@NotNull List<String> names, @NotNull Boolean includeAll) {
     return chartVersionDao.get(names, includeAll);

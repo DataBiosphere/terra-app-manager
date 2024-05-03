@@ -69,7 +69,7 @@ paths:
           name: chartName
           description: The optional chartName to return. If omitted, will return all chart versions for all charts.
           schema:
-            $ref: '#/components/schemas/ChartName'
+            type: string
         - in: query
           name: includeAll
           description: If selected and no chartName is provided, will return all chart versions including inactive ones.
@@ -169,7 +169,7 @@ components:
       required: [ chartName ]
       properties:
         chartName:
-          $ref: '#/components/schemas/ChartName'
+          type: string
         chartVersion:
           type: string
         appVersion:
@@ -184,10 +184,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/ChartVersion'
-    ChartName:
-      type: string
-      pattern: '^[a-z]+(-[a-z]+)*$'
-
 
   securitySchemes:
     bearerAuth:
