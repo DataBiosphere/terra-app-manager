@@ -33,7 +33,6 @@ public class AdminController implements AdminApi {
   // not null
   @Override
   public ResponseEntity<ChartArray> getChartVersions(String chartName, Boolean includeAll) {
-    includeAll = includeAll == null ? false : includeAll;
     List<String> versions = chartName == null ? List.of() : List.of(chartName);
     List<bio.terra.appmanager.model.ChartVersion> dbResult =
         this.chartService.getVersions(versions, includeAll);
