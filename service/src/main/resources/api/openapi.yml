@@ -59,8 +59,6 @@ paths:
           description: Request did not come from an admin
         '500':
           $ref: '#/components/responses/ServerError'
-
-  /api/admin/v1/charts/versions/{chartNames}:
     delete:
       tags: [ admin ]
       summary: Delete ChartVersions
@@ -68,7 +66,7 @@ paths:
       security: [ ] # TODO: remove this to turn on "security"
       parameters:
         - name: chartNames
-          in: path
+          in: query
           required: true
           schema:
             type: array
