@@ -110,6 +110,14 @@ class AdminControllerTest {
   }
 
   @Test
+  void testGet_200_WithNullIncludeAll() throws Exception {
+    String chartName = "chart-name-here";
+
+    controller.getChartVersions(chartName, null);
+    verify(serviceMock).getVersions(List.of(chartName), false);
+  }
+
+  @Test
   void testGet_200_WithNameAndIncludeAll() throws Exception {
     String chartName = "chart-name-here";
 
