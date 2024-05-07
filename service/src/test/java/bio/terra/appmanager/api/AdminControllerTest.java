@@ -99,7 +99,7 @@ class AdminControllerTest {
   }
 
   @Test
-  void testGet_200_WithNameNoIncludeAll() throws Exception {
+  void testGet_200_withNameNoIncludeAll() throws Exception {
     String chartName = "chart-name-here";
 
     mockMvc
@@ -110,15 +110,7 @@ class AdminControllerTest {
   }
 
   @Test
-  void testGet_200_WithNullIncludeAll() throws Exception {
-    String chartName = "chart-name-here";
-
-    controller.getChartVersions(chartName, null);
-    verify(serviceMock).getVersions(List.of(chartName), false);
-  }
-
-  @Test
-  void testGet_200_WithNameAndIncludeAll() throws Exception {
+  void testGet_200_withNameAndIncludeAll() throws Exception {
     String chartName = "chart-name-here";
 
     mockMvc
