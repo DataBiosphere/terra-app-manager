@@ -22,7 +22,7 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.broadinstitute.dsde.workbench:sam-client_2.13:0.1-2cd8969'
     implementation 'jakarta.ws.rs:jakarta.ws.rs-api'
-    implementation 'org.postgresql:postgresql'
+    implementation 'org.postgresql:postgresql:42.6.1'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus:1.10.4'
