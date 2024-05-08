@@ -39,6 +39,11 @@ repositories {
 }
 
 dependencies {
+    // this is necessary for a transitive dependency
+    // preference is to update terra-common-lib to address transitive dependencies
+    // TODO: remove this when transitive dependencies are addressed
+    implementation 'org.yaml:snakeyaml:2.0'
+
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.0'
     swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.47'
 
