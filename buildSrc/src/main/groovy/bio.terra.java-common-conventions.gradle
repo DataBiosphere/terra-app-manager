@@ -50,6 +50,10 @@ dependencies {
     // transitive dependency of:
     // - org.broadinstitute.dsde.workbench:sam-client_2.13:0.1-5281c21
     implementation 'org.json:json:20240303'
+    // transitive dependency of:
+    // - (multiple places)
+    implementation 'ch.qos.logback:logback-core:1.4.12'
+//    implementation 'ch.qos.logback:logback-classic:1.4.12'
 
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.0'
     swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.47'
