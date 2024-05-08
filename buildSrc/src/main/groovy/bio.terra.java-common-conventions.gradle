@@ -43,6 +43,10 @@ dependencies {
     // preference is to update terra-common-lib to address transitive dependencies
     // TODO: remove this when transitive dependencies are addressed
     implementation 'org.yaml:snakeyaml:2.0'
+    // transitive dependency of:
+    // - bio.terra:stairway-gcp:0.0.76-SNAPSHOT
+    // - io.kubernetes:client-java:16.0.0
+    implementation 'org.bitbucket.b_c:jose4j:0.9.6'
 
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.0'
     swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.47'
