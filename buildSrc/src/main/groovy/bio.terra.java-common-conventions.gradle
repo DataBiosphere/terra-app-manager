@@ -45,18 +45,6 @@ ext['opentelemetry.version'] = '1.36.0'
 ext['netty.version'] = '4.1.108.Final'
 
 dependencies {
-    // this is necessary for a transitive dependency
-    // preference is to update terra-common-lib to address transitive dependencies
-    // TODO: remove this when transitive dependencies are addressed
-//    implementation 'org.yaml:snakeyaml:2.0'
-//    // transitive dependency of:
-//    // - org.broadinstitute.dsde.workbench:sam-client_2.13:0.1-5281c21
-////    implementation 'org.json:json:20240303'
-//    // transitive dependency of:
-//    // - (multiple places)
-//    implementation 'ch.qos.logback:logback-core:1.4.9'
-//    implementation 'ch.qos.logback:logback-classic:1.4.9'
-
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.0'
     swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.47'
 
