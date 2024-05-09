@@ -28,6 +28,15 @@ public record ChartVersion(
         source.getInactiveAt());
   }
 
+  public bio.terra.appmanager.api.model.ChartVersion toApi() {
+    return new bio.terra.appmanager.api.model.ChartVersion()
+        .chartName(this.chartName)
+        .chartVersion(this.chartVersion)
+        .appVersion(this.appVersion)
+        .activeAt(this.activeAt)
+        .inactiveAt(this.inactiveAt);
+  }
+
   public ChartVersion activate(Date activeAt) {
     return new ChartVersion(chartName(), chartVersion(), appVersion(), activeAt, null);
   }
