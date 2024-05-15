@@ -4,6 +4,7 @@ import bio.terra.appmanager.dao.ChartVersionDao;
 import bio.terra.appmanager.model.ChartVersion;
 import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class ChartService {
    * @param versions non-null list of {@ ChartVersion}s to create
    */
   @WriteTransaction
-  public void createVersions(@NotNull List<ChartVersion> versions) {
+  public void createVersions(@Valid List<ChartVersion> versions) {
     versions.forEach(chartVersionDao::upsert);
   }
 
