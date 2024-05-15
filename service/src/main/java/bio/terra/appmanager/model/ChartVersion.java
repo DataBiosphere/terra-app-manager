@@ -1,8 +1,9 @@
 package bio.terra.appmanager.model;
 
+import bio.terra.common.exception.InconsistentFieldsException;
 import jakarta.annotation.Nullable;
 import java.util.Date;
-import java.util.Objects;
+import java.util.regex.Pattern;
 
 public record ChartVersion(
     String chartName,
@@ -10,9 +11,37 @@ public record ChartVersion(
     @Nullable String appVersion,
     @Nullable Date activeAt,
     @Nullable Date inactiveAt) {
+
   public ChartVersion {
-    Objects.requireNonNull(chartName);
-    Objects.requireNonNull(chartVersion);
+    if (!isChartNameValid(chartName)) {
+      throw new InconsistentFieldsException(
+          "Chart name is invalid, must follow chart name conventions: https://helm.sh/docs/chart_best_practices/conventions/#chart-names. Regex used: "
+              + chartNameRegex);
+    }
+    if (!isChartVersionValid(chartVersion)) {
+      throw new InconsistentFieldsException(
+          "Chart version is invalid, must follow chart version conventions: https://helm.sh/docs/chart_best_practices/values/. Value must be camel case, the first letter must be lowercase and value must have letters only. Regex used: '^[a-z][a-z]*(([A-Z][a-z]+)*[A-Z]?|([a-z]+[A-Z])*|[A-Z])$'");
+    }
+  }
+
+  // Must follow chart name conventions:
+  // https://helm.sh/docs/chart_best_practices/conventions/#chart-names
+  // Alphanumeric lowercase with dashes allowed, additionally we impose 1-25 character limit
+  static final String chartNameRegex = "^[a-z0-9-]{1,25}$";
+  // Must follow chart value conventions:
+  // https://helm.sh/docs/chart_best_practices/values/#naming-conventions
+  // Camel case, requiring the first letter to be lowercase with no numeric characters. Letters only.
+  // See regex test cases: https://regex101.com/r/4h7A1I/8
+  static final String chartValueRegex = "^[a-z][a-z]*(([A-Z][a-z]+)*[A-Z]?|([a-z]+[A-Z])*|[A-Z])$";
+
+  public static boolean isChartNameValid(String chartName) {
+    Pattern chartNamePattern = Pattern.compile(chartNameRegex);
+    return chartNamePattern.matcher(chartName).matches();
+  }
+
+  public static boolean isChartVersionValid(String chartVersion) {
+    Pattern chartNamePattern = Pattern.compile(chartValueRegex);
+    return chartNamePattern.matcher(chartVersion).matches();
   }
 
   public ChartVersion(String chartName, String chartVersion) {

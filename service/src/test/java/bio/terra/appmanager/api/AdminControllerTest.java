@@ -52,6 +52,14 @@ class AdminControllerTest {
   }
 
   @Test
+  void testControllerCreate_inValid() throws Exception {
+    String validChartName = "valid-chart-name@@#_L";
+    String invalidChartVersion = "invalid-chart-versionQ$^";
+    bio.terra.appmanager.model.ChartVersion chartVersion =
+        new bio.terra.appmanager.model.ChartVersion(validChartName, invalidChartVersion);
+  }
+
+  @Test
   void testCreate_204() throws Exception {
     String chartName = "chart-name-here";
     String chartVersion = "chart-version-here";
