@@ -46,10 +46,12 @@ public class ChartVersionValidationTest {
     String goodChartVersion1 = "good";
     String goodChartVersion2 = "alsoGood";
 
-    String badChartVersion1 = "Uppercase";
+    String badChartVersion1 = "UpperCaseStart";
     String badChartVersion2 = "numbers1";
     String badChartVersion3 = "specialchar$";
     String badChartVersion4 = "dash-es";
+    String badChartVersion5 = "tooooooooooooooooooolooooooooooooooooooooooooooooooooooong";
+    String badChartVersion6 = "twoUPpercase";
 
     assertDoesNotThrow(() -> new ChartVersion(controlChartName, goodChartVersion1));
     assertDoesNotThrow(() -> new ChartVersion(controlChartName, goodChartVersion2));
@@ -73,6 +75,16 @@ public class ChartVersionValidationTest {
             InconsistentFieldsException.class,
             () -> new ChartVersion(controlChartName, badChartVersion4));
     assertTrue(ex4.getMessage().contains(getPartialChartVersionExceptionMessage(badChartVersion4)));
+    Exception ex5 =
+        assertThrows(
+            InconsistentFieldsException.class,
+            () -> new ChartVersion(controlChartName, badChartVersion5));
+    assertTrue(ex5.getMessage().contains(getPartialChartVersionExceptionMessage(badChartVersion5)));
+    Exception ex6 =
+        assertThrows(
+            InconsistentFieldsException.class,
+            () -> new ChartVersion(controlChartName, badChartVersion6));
+    assertTrue(ex6.getMessage().contains(getPartialChartVersionExceptionMessage(badChartVersion6)));
   }
 
   private String getPartialChartNameExceptionMessage(String chartName) {
