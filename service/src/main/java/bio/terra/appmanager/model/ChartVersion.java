@@ -15,12 +15,16 @@ public record ChartVersion(
   public ChartVersion {
     if (!isChartNameValid(chartName)) {
       throw new InconsistentFieldsException(
-          "Chart name is invalid, must follow chart name conventions: https://helm.sh/docs/chart_best_practices/conventions/#chart-names. Regex used: "
+          "Chart name "
+              + chartName
+              + " is invalid, must follow chart name conventions: https://helm.sh/docs/chart_best_practices/conventions/#chart-names. Regex used: "
               + chartNameRegex);
     }
     if (!isChartVersionValid(chartVersion)) {
       throw new InconsistentFieldsException(
-          "Chart version is invalid, must follow chart version conventions: https://helm.sh/docs/chart_best_practices/values/. Value must be camel case, the first letter must be lowercase and value must have letters only. Regex used: '^[a-z][a-z]*(([A-Z][a-z]+)*[A-Z]?|([a-z]+[A-Z])*|[A-Z])$'");
+          "Chart version "
+              + chartVersion
+              + " is invalid, must follow chart version conventions: https://helm.sh/docs/chart_best_practices/values/. Value must be camel case, the first letter must be lowercase and value must have letters only. Regex used: '^[a-z][a-z]*(([A-Z][a-z]+)*[A-Z]?|([a-z]+[A-Z])*|[A-Z])$'");
     }
   }
 
@@ -30,7 +34,8 @@ public record ChartVersion(
   static final String chartNameRegex = "^[a-z0-9-]{1,25}$";
   // Must follow chart value conventions:
   // https://helm.sh/docs/chart_best_practices/values/#naming-conventions
-  // Camel case, requiring the first letter to be lowercase with no numeric characters. Letters only.
+  // Camel case, requiring the first letter to be lowercase with no numeric characters. Letters
+  // only.
   // See regex test cases: https://regex101.com/r/4h7A1I/8
   static final String chartValueRegex = "^[a-z][a-z]*(([A-Z][a-z]+)*[A-Z]?|([a-z]+[A-Z])*|[A-Z])$";
 

@@ -1,6 +1,7 @@
 package bio.terra.appmanager.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -11,7 +12,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import bio.terra.appmanager.api.model.ChartArray;
 import bio.terra.appmanager.controller.AdminController;
+import bio.terra.appmanager.controller.GlobalExceptionHandler;
 import bio.terra.appmanager.service.ChartService;
+import bio.terra.common.exception.InconsistentFieldsException;
 import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -27,15 +30,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ContextConfiguration(classes = AdminController.class)
 @WebMvcTest
 class AdminControllerTest {
   @MockBean ChartService serviceMock;
 
-  @Autowired private MockMvc mockMvc;
-
   @Autowired AdminController controller;
+
+  private MockMvc mockMvc;
 
   @Captor ArgumentCaptor<List<bio.terra.appmanager.model.ChartVersion>> capture_chartVersions;
 
@@ -44,6 +48,10 @@ class AdminControllerTest {
   @BeforeEach
   public void open() {
     closeable = MockitoAnnotations.openMocks(this);
+    mockMvc =
+        MockMvcBuilders.standaloneSetup(controller)
+            .setControllerAdvice(new GlobalExceptionHandler())
+            .build();
   }
 
   @AfterEach
@@ -52,17 +60,9 @@ class AdminControllerTest {
   }
 
   @Test
-  void testControllerCreate_inValid() throws Exception {
-    String validChartName = "valid-chart-name@@#_L";
-    String invalidChartVersion = "invalid-chart-versionQ$^";
-    bio.terra.appmanager.model.ChartVersion chartVersion =
-        new bio.terra.appmanager.model.ChartVersion(validChartName, invalidChartVersion);
-  }
-
-  @Test
   void testCreate_204() throws Exception {
     String chartName = "chart-name-here";
-    String chartVersion = "chart-version-here";
+    String chartVersion = "chartVersionHere";
 
     mockMvc
         .perform(
@@ -83,6 +83,57 @@ class AdminControllerTest {
     assert (capture_chartVersions.getValue().size() == 1);
     verifyChartVersion(
         capture_chartVersions.getValue().get(0), chartName, chartVersion, null, null, null);
+  }
+
+  // TODO: it might be impossible to inject mockMvcc with GlobalExceptionHandler and verify the
+  // badrequest response
+  // See https://github.com/spring-projects/spring-boot/issues/7321
+  @Test
+  void testInvalidChartVersionPost() throws Exception {
+    String chartName = "chart-name-here";
+    String chartVersion = "invalid-chart-version$";
+
+    Exception ex =
+        assertThrows(
+            jakarta.servlet.ServletException.class,
+            () ->
+                mockMvc.perform(
+                    post("/api/admin/v1/charts/versions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                            "[{"
+                                + "\"chartName\": \""
+                                + chartName
+                                + "\","
+                                + "\"chartVersion\": \""
+                                + chartVersion
+                                + "\""
+                                + "}]")));
+    assertEquals(InconsistentFieldsException.class, ex.getCause().getClass());
+  }
+
+  @Test
+  void testInvalidChartNamePost() throws Exception {
+    String chartName = "invalidChartName$";
+    String chartVersion = "validChartVersion";
+
+    Exception ex =
+        assertThrows(
+            jakarta.servlet.ServletException.class,
+            () ->
+                mockMvc.perform(
+                    post("/api/admin/v1/charts/versions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                            "[{"
+                                + "\"chartName\": \""
+                                + chartName
+                                + "\","
+                                + "\"chartVersion\": \""
+                                + chartVersion
+                                + "\""
+                                + "}]")));
+    assertEquals(InconsistentFieldsException.class, ex.getCause().getClass());
   }
 
   @Test

@@ -28,7 +28,7 @@ class ChartServiceTest extends BaseSpringBootTest {
   @Test
   void testCreateChartVersion_singleElement() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chart-version-here-1";
+    String chartVersion1_1 = "chartVersionHere";
     ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
 
     ArgumentCaptor<ChartVersion> argument = ArgumentCaptor.forClass(ChartVersion.class);
@@ -43,8 +43,8 @@ class ChartServiceTest extends BaseSpringBootTest {
   @Test
   void testCreateChartVersion_multipleElement() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chart-version-here-1";
-    String chartVersion1_2 = "chart-version-here-too";
+    String chartVersion1_1 = "chartVersionHereOne";
+    String chartVersion1_2 = "chartVersionHereToo";
     ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
     ChartVersion version1_2 = new ChartVersion(chartName1, chartVersion1_2);
 
