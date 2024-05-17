@@ -8,17 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import bio.terra.appmanager.model.ChartVersion;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class ChartVersionDaoTest extends BaseDaoTest {
   @Autowired ChartVersionDao versionDao;
-
-  @AfterEach
-  void clearDatabase() {
-    versionDao.clearRepository();
-  }
 
   @Test
   void testSingleVersionUpsert() {

@@ -1,6 +1,7 @@
 package bio.terra.appmanager.controller;
 
 import bio.terra.appmanager.api.AdminApi;
+import bio.terra.appmanager.api.model.ChartArray;
 import bio.terra.appmanager.api.model.ChartVersion;
 import bio.terra.appmanager.service.ChartService;
 import java.util.List;
@@ -32,5 +33,21 @@ public class AdminController implements AdminApi {
   public ResponseEntity<Void> deleteChartVersions(List<String> body) {
     this.chartService.deleteVersions(body);
     return ResponseEntity.noContent().build();
+  }
+  // Note that this method's implementation relies on `includeAll` having a default value and being
+  // not null
+  @Override
+  public ResponseEntity<ChartArray> getChartVersions(String chartName, Boolean includeAll) {
+    List<String> versions = chartName == null ? List.of() : List.of(chartName);
+    List<bio.terra.appmanager.model.ChartVersion> dbResult =
+        this.chartService.getVersions(versions, includeAll);
+
+    List<bio.terra.appmanager.api.model.ChartVersion> apiChartVersions =
+        dbResult.stream().map(bio.terra.appmanager.model.ChartVersion::toApi).toList();
+
+    ChartArray apiResult = new ChartArray();
+    apiResult.addAll(apiChartVersions);
+
+    return ResponseEntity.ok(apiResult);
   }
 }

@@ -1,7 +1,15 @@
+# README:
+# It is a best practice to put each DDL statement in its own change set.
+# DDL statements are atomic.
+#
+# When they are grouped in a changeset and one fails the changeset cannot be
+# rolled back or rerun making recovery more difficult.
+#
+# For more information, see:
+# https://docs.liquibase.com/concepts/changelogs/yaml-format.html
+# https://docs.liquibase.com/change-types/home.html
+#
 databaseChangeLog:
   - include:
-      file: changesets/initial_schema.yaml
+      file: changesets/20240429_create_chart_versions.yaml
       relativeToChangelogFile: true
-# README: it is a best practice to put each DDL statement in its own change set. DDL statements
-# are atomic. When they are grouped in a changeset and one fails the changeset cannot be
-# rolled back or rerun making recovery more difficult

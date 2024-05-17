@@ -88,4 +88,17 @@ class ChartServiceTest extends BaseSpringBootTest {
     assertEquals(chartName1, argument.getValue().get(0));
     assertEquals(chartName2, argument.getValue().get(1));
   }
+
+  @Test
+  void testGetVersions() {
+    List<String> chartNameList = List.of("chart-name-here");
+    Boolean includeAll = true;
+
+    ArgumentCaptor<List<String>> argument1 = ArgumentCaptor.forClass(List.class);
+    ArgumentCaptor<Boolean> argument2 = ArgumentCaptor.forClass(Boolean.class);
+
+    InOrder inOrder = inOrder(chartVersionDao);
+    chartService.getVersions(chartNameList, includeAll);
+    inOrder.verify(chartVersionDao, calls(1)).get(eq(chartNameList), eq(includeAll));
+  }
 }

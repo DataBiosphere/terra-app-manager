@@ -81,82 +81,32 @@ paths:
           description: Request did not come from an admin
         '500':
           $ref: '#/components/responses/ServerError'
-
-  /api/example/v1/message:
     get:
-      summary: Gets your message
-      tags: [ example ]
-      operationId: getMessage
-      responses:
-        '200':
-          description: Your message
-          content:
-            application/json:
-              schema:
-                type: string
-        '404':
-          description: You don't have a message
-        '500':
-          $ref: '#/components/responses/ServerError'
-    post:
-      summary: Stores your message
-      tags: [ example ]
-      operationId: setMessage
-      requestBody:
-        content:
-          'application/json':
-            schema:
-              type: string
-        required: true
-      responses:
-        '204':
-          description: Message saved
-        '500':
-          $ref: '#/components/responses/ServerError'
-  /api/example/v1/{resourceType}/{resourceId}/{action}:
-    get:
-      summary: Checks sam access
-      tags: [ example ]
-      operationId: getAction
+      tags: [ admin ]
+      summary: Get ChartVersion(s)
+      operationId: getChartVersions
+      security: [ ] # TODO: remove this to turn on "security"
       parameters:
-        - name: resourceType
-          in: path
-          required: true
+        - in: query
+          name: chartName
+          description: The optional chartName to return. If omitted, will return all chart versions for all charts.
           schema:
             type: string
-        - name: resourceId
-          in: path
-          required: true
+        - in: query
+          name: includeAll
+          description: If selected and no chartName is provided, will return all chart versions including inactive ones.
           schema:
-            type: string
-        - name: action
-          in: path
-          required: true
-          schema:
-            type: string
+            type: boolean
+            default: false
       responses:
         '200':
-          description: action access
+          description: Chart version(s) specified
           content:
             application/json:
               schema:
-                type: boolean
-        '500':
-          $ref: '#/components/responses/ServerError'
-  /api/example/v1/counter:
-    post:
-      summary: increment a metrics counter
-      tags: [ example ]
-      operationId: incrementCounter
-      requestBody:
-        description: tag for counter
-        content:
-          application/json:
-            schema:
-              type: string
-      responses:
-        '204':
-          description: success
+                $ref: '#/components/schemas/ChartArray'
+        '403':
+          description: Request did not come from an admin
         '500':
           $ref: '#/components/responses/ServerError'
 
