@@ -35,7 +35,7 @@ public class ChartService {
   public void deleteVersions(@NotNull List<String> names) {
     chartVersionDao.delete(names);
   }
-  
+
   /**
    * Get chart versions by name
    *

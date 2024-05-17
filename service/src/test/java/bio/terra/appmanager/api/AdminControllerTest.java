@@ -187,7 +187,7 @@ class AdminControllerTest {
     // this will fail if someone removes @Disabled(...)
     fail("force whomever removes @Disabled(...) to implement test");
   }
-  
+
   @Test
   void testGet_ChartVersionModelToApi() {
     String chartName = "chart-name-here";
