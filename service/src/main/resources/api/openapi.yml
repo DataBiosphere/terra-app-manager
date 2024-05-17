@@ -65,15 +65,17 @@ paths:
       operationId: deleteChartVersions
       security: [ ] # TODO: remove this to turn on "security"
       parameters:
-        - name: chartNames
-          in: query
+        - in: query
+          name: chartNames
+          description: Array of chartName(s) to delete.
           required: true
           schema:
             type: array
             items:
               type: string
+          style: pipeDelimited
       responses:
-        '201':
+        '204':
           description: ChartVersion(s) have been successfully deleted
         '403':
           description: Request did not come from an admin

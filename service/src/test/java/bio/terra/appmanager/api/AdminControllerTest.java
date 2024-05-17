@@ -101,12 +101,29 @@ class AdminControllerTest {
     String chartName = "chart-name-here";
 
     mockMvc
-        .perform(delete("/api/admin/v1/charts/versions/" + chartName))
+        .perform(delete("/api/admin/v1/charts/versions").queryParam("chartNames", chartName))
         .andExpect(status().isNoContent());
 
     verify(serviceMock).deleteVersions(capture_chartNames.capture());
     assert (capture_chartNames.getValue().size() == 1);
     assertEquals(capture_chartNames.getValue().get(0), chartName);
+  }
+
+  @Test
+  void testDelete_204_multipleChartNames() throws Exception {
+    String chartName1 = "chart-name-1";
+    String chartName2 = "chart-name-2";
+
+    mockMvc
+        .perform(
+            delete("/api/admin/v1/charts/versions")
+                .queryParam("chartNames", chartName1, chartName2))
+        .andExpect(status().isNoContent());
+
+    verify(serviceMock).deleteVersions(capture_chartNames.capture());
+    assert (capture_chartNames.getValue().size() == 2);
+    assertEquals(capture_chartNames.getValue().get(0), chartName1);
+    assertEquals(capture_chartNames.getValue().get(1), chartName2);
   }
 
   @Test

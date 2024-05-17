@@ -62,4 +62,30 @@ class ChartServiceTest extends BaseSpringBootTest {
     assertEquals(version1_2.chartVersion(), argument.getValue().chartVersion());
     assertNull(argument.getValue().activeAt());
   }
+
+  @Test
+  void testDeleteVersions_singleElement() {
+    String chartName1 = "chart-name-here";
+
+    ArgumentCaptor<List<String>> argument = ArgumentCaptor.forClass(List.class);
+
+    chartService.deleteVersions(List.of(chartName1));
+    verify(chartVersionDao, times(1)).delete(argument.capture());
+    assertEquals(1, argument.getValue().size());
+    assertEquals(chartName1, argument.getValue().get(0));
+  }
+
+  @Test
+  void testDeleteVersions_multipleElements() {
+    String chartName1 = "chart-name-1";
+    String chartName2 = "chart-name-2";
+
+    ArgumentCaptor<List<String>> argument = ArgumentCaptor.forClass(List.class);
+
+    chartService.deleteVersions(List.of(chartName1, chartName2));
+    verify(chartVersionDao, times(1)).delete(argument.capture());
+    assertEquals(2, argument.getValue().size());
+    assertEquals(chartName1, argument.getValue().get(0));
+    assertEquals(chartName2, argument.getValue().get(1));
+  }
 }
