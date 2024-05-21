@@ -184,7 +184,7 @@ class AdminControllerTest {
     ChartArray chartArray = controller.getChartVersions(chartName, true).getBody();
     bio.terra.appmanager.api.model.ChartVersion apiVersion = chartArray.get(0);
 
-    assertEquals(chartArray.size(), 1);
+    assertEquals(1, chartArray.size());
     verifyChartVersion(
         chart,
         apiVersion.getChartName(),
