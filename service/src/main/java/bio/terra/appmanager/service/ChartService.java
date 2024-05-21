@@ -30,10 +30,10 @@ public class ChartService {
   /**
    * Soft-delete the specified chart entries with associated chartName.
    *
-   * @param names non-null list of {@ ChartName}s to delete
+   * @param names non-null {@ ChartName} to delete
    */
-  public void deleteVersions(@NotNull List<String> names) {
-    chartVersionDao.delete(names);
+  public void deleteVersion(@NotNull String name) {
+    chartVersionDao.delete(List.of(name));
   }
 
   /**

@@ -61,22 +61,19 @@ paths:
           $ref: '#/components/responses/ServerError'
     delete:
       tags: [ admin ]
-      summary: Delete ChartVersions
-      operationId: deleteChartVersions
+      summary: Delete ChartVersion
+      operationId: deleteChartVersion
       security: [ ] # TODO: remove this to turn on "security"
       parameters:
         - in: query
-          name: chartNames
-          description: Array of chartName(s) to delete.
+          name: chartName
+          description: ChartName to delete.
           required: true
           schema:
-            type: array
-            items:
-              type: string
-          style: pipeDelimited
+            type: string
       responses:
         '204':
-          description: ChartVersion(s) have been successfully deleted
+          description: ChartVersion has been successfully deleted
         '403':
           description: Request did not come from an admin
         '500':

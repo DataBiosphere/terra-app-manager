@@ -39,7 +39,7 @@ class AdminControllerTest {
   @Autowired AdminController controller;
 
   @Captor ArgumentCaptor<List<bio.terra.appmanager.model.ChartVersion>> capture_chartVersions;
-  @Captor ArgumentCaptor<List<String>> capture_chartNames;
+  @Captor ArgumentCaptor<String> capture_chartName;
 
   private AutoCloseable closeable;
 
@@ -155,29 +155,11 @@ class AdminControllerTest {
     String chartName = "chart-name-here";
 
     mockMvc
-        .perform(delete("/api/admin/v1/charts/versions").queryParam("chartNames", chartName))
+        .perform(delete("/api/admin/v1/charts/versions").queryParam("chartName", chartName))
         .andExpect(status().isNoContent());
 
-    verify(serviceMock).deleteVersions(capture_chartNames.capture());
-    assert (capture_chartNames.getValue().size() == 1);
-    assertEquals(capture_chartNames.getValue().get(0), chartName);
-  }
-
-  @Test
-  void testDelete_204_multipleChartNames() throws Exception {
-    String chartName1 = "chart-name-1";
-    String chartName2 = "chart-name-2";
-
-    mockMvc
-        .perform(
-            delete("/api/admin/v1/charts/versions")
-                .queryParam("chartNames", chartName1, chartName2))
-        .andExpect(status().isNoContent());
-
-    verify(serviceMock).deleteVersions(capture_chartNames.capture());
-    assert (capture_chartNames.getValue().size() == 2);
-    assertEquals(capture_chartNames.getValue().get(0), chartName1);
-    assertEquals(capture_chartNames.getValue().get(1), chartName2);
+    verify(serviceMock).deleteVersion(capture_chartName.capture());
+    assertEquals(capture_chartName.getValue(), chartName);
   }
 
   @Test
