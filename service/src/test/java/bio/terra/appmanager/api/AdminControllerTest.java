@@ -44,7 +44,7 @@ class AdminControllerTest {
   private AutoCloseable closeable;
 
   @BeforeEach
-  public void open() {
+  public void setup() {
     closeable = MockitoAnnotations.openMocks(this);
     mockMvc =
         MockMvcBuilders.standaloneSetup(controller)
