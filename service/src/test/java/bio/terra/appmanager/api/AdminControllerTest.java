@@ -93,23 +93,25 @@ class AdminControllerTest {
     String chartName = "chart-name-here";
     String chartVersion = "invalid-chart-version$";
 
-    Exception ex =
-        assertThrows(
-            jakarta.servlet.ServletException.class,
-            () ->
-                mockMvc.perform(
-                    post("/api/admin/v1/charts/versions")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(
-                            "[{"
-                                + "\"chartName\": \""
-                                + chartName
-                                + "\","
-                                + "\"chartVersion\": \""
-                                + chartVersion
-                                + "\""
-                                + "}]")));
-    assertEquals(InconsistentFieldsException.class, ex.getCause().getClass());
+    //    Exception ex =
+    //        assertThrows(
+    //            jakarta.servlet.ServletException.class,
+    //            () ->
+    mockMvc
+        .perform(
+            post("/api/admin/v1/charts/versions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "[{"
+                        + "\"chartName\": \""
+                        + chartName
+                        + "\","
+                        + "\"chartVersion\": \""
+                        + chartVersion
+                        + "\""
+                        + "}]"))
+        .andExpect(status().isBadRequest());
+    //    assertEquals(InconsistentFieldsException.class, ex.getCause().getClass());
   }
 
   @Test

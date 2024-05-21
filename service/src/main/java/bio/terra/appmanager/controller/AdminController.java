@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 @Controller
+// TODO: advice?
 public class AdminController implements AdminApi {
   private final ChartService chartService;
 

@@ -15,6 +15,7 @@ public class GlobalExceptionHandler extends AbstractGlobalExceptionHandler<Error
 
   @Override
   public ErrorReport generateErrorReport(Throwable ex, HttpStatus statusCode, List<String> causes) {
+    System.out.println("in error report " + statusCode.toString());
     return new ErrorReport().message(ex.getMessage()).statusCode(statusCode.value());
   }
 
@@ -22,6 +23,7 @@ public class GlobalExceptionHandler extends AbstractGlobalExceptionHandler<Error
   @ExceptionHandler(InconsistentFieldsException.class)
   public ResponseEntity<ErrorReport> constraintViolationExceptionHandler(
       ConstraintViolationException ex) {
+    System.out.println("in handler");
     ErrorReport errorReport =
         new ErrorReport().message(ex.getMessage()).statusCode(HttpStatus.BAD_REQUEST.value());
     return new ResponseEntity<>(errorReport, HttpStatus.BAD_REQUEST);
