@@ -84,7 +84,7 @@ class AdminControllerTest {
   }
 
   @Test
-  void testInvalidChartVersionPost() throws Exception {
+  void testCreate_invalidChartVersion() throws Exception {
     String chartName = "chart-name-here";
     String chartVersion = "invalid-chart-version$";
 
@@ -105,7 +105,7 @@ class AdminControllerTest {
   }
 
   @Test
-  void testInvalidChartNamePost() throws Exception {
+  void testCreate_invalidChartName() throws Exception {
     String chartName = "invalidChartName$";
     String chartVersion = "validChartVersion";
 
