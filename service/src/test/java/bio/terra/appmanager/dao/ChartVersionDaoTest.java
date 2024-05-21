@@ -33,7 +33,7 @@ class ChartVersionDaoTest extends BaseDaoTest {
   void testMultiVersionUpsert() {
     String chartName = "chart-name-here";
 
-    String chartVersion1 = "chart-name-here";
+    String chartVersion1 = "chartVersionHere";
     ChartVersion version1 = new ChartVersion(chartName, chartVersion1);
 
     String chartVersion2 = "chartVersionHereToo";
@@ -69,7 +69,7 @@ class ChartVersionDaoTest extends BaseDaoTest {
     ChartVersion version2_1 = new ChartVersion(chartName2, chartVersion2_1);
     ChartVersion version2_2 = new ChartVersion(chartName2, chartVersion2_2);
 
-    String chartName3 = "chartVersionHereAgain";
+    String chartName3 = "chart-name";
     String chartVersion3_1 = "chartVersionHereFive";
     String chartVersion3_2 = "chartVersionHereSix";
     ChartVersion version3_1 = new ChartVersion(chartName3, chartVersion3_1);

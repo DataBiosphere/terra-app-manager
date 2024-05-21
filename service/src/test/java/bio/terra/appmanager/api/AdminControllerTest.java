@@ -199,7 +199,7 @@ class AdminControllerTest {
   @Test
   void testGet_ChartVersionModelToApi() {
     String chartName = "chart-name-here";
-    String chartVersion = "chart-version";
+    String chartVersion = "chartVersion";
     bio.terra.appmanager.model.ChartVersion chart =
         new bio.terra.appmanager.model.ChartVersion(chartName, chartVersion);
     chart = chart.activate(new Date()).inactivate(new Date());
