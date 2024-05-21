@@ -1,7 +1,6 @@
 package bio.terra.appmanager.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -14,7 +13,6 @@ import bio.terra.appmanager.api.model.ChartArray;
 import bio.terra.appmanager.controller.AdminController;
 import bio.terra.appmanager.controller.GlobalExceptionHandler;
 import bio.terra.appmanager.service.ChartService;
-import bio.terra.common.exception.InconsistentFieldsException;
 import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -85,18 +83,11 @@ class AdminControllerTest {
         capture_chartVersions.getValue().get(0), chartName, chartVersion, null, null, null);
   }
 
-  // TODO: it might be impossible to inject mockMvcc with GlobalExceptionHandler and verify the
-  // badrequest response
-  // See https://github.com/spring-projects/spring-boot/issues/7321
   @Test
   void testInvalidChartVersionPost() throws Exception {
     String chartName = "chart-name-here";
     String chartVersion = "invalid-chart-version$";
 
-    //    Exception ex =
-    //        assertThrows(
-    //            jakarta.servlet.ServletException.class,
-    //            () ->
     mockMvc
         .perform(
             post("/api/admin/v1/charts/versions")
@@ -111,7 +102,6 @@ class AdminControllerTest {
                         + "\""
                         + "}]"))
         .andExpect(status().isBadRequest());
-    //    assertEquals(InconsistentFieldsException.class, ex.getCause().getClass());
   }
 
   @Test
@@ -119,23 +109,20 @@ class AdminControllerTest {
     String chartName = "invalidChartName$";
     String chartVersion = "validChartVersion";
 
-    Exception ex =
-        assertThrows(
-            jakarta.servlet.ServletException.class,
-            () ->
-                mockMvc.perform(
-                    post("/api/admin/v1/charts/versions")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(
-                            "[{"
-                                + "\"chartName\": \""
-                                + chartName
-                                + "\","
-                                + "\"chartVersion\": \""
-                                + chartVersion
-                                + "\""
-                                + "}]")));
-    assertEquals(InconsistentFieldsException.class, ex.getCause().getClass());
+    mockMvc
+        .perform(
+            post("/api/admin/v1/charts/versions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "[{"
+                        + "\"chartName\": \""
+                        + chartName
+                        + "\","
+                        + "\"chartVersion\": \""
+                        + chartVersion
+                        + "\""
+                        + "}]"))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
