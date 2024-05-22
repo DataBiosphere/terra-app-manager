@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 
 import bio.terra.appmanager.BaseSpringBootTest;
 import bio.terra.appmanager.dao.ChartDao;
-import bio.terra.appmanager.model.ChartVersion;
+import bio.terra.appmanager.model.Chart;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -20,20 +20,20 @@ class ChartServiceTest extends BaseSpringBootTest {
   @Autowired ChartService chartService;
 
   @Test
-  void createChartVersion_withEmptyList() {
-    chartService.createVersions(List.of());
+  void createChart_withEmptyList() {
+    chartService.createCharts(List.of());
     verifyNoInteractions(chartDao);
   }
 
   @Test
-  void testCreateChartVersion_singleElement() {
+  void testCreateChart_singleElement() {
     String chartName1 = "chart-name-here";
     String chartVersion1_1 = "chartVersionHere";
-    ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
+    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
 
-    ArgumentCaptor<ChartVersion> argument = ArgumentCaptor.forClass(ChartVersion.class);
+    ArgumentCaptor<Chart> argument = ArgumentCaptor.forClass(Chart.class);
 
-    chartService.createVersions(List.of(version1_1));
+    chartService.createCharts(List.of(version1_1));
     verify(chartDao, times(1)).upsert(argument.capture());
     assertEquals(version1_1.chartName(), argument.getValue().chartName());
     assertEquals(version1_1.chartVersion(), argument.getValue().chartVersion());
@@ -41,17 +41,17 @@ class ChartServiceTest extends BaseSpringBootTest {
   }
 
   @Test
-  void testCreateChartVersion_multipleElement() {
+  void testCreateChart_multipleElement() {
     String chartName1 = "chart-name-here";
     String chartVersion1_1 = "chartVersionHereOne";
     String chartVersion1_2 = "chartVersionHereToo";
-    ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
-    ChartVersion version1_2 = new ChartVersion(chartName1, chartVersion1_2);
+    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
+    Chart version1_2 = new Chart(chartName1, chartVersion1_2);
 
-    ArgumentCaptor<ChartVersion> argument = ArgumentCaptor.forClass(ChartVersion.class);
+    ArgumentCaptor<Chart> argument = ArgumentCaptor.forClass(Chart.class);
 
     InOrder inOrder = inOrder(chartDao);
-    chartService.createVersions(List.of(version1_1, version1_2));
+    chartService.createCharts(List.of(version1_1, version1_2));
     inOrder.verify(chartDao, calls(1)).upsert(argument.capture());
     assertEquals(version1_1.chartName(), argument.getValue().chartName());
     assertEquals(version1_1.chartVersion(), argument.getValue().chartVersion());
@@ -84,7 +84,7 @@ class ChartServiceTest extends BaseSpringBootTest {
     ArgumentCaptor<Boolean> argument2 = ArgumentCaptor.forClass(Boolean.class);
 
     InOrder inOrder = inOrder(chartDao);
-    chartService.getVersions(chartNameList, includeAll);
+    chartService.getCharts(chartNameList, includeAll);
     inOrder.verify(chartDao, calls(1)).get(chartNameList, includeAll);
   }
 }
