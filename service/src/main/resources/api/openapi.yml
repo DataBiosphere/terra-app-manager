@@ -38,7 +38,7 @@ paths:
 
   # README /docs/api_versioning.md
   #
-  /api/admin/v1/charts:
+  /api/admin/v1/charts/versions:
     post:
       tags: [ admin ]
       summary: Create new ChartVersion(s) to track

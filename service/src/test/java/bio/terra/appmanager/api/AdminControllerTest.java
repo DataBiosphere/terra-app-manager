@@ -60,7 +60,7 @@ class AdminControllerTest {
 
     mockMvc
         .perform(
-            post("/api/admin/v1/charts")
+            post("/api/admin/v1/charts/versions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     "[{"
@@ -85,7 +85,7 @@ class AdminControllerTest {
 
     mockMvc
         .perform(
-            post("/api/admin/v1/charts")
+            post("/api/admin/v1/charts/versions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("[{" + "\"chartName\": \"" + chartName + "\"" + "}]"))
         .andExpect(status().isBadRequest());
@@ -95,7 +95,7 @@ class AdminControllerTest {
 
   @Test
   void testGet_200_withNoParams() throws Exception {
-    mockMvc.perform(get("/api/admin/v1/charts")).andExpect(status().isOk());
+    mockMvc.perform(get("/api/admin/v1/charts/versions")).andExpect(status().isOk());
 
     verify(serviceMock).getVersions(List.of(), false);
   }
@@ -105,7 +105,7 @@ class AdminControllerTest {
     String chartName = "chart-name-here";
 
     mockMvc
-        .perform(get("/api/admin/v1/charts").queryParam("chartName", chartName))
+        .perform(get("/api/admin/v1/charts/versions").queryParam("chartName", chartName))
         .andExpect(status().isOk());
 
     verify(serviceMock).getVersions(List.of(chartName), false);
@@ -117,7 +117,7 @@ class AdminControllerTest {
 
     mockMvc
         .perform(
-            get("/api/admin/v1/charts")
+            get("/api/admin/v1/charts/versions")
                 .queryParam("chartName", chartName)
                 .queryParam("includeAll", "true"))
         .andExpect(status().isOk());
@@ -128,7 +128,7 @@ class AdminControllerTest {
   @Test
   void testGet_200_WithNoNameAndIncludeAll() throws Exception {
     mockMvc
-        .perform(get("/api/admin/v1/charts").queryParam("includeAll", "true"))
+        .perform(get("/api/admin/v1/charts/versions").queryParam("includeAll", "true"))
         .andExpect(status().isOk());
 
     verify(serviceMock).getVersions(List.of(), true);
@@ -155,7 +155,7 @@ class AdminControllerTest {
     String chartName = "chart-name-here";
 
     mockMvc
-        .perform(delete("/api/admin/v1/charts").queryParam("chartName", chartName))
+        .perform(delete("/api/admin/v1/charts/versions").queryParam("chartName", chartName))
         .andExpect(status().isNoContent());
 
     verify(serviceMock).deleteVersion(capture_chartName.capture());
