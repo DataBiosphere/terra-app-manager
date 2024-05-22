@@ -5,14 +5,14 @@ import jakarta.annotation.Nullable;
 import java.util.Date;
 import java.util.regex.Pattern;
 
-public record ChartVersion(
+public record Chart(
     String chartName,
     String chartVersion,
     @Nullable String appVersion,
     @Nullable Date activeAt,
     @Nullable Date inactiveAt) {
 
-  public ChartVersion {
+  public Chart {
     if (!isChartNameValid(chartName)) {
       throw new InconsistentFieldsException(
           "Chart name "
@@ -50,12 +50,12 @@ public record ChartVersion(
     return chartVersionPattern.matcher(chartVersion).matches() && chartVersion.length() < 25;
   }
 
-  public ChartVersion(String chartName, String chartVersion) {
+  public Chart(String chartName, String chartVersion) {
     this(chartName, chartVersion, null, null, null);
   }
 
-  public static ChartVersion fromApi(bio.terra.appmanager.api.model.ChartVersion source) {
-    return new ChartVersion(
+  public static Chart fromApi(bio.terra.appmanager.api.model.Chart source) {
+    return new Chart(
         source.getChartName(),
         source.getChartVersion(),
         source.getAppVersion(),
@@ -63,8 +63,8 @@ public record ChartVersion(
         source.getInactiveAt());
   }
 
-  public bio.terra.appmanager.api.model.ChartVersion toApi() {
-    return new bio.terra.appmanager.api.model.ChartVersion()
+  public bio.terra.appmanager.api.model.Chart toApi() {
+    return new bio.terra.appmanager.api.model.Chart()
         .chartName(this.chartName)
         .chartVersion(this.chartVersion)
         .appVersion(this.appVersion)
@@ -72,11 +72,11 @@ public record ChartVersion(
         .inactiveAt(this.inactiveAt);
   }
 
-  public ChartVersion activate(Date activeAt) {
-    return new ChartVersion(chartName(), chartVersion(), appVersion(), activeAt, null);
+  public Chart activate(Date activeAt) {
+    return new Chart(chartName(), chartVersion(), appVersion(), activeAt, null);
   }
 
-  public ChartVersion inactivate(Date inactiveAt) {
-    return new ChartVersion(chartName(), chartVersion(), appVersion(), activeAt(), inactiveAt);
+  public Chart inactivate(Date inactiveAt) {
+    return new Chart(chartName(), chartVersion(), appVersion(), activeAt(), inactiveAt);
   }
 }

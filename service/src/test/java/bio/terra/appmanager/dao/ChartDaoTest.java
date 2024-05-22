@@ -11,8 +11,8 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class ChartVersionDaoTest extends BaseDaoTest {
-  @Autowired ChartVersionDao versionDao;
+class ChartDaoTest extends BaseDaoTest {
+  @Autowired ChartDao versionDao;
 
   @Test
   void testSingleVersionUpsert() {

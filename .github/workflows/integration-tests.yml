@@ -92,7 +92,7 @@ jobs:
         run: |
           curl -H 'Authorization: token ${{ secrets.BROADBOT_TOKEN }}' \
             -H 'Accept: application/vnd.github.v3.raw' \
-            -L https://api.github.com/repos/broadinstitute/terra-helmfile/contents/versions/app/dev.yaml \
+            -L https://api.github.com/repos/broadinstitute/terra-helmfile/contents/app/dev.yaml \
             --create-dirs -o "integration/src/main/resources/rendered/dev.yaml"
           curl -H 'Authorization: token ${{ secrets.BROADBOT_TOKEN }}' \
             -H 'Accept: application/vnd.github.v3.raw' \
