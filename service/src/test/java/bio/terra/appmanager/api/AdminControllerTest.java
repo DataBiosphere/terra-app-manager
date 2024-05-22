@@ -136,7 +136,7 @@ class AdminControllerTest {
 
   @Test
   @Disabled("Enable when Authorization is implemented")
-  void testGet_403() throws Exception {
+  void testGet_403() {
     // we need to do this when we put in authorization
     // this will fail if someone removes @Disabled(...)
     fail("force whomever removes @Disabled(...) to implement test");
