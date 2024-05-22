@@ -28,6 +28,15 @@ public class ChartService {
   }
 
   /**
+   * Soft-delete the specified chart entries with associated chartName.
+   *
+   * @param names non-null {@ ChartName} to delete
+   */
+  public void deleteVersion(@NotNull String name) {
+    chartVersionDao.delete(List.of(name));
+  }
+
+  /**
    * Get chart versions by name
    *
    * @param names The names of charts to retrieve the versions of

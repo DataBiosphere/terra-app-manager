@@ -29,6 +29,12 @@ public class AdminController implements AdminApi {
     return ResponseEntity.noContent().build();
   }
 
+  @Override
+  public ResponseEntity<Void> deleteChartVersion(String body) {
+    this.chartService.deleteVersion(body);
+    return ResponseEntity.noContent().build();
+  }
+
   // Note that this method's implementation relies on `includeAll` having a default value and being
   // not null
   @Override

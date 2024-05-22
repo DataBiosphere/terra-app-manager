@@ -59,6 +59,25 @@ paths:
           description: Request did not come from an admin
         '500':
           $ref: '#/components/responses/ServerError'
+    delete:
+      tags: [ admin ]
+      summary: Delete ChartVersion
+      operationId: deleteChartVersion
+      security: [ ] # TODO: remove this to turn on "security"
+      parameters:
+        - in: query
+          name: chartName
+          description: ChartName to delete.
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: ChartVersion has been successfully deleted
+        '403':
+          description: Request did not come from an admin
+        '500':
+          $ref: '#/components/responses/ServerError'
     get:
       tags: [ admin ]
       summary: Get ChartVersion(s)

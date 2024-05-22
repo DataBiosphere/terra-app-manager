@@ -64,6 +64,18 @@ class ChartServiceTest extends BaseSpringBootTest {
   }
 
   @Test
+  void testDeleteVersion() {
+    String chartName1 = "chart-name-here";
+
+    ArgumentCaptor<List<String>> argument = ArgumentCaptor.forClass(List.class);
+
+    chartService.deleteVersion(chartName1);
+    verify(chartVersionDao, times(1)).delete(argument.capture());
+    assertEquals(1, argument.getValue().size());
+    assertEquals(chartName1, argument.getValue().get(0));
+  }
+
+  @Test
   void testGetVersions() {
     List<String> chartNameList = List.of("chart-name-here");
     Boolean includeAll = true;
