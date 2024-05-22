@@ -54,7 +54,7 @@ paths:
         '201':
           description: ChartVersion(s) have been successfully created
         '400':
-          description: Bad request - invalid ChartVersion(s) provided
+          $ref: '#/components/responses/BadRequest'
         '403':
           description: Request did not come from an admin
         '500':
@@ -132,6 +132,7 @@ components:
           type: string
         statusCode:
           type: integer
+
 
     SystemStatus:
       required: [ ok, systems ]

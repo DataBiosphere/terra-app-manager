@@ -17,7 +17,7 @@ class ChartVersionDaoTest extends BaseDaoTest {
   @Test
   void testSingleVersionUpsert() {
     String chartName = "chart-name-here";
-    String chartVersion = "chart-version-here";
+    String chartVersion = "chartVersionHere";
     ChartVersion version = new ChartVersion(chartName, chartVersion);
 
     versionDao.upsert(version);
@@ -33,10 +33,10 @@ class ChartVersionDaoTest extends BaseDaoTest {
   void testMultiVersionUpsert() {
     String chartName = "chart-name-here";
 
-    String chartVersion1 = "chart-name-here";
+    String chartVersion1 = "chartVersionHere";
     ChartVersion version1 = new ChartVersion(chartName, chartVersion1);
 
-    String chartVersion2 = "chart-version-here-too";
+    String chartVersion2 = "chartVersionHereToo";
     ChartVersion version2 = new ChartVersion(chartName, chartVersion2);
 
     versionDao.upsert(version1);
@@ -58,20 +58,20 @@ class ChartVersionDaoTest extends BaseDaoTest {
   @Test
   void testMultiNameGet() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chart-version-here-1";
-    String chartVersion1_2 = "chart-version-here-too";
+    String chartVersion1_1 = "chartVersionHereOne";
+    String chartVersion1_2 = "chartVersionHereToo";
     ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
     ChartVersion version1_2 = new ChartVersion(chartName1, chartVersion1_2);
 
-    String chartName2 = "chart-version-here-too";
-    String chartVersion2_1 = "chart-version-here-3";
-    String chartVersion2_2 = "chart-version-here-four";
+    String chartName2 = "chart-name-here-too";
+    String chartVersion2_1 = "chartVersionHereThree";
+    String chartVersion2_2 = "chartVersionHereFour";
     ChartVersion version2_1 = new ChartVersion(chartName2, chartVersion2_1);
     ChartVersion version2_2 = new ChartVersion(chartName2, chartVersion2_2);
 
-    String chartName3 = "chart-version-here-again";
-    String chartVersion3_1 = "chart-version-here-5";
-    String chartVersion3_2 = "chart-version-here-six";
+    String chartName3 = "chart-name";
+    String chartVersion3_1 = "chartVersionHereFive";
+    String chartVersion3_2 = "chartVersionHereSix";
     ChartVersion version3_1 = new ChartVersion(chartName3, chartVersion3_1);
     ChartVersion version3_2 = new ChartVersion(chartName3, chartVersion3_2);
 
@@ -101,20 +101,20 @@ class ChartVersionDaoTest extends BaseDaoTest {
   @Test
   void testGetAll() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chart-version-here-1";
-    String chartVersion1_2 = "chart-version-here-too";
+    String chartVersion1_1 = "chartVersionHereOne";
+    String chartVersion1_2 = "chartVersionHereToo";
     ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
     ChartVersion version1_2 = new ChartVersion(chartName1, chartVersion1_2);
 
-    String chartName2 = "chart-version-here-too";
-    String chartVersion2_1 = "chart-version-here-3";
-    String chartVersion2_2 = "chart-version-here-four";
+    String chartName2 = "chart-name-here-too";
+    String chartVersion2_1 = "chartVersionHereThree";
+    String chartVersion2_2 = "chartVersionHereFour";
     ChartVersion version2_1 = new ChartVersion(chartName2, chartVersion2_1);
     ChartVersion version2_2 = new ChartVersion(chartName2, chartVersion2_2);
 
-    String chartName3 = "chart-version-here-again";
-    String chartVersion3_1 = "chart-version-here-5";
-    String chartVersion3_2 = "chart-version-here-six";
+    String chartName3 = "chart-name-here-again";
+    String chartVersion3_1 = "chartVersionHereFive";
+    String chartVersion3_2 = "chartVersionHereSix";
     ChartVersion version3_1 = new ChartVersion(chartName3, chartVersion3_1);
     ChartVersion version3_2 = new ChartVersion(chartName3, chartVersion3_2);
 
@@ -132,7 +132,7 @@ class ChartVersionDaoTest extends BaseDaoTest {
   @Test
   void testDelete() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chart-version-here-1";
+    String chartVersion1_1 = "chartVersionHere";
     ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
 
     versionDao.upsert(version1_1);
@@ -147,7 +147,7 @@ class ChartVersionDaoTest extends BaseDaoTest {
   @Test
   void testDelete_noNames() {
     final String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chart-version-here-1";
+    String chartVersion1_1 = "chartVersionHere";
     ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
 
     versionDao.upsert(version1_1);
@@ -163,20 +163,20 @@ class ChartVersionDaoTest extends BaseDaoTest {
   @Test
   void testMultiDelete() {
     final String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chart-version-here-1";
-    String chartVersion1_2 = "chart-version-here-too";
+    String chartVersion1_1 = "chartVersionHere";
+    String chartVersion1_2 = "chartVersionHereToo";
     ChartVersion version1_1 = new ChartVersion(chartName1, chartVersion1_1);
     ChartVersion version1_2 = new ChartVersion(chartName1, chartVersion1_2);
 
-    final String chartName2 = "chart-version-here-too";
-    String chartVersion2_1 = "chart-version-here-3";
-    String chartVersion2_2 = "chart-version-here-four";
+    final String chartName2 = "chart-name-here-too";
+    String chartVersion2_1 = "chartVersionHereThree";
+    String chartVersion2_2 = "chartVersionHereFour";
     ChartVersion version2_1 = new ChartVersion(chartName2, chartVersion2_1);
     ChartVersion version2_2 = new ChartVersion(chartName2, chartVersion2_2);
 
-    final String chartName3 = "chart-version-here-again";
-    String chartVersion3_1 = "chart-version-here-5";
-    String chartVersion3_2 = "chart-version-here-six";
+    final String chartName3 = "chart-version-name-again";
+    String chartVersion3_1 = "chartVersionHereFive";
+    String chartVersion3_2 = "chartVersionHereSix";
     ChartVersion version3_1 = new ChartVersion(chartName3, chartVersion3_1);
     ChartVersion version3_2 = new ChartVersion(chartName3, chartVersion3_2);
 

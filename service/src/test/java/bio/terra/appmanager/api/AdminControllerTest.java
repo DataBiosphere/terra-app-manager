@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import bio.terra.appmanager.api.model.ChartArray;
 import bio.terra.appmanager.controller.AdminController;
+import bio.terra.appmanager.controller.GlobalExceptionHandler;
 import bio.terra.appmanager.service.ChartService;
 import java.util.Date;
 import java.util.List;
@@ -27,23 +28,28 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ContextConfiguration(classes = AdminController.class)
 @WebMvcTest
 class AdminControllerTest {
   @MockBean ChartService serviceMock;
 
-  @Autowired private MockMvc mockMvc;
-
   @Autowired AdminController controller;
+
+  private MockMvc mockMvc;
 
   @Captor ArgumentCaptor<List<bio.terra.appmanager.model.ChartVersion>> capture_chartVersions;
 
   private AutoCloseable closeable;
 
   @BeforeEach
-  public void open() {
+  public void setup() {
     closeable = MockitoAnnotations.openMocks(this);
+    mockMvc =
+        MockMvcBuilders.standaloneSetup(controller)
+            .setControllerAdvice(new GlobalExceptionHandler())
+            .build();
   }
 
   @AfterEach
@@ -54,7 +60,7 @@ class AdminControllerTest {
   @Test
   void testCreate_204() throws Exception {
     String chartName = "chart-name-here";
-    String chartVersion = "chart-version-here";
+    String chartVersion = "chartVersionHere";
 
     mockMvc
         .perform(
@@ -75,6 +81,48 @@ class AdminControllerTest {
     assert (capture_chartVersions.getValue().size() == 1);
     verifyChartVersion(
         capture_chartVersions.getValue().get(0), chartName, chartVersion, null, null, null);
+  }
+
+  @Test
+  void testCreate_invalidChartVersion() throws Exception {
+    String chartName = "chart-name-here";
+    String chartVersion = "invalid-chart-version$";
+
+    mockMvc
+        .perform(
+            post("/api/admin/v1/charts/versions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "[{"
+                        + "\"chartName\": \""
+                        + chartName
+                        + "\","
+                        + "\"chartVersion\": \""
+                        + chartVersion
+                        + "\""
+                        + "}]"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void testCreate_invalidChartName() throws Exception {
+    String chartName = "invalidChartName$";
+    String chartVersion = "validChartVersion";
+
+    mockMvc
+        .perform(
+            post("/api/admin/v1/charts/versions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "[{"
+                        + "\"chartName\": \""
+                        + chartName
+                        + "\","
+                        + "\"chartVersion\": \""
+                        + chartVersion
+                        + "\""
+                        + "}]"))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
@@ -151,7 +199,7 @@ class AdminControllerTest {
   @Test
   void testGet_ChartVersionModelToApi() {
     String chartName = "chart-name-here";
-    String chartVersion = "chart-version";
+    String chartVersion = "chartVersion";
     bio.terra.appmanager.model.ChartVersion chart =
         new bio.terra.appmanager.model.ChartVersion(chartName, chartVersion);
     chart = chart.activate(new Date()).inactivate(new Date());
