@@ -38,8 +38,8 @@ public record ChartVersion(
   // https://helm.sh/docs/chart_best_practices/values/#naming-conventions
   // Camel case, requiring the first letter to be lowercase with no numeric characters. Letters
   // only. Additionally we impose 1-25 character limit
-  // See regex test cases: https://regex101.com/r/4h7A1I/8
-  static final String chartValueRegex = "^[a-z]+(([A-Z][a-z]+)*[A-Z]?|([a-z]+[A-Z])*|[A-Z])$";
+  // See regex test cases: https://regex101.com/r/nz2Ccj/1
+  static final String chartValueRegex = "^[a-z]+(([A-Z][a-z]+)*[A-Z]?)$";
   static final Pattern chartVersionPattern = Pattern.compile(chartValueRegex);
 
   public static boolean isChartNameValid(String chartName) {

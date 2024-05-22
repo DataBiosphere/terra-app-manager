@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import bio.terra.common.exception.InconsistentFieldsException;
 import org.junit.jupiter.api.Test;
 
-public class ChartVersionValidationTest {
+class ChartVersionValidationTest {
 
   @Test
   void testChartNameValidation() {
