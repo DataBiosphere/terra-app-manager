@@ -67,7 +67,7 @@ paths:
       parameters:
         - in: query
           name: chartName
-          description: ChartName to delete.
+          description: Name of chart to delete
           required: true
           schema:
             type: string
@@ -86,12 +86,12 @@ paths:
       parameters:
         - in: query
           name: chartName
-          description: The optional chartName to return. If omitted, will return all chart versions for all charts.
+          description: Optional name of the chart to return. If omitted, all active charts shall be returned.
           schema:
             type: string
         - in: query
           name: includeAll
-          description: If selected and no chartName is provided, will return all chart versions including inactive ones.
+          description: Return active and inactive charts if set to true
           schema:
             type: boolean
             default: false
@@ -152,7 +152,6 @@ components:
         statusCode:
           type: integer
 
-
     SystemStatus:
       required: [ ok, systems ]
       type: object
@@ -188,9 +187,9 @@ components:
       type: object
       required: [ chartName ]
       properties:
-        chartName:
+        name:
           type: string
-        chartVersion:
+        version:
           type: string
         appVersion:
           type: string

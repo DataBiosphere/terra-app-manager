@@ -70,10 +70,10 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     "[{"
-                        + "\"chartName\": \""
+                        + "\"name\": \""
                         + chartName
                         + "\","
-                        + "\"chartVersion\": \""
+                        + "\"version\": \""
                         + chartVersion
                         + "\""
                         + "}]"))
@@ -95,10 +95,10 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     "[{"
-                        + "\"chartName\": \""
+                        + "\"name\": \""
                         + chartName
                         + "\","
-                        + "\"chartVersion\": \""
+                        + "\"version\": \""
                         + chartVersion
                         + "\""
                         + "}]"))
@@ -116,10 +116,10 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     "[{"
-                        + "\"chartName\": \""
+                        + "\"name\": \""
                         + chartName
                         + "\","
-                        + "\"chartVersion\": \""
+                        + "\"version\": \""
                         + chartVersion
                         + "\""
                         + "}]"))
@@ -134,7 +134,7 @@ class AdminControllerTest {
         .perform(
             post("/api/admin/v1/charts")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("[{" + "\"chartName\": \"" + chartName + "\"" + "}]"))
+                .content("[{" + "\"name\": \"" + chartName + "\"" + "}]"))
         .andExpect(status().isBadRequest());
 
     verifyNoInteractions(serviceMock);
@@ -234,8 +234,8 @@ class AdminControllerTest {
     assertEquals(1, chartArray.size());
     verifyChart(
         chart,
-        apiVersion.getChartName(),
-        apiVersion.getChartVersion(),
+        apiVersion.getName(),
+        apiVersion.getVersion(),
         apiVersion.getAppVersion(),
         apiVersion.getActiveAt(),
         apiVersion.getInactiveAt());
@@ -248,8 +248,8 @@ class AdminControllerTest {
       String appVersion,
       Date activeAt,
       Date inactiveAt) {
-    assertEquals(version.chartName(), chartName);
-    assertEquals(version.chartVersion(), chartVersion);
+    assertEquals(version.name(), chartName);
+    assertEquals(version.version(), chartVersion);
     assertEquals(version.appVersion(), appVersion);
     assertEquals(version.activeAt(), activeAt);
     assertEquals(version.inactiveAt(), inactiveAt);

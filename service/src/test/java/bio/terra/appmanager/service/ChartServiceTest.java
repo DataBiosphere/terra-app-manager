@@ -35,8 +35,8 @@ class ChartServiceTest extends BaseSpringBootTest {
 
     chartService.createCharts(List.of(version1_1));
     verify(chartDao, times(1)).upsert(argument.capture());
-    assertEquals(version1_1.chartName(), argument.getValue().chartName());
-    assertEquals(version1_1.chartVersion(), argument.getValue().chartVersion());
+    assertEquals(version1_1.name(), argument.getValue().name());
+    assertEquals(version1_1.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
   }
 
@@ -53,13 +53,13 @@ class ChartServiceTest extends BaseSpringBootTest {
     InOrder inOrder = inOrder(chartDao);
     chartService.createCharts(List.of(version1_1, version1_2));
     inOrder.verify(chartDao, calls(1)).upsert(argument.capture());
-    assertEquals(version1_1.chartName(), argument.getValue().chartName());
-    assertEquals(version1_1.chartVersion(), argument.getValue().chartVersion());
+    assertEquals(version1_1.name(), argument.getValue().name());
+    assertEquals(version1_1.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
 
     inOrder.verify(chartDao, calls(1)).upsert(argument.capture());
-    assertEquals(version1_2.chartName(), argument.getValue().chartName());
-    assertEquals(version1_2.chartVersion(), argument.getValue().chartVersion());
+    assertEquals(version1_2.name(), argument.getValue().name());
+    assertEquals(version1_2.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
   }
 

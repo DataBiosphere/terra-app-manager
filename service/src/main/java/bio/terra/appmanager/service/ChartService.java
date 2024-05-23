@@ -20,7 +20,7 @@ public class ChartService {
   /**
    * Create chart entries with associated chart and application versions.
    *
-   * @param charts non-null list of {@ Chart}s to create
+   * @param charts non-null list of {@link Chart}s to create
    */
   @WriteTransaction
   public void createCharts(@NotNull List<Chart> charts) {
@@ -28,9 +28,9 @@ public class ChartService {
   }
 
   /**
-   * Soft-delete the specified chart entries with associated chartName.
+   * Soft-delete the specified chart entries with associated name.
    *
-   * @param names non-null {@ ChartName} to delete
+   * @param name non-null chart name to delete
    */
   public void deleteVersion(@NotNull String name) {
     chartDao.delete(List.of(name));

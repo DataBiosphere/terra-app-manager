@@ -11,5 +11,5 @@
 #
 databaseChangeLog:
   - include:
-      file: changesets/20240429_create_chart_versions.yaml
+      file: changesets/20240429_create_charts_table.yaml
       relativeToChangelogFile: true

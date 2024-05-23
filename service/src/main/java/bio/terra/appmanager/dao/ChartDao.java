@@ -14,11 +14,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ChartDao {
 
-  private static final RowMapper<Chart> CHART_VERSION_ROW_MAPPER =
+  private static final RowMapper<Chart> CHART_ROW_MAPPER =
       (rs, rowNum) ->
           new Chart(
-              rs.getString("chart_name"),
-              rs.getString("chart_version"),
+              rs.getString("name"),
+              rs.getString("version"),
               rs.getString("app_version"),
               rs.getDate("created_at"),
               rs.getDate("deleted_at"));
@@ -29,43 +29,43 @@ public class ChartDao {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  private void deleteActiveVersions(List<String> ChartNames, Date inactiveDate) {
-    if (ChartNames.isEmpty()) {
+  private void deleteActiveVersions(List<String> chartNames, Date inactiveDate) {
+    if (chartNames.isEmpty()) {
       return; // nothing to invalidate
     }
 
     var query =
-        "UPDATE chart_versions"
+        "UPDATE charts"
             + " SET deleted_at = :deletedAt"
-            + " WHERE chart_name in (:chartNames)"
+            + " WHERE name in (:chartNames)"
             + " AND deleted_at is null";
 
     var namedParameters =
         new MapSqlParameterSource()
             .addValue("deletedAt", inactiveDate)
-            .addValue("chartNames", ChartNames);
+            .addValue("chartNames", chartNames);
 
     jdbcTemplate.update(query, namedParameters);
   }
 
   /**
-   * @param version {@link Chart} to add to the repository
+   * @param chart {@link Chart} to add to the repository
    */
   @WithSpan
-  public void upsert(Chart version) {
+  public void upsert(Chart chart) {
     // make sure the activeDate and inactiveDate(s) are the same date/time
     Date currentDate = new Date();
-    deleteActiveVersions(List.of(version.chartName()), currentDate);
+    deleteActiveVersions(List.of(chart.name()), currentDate);
 
     var query =
-        "INSERT INTO chart_versions (chart_name, chart_version, app_version, created_at)"
+        "INSERT INTO charts (name, version, app_version, created_at)"
             + " VALUES (:chartName, :chartVersion, :appVersion, :createdAt)";
 
     var namedParameters =
         new MapSqlParameterSource()
-            .addValue("chartName", version.chartName())
-            .addValue("chartVersion", version.chartVersion())
-            .addValue("appVersion", version.appVersion())
+            .addValue("chartName", chart.name())
+            .addValue("chartVersion", chart.version())
+            .addValue("appVersion", chart.appVersion())
             .addValue("createdAt", currentDate);
 
     jdbcTemplate.update(query, namedParameters);
@@ -103,15 +103,13 @@ public class ChartDao {
    */
   @WithSpan
   public List<Chart> get(@NotNull List<String> chartNames, boolean includeAll) {
-    var query =
-        "SELECT chart_name, chart_version, app_version, created_at, deleted_at"
-            + " FROM chart_versions";
+    var query = "SELECT name, version, app_version, created_at, deleted_at" + " FROM charts";
 
     var namedParameters = new MapSqlParameterSource();
     var conditions = new ArrayList<String>();
 
     if (!chartNames.isEmpty()) {
-      conditions.add(" chart_name in (:chartNames)");
+      conditions.add(" name in (:chartNames)");
       namedParameters.addValue("chartNames", chartNames);
     }
 
@@ -123,7 +121,7 @@ public class ChartDao {
       query += " WHERE" + String.join(" AND", conditions);
     }
 
-    return jdbcTemplate.queryForStream(query, namedParameters, CHART_VERSION_ROW_MAPPER).toList();
+    return jdbcTemplate.queryForStream(query, namedParameters, CHART_ROW_MAPPER).toList();
   }
 
   /**

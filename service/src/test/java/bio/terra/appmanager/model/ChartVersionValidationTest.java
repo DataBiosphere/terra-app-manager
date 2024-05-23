@@ -11,7 +11,7 @@ class ChartValidationTest {
 
   @Test
   void testChartNameValidation() {
-    String controlChartVersion = "chartVersion";
+    String controlChartVersion = "version";
     String goodChartName1 = "good";
     String goodChartName2 = "also-good";
     String goodChartName3 = "numbers1";
