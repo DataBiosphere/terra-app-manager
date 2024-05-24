@@ -96,3 +96,9 @@ otel:
         service:
           name: ${spring.application.name}
           version: ${appmanager.version.gitTag:unknown}
+
+sentry:
+  dsn: https://9b6b2186ea9ce076f5ecaa5172d9d04f@o54426.ingest.us.sentry.io/4507300631019520
+  # Set traces-sample-rate to 1.0 to capture 100% of transactions for performance monitoring.
+  # We recommend adjusting this value in production.
+  traces-sample-rate: 1.0
