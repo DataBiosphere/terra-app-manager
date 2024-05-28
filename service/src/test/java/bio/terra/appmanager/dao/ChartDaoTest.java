@@ -192,8 +192,7 @@ class ChartDaoTest extends BaseDaoTest {
     List<Chart> allVersions = chartDao.get(true);
     for (Chart version : allVersions) {
       switch (version.name()) {
-        case chartName1:
-        case chartName2:
+        case chartName1, chartName2:
           assertNotNull(version.inactiveAt());
           break;
         case chartName3:
