@@ -8,6 +8,7 @@ import bio.terra.appmanager.BaseSpringBootTest;
 import bio.terra.appmanager.dao.ChartDao;
 import bio.terra.appmanager.model.Chart;
 import java.util.List;
+import bio.terra.appmanager.model.ChartTestUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
@@ -28,7 +29,7 @@ class ChartServiceTest extends BaseSpringBootTest {
   @Test
   void testCreateChart_singleElement() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chartVersionHere";
+    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
     Chart version1_1 = new Chart(chartName1, chartVersion1_1);
 
     ArgumentCaptor<Chart> argument = ArgumentCaptor.forClass(Chart.class);
@@ -43,8 +44,8 @@ class ChartServiceTest extends BaseSpringBootTest {
   @Test
   void testCreateChart_multipleElement() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chartVersionHereOne";
-    String chartVersion1_2 = "chartVersionHereToo";
+    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
+    String chartVersion1_2 = ChartTestUtils.makeChartVersion(1);
     Chart version1_1 = new Chart(chartName1, chartVersion1_1);
     Chart version1_2 = new Chart(chartName1, chartVersion1_2);
 

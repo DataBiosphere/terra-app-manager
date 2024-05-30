@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import bio.terra.appmanager.model.Chart;
+import bio.terra.appmanager.model.ChartTestUtils;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ class ChartDaoTest extends BaseDaoTest {
   @Test
   void testSingleVersionUpsert() {
     String chartName = "chart-name-here";
-    String chartVersion = "chartVersionHere";
+    String chartVersion = "0.0.1";
     Chart version = new Chart(chartName, chartVersion);
 
     chartDao.upsert(version);
@@ -33,10 +34,10 @@ class ChartDaoTest extends BaseDaoTest {
   void testMultiVersionUpsert() {
     String chartName = "chart-name-here";
 
-    String chartVersion1 = "chartVersionHere";
+    String chartVersion1 = "0.0.1";
     Chart version1 = new Chart(chartName, chartVersion1);
 
-    String chartVersion2 = "chartVersionHereToo";
+    String chartVersion2 = "0.0.2";
     Chart version2 = new Chart(chartName, chartVersion2);
 
     chartDao.upsert(version1);
@@ -58,20 +59,20 @@ class ChartDaoTest extends BaseDaoTest {
   @Test
   void testMultiNameGet() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chartVersionHereOne";
-    String chartVersion1_2 = "chartVersionHereToo";
+    String chartVersion1_1 = "0.0.1";
+    String chartVersion1_2 = "0.0.2";
     Chart version1_1 = new Chart(chartName1, chartVersion1_1);
     Chart version1_2 = new Chart(chartName1, chartVersion1_2);
 
     String chartName2 = "chart-name-here-too";
-    String chartVersion2_1 = "chartVersionHereThree";
-    String chartVersion2_2 = "chartVersionHereFour";
+    String chartVersion2_1 = "0.0.3";
+    String chartVersion2_2 = "0.0.4";
     Chart version2_1 = new Chart(chartName2, chartVersion2_1);
     Chart version2_2 = new Chart(chartName2, chartVersion2_2);
 
     String chartName3 = "chart-name";
-    String chartVersion3_1 = "chartVersionHereFive";
-    String chartVersion3_2 = "chartVersionHereSix";
+    String chartVersion3_1 = "0.0.5";
+    String chartVersion3_2 = "0.0.6";
     Chart version3_1 = new Chart(chartName3, chartVersion3_1);
     Chart version3_2 = new Chart(chartName3, chartVersion3_2);
 
@@ -101,20 +102,20 @@ class ChartDaoTest extends BaseDaoTest {
   @Test
   void testGetAll() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chartVersionHereOne";
-    String chartVersion1_2 = "chartVersionHereToo";
+    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
+    String chartVersion1_2 = ChartTestUtils.makeChartVersion(1);
     Chart version1_1 = new Chart(chartName1, chartVersion1_1);
     Chart version1_2 = new Chart(chartName1, chartVersion1_2);
 
     String chartName2 = "chart-name-here-too";
-    String chartVersion2_1 = "chartVersionHereThree";
-    String chartVersion2_2 = "chartVersionHereFour";
+    String chartVersion2_1 = ChartTestUtils.makeChartVersion(3);
+    String chartVersion2_2 = ChartTestUtils.makeChartVersion(4);
     Chart version2_1 = new Chart(chartName2, chartVersion2_1);
     Chart version2_2 = new Chart(chartName2, chartVersion2_2);
 
     String chartName3 = "chart-name-here-again";
-    String chartVersion3_1 = "chartVersionHereFive";
-    String chartVersion3_2 = "chartVersionHereSix";
+    String chartVersion3_1 = ChartTestUtils.makeChartVersion(5);
+    String chartVersion3_2 = ChartTestUtils.makeChartVersion(6);
     Chart version3_1 = new Chart(chartName3, chartVersion3_1);
     Chart version3_2 = new Chart(chartName3, chartVersion3_2);
 
@@ -132,7 +133,7 @@ class ChartDaoTest extends BaseDaoTest {
   @Test
   void testDelete() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chartVersionHere";
+    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
     Chart version1_1 = new Chart(chartName1, chartVersion1_1);
 
     chartDao.upsert(version1_1);
@@ -147,7 +148,7 @@ class ChartDaoTest extends BaseDaoTest {
   @Test
   void testDelete_noNames() {
     final String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chartVersionHere";
+    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
     Chart version1_1 = new Chart(chartName1, chartVersion1_1);
 
     chartDao.upsert(version1_1);
@@ -163,20 +164,20 @@ class ChartDaoTest extends BaseDaoTest {
   @Test
   void testMultiDelete() {
     final String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "chartVersionHere";
-    String chartVersion1_2 = "chartVersionHereToo";
+    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
+    String chartVersion1_2 = ChartTestUtils.makeChartVersion(1);
     Chart version1_1 = new Chart(chartName1, chartVersion1_1);
     Chart version1_2 = new Chart(chartName1, chartVersion1_2);
 
     final String chartName2 = "chart-name-here-too";
-    String chartVersion2_1 = "chartVersionHereThree";
-    String chartVersion2_2 = "chartVersionHereFour";
+    String chartVersion2_1 = ChartTestUtils.makeChartVersion(2);
+    String chartVersion2_2 = ChartTestUtils.makeChartVersion(3);
     Chart version2_1 = new Chart(chartName2, chartVersion2_1);
     Chart version2_2 = new Chart(chartName2, chartVersion2_2);
 
     final String chartName3 = "chart-version-name-again";
-    String chartVersion3_1 = "chartVersionHereFive";
-    String chartVersion3_2 = "chartVersionHereSix";
+    String chartVersion3_1 = ChartTestUtils.makeChartVersion(4);
+    String chartVersion3_2 = ChartTestUtils.makeChartVersion(5);
     Chart version3_1 = new Chart(chartName3, chartVersion3_1);
     Chart version3_2 = new Chart(chartName3, chartVersion3_2);
 
@@ -209,14 +210,6 @@ class ChartDaoTest extends BaseDaoTest {
   private static Chart getByChart(List<Chart> storedVersions, String chartVersion) {
     return storedVersions.stream()
         .filter(version -> chartVersion.equals(version.version()))
-        .findFirst()
-        .orElse(null);
-  }
-
-  @Nullable
-  private static Chart getByChartName(List<Chart> storedVersions, String chartName) {
-    return storedVersions.stream()
-        .filter(version -> chartName.equals(version.version()))
         .findFirst()
         .orElse(null);
   }
