@@ -258,7 +258,8 @@ class AdminControllerTest {
   void testUpdate_ControllerCall_200() throws Exception {
     String chartName1 = "chart-name";
     String chartName2 = "chart-name2";
-    String chartVersion = ChartTestUtils.makeChartVersion(0);;
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
+    ;
     String appVersion = "app.version";
 
     Chart apiChart1 =
@@ -287,9 +288,18 @@ class AdminControllerTest {
   }
 
   @Test
+  void testUpdate_ControllerCall_200EmptyList() throws Exception {
+    List<bio.terra.appmanager.model.Chart> chartNames = List.of();
+
+    controller.updateChart(List.of());
+    verify(serviceMock).updateVersions(chartNames);
+  }
+
+  @Test
   void testUpdate_ControllerCall_simple404() throws Exception {
     String chartName = "chart-name";
-    String chartVersion = ChartTestUtils.makeChartVersion(0);;
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
+    ;
     String appVersion = "app.version";
 
     Chart apiChart =
@@ -306,7 +316,8 @@ class AdminControllerTest {
     String chartName1 = "chart-name";
     String chartName2 = "chart-name2";
     String chartName3 = "chart-name3";
-    String chartVersion = ChartTestUtils.makeChartVersion(0);;
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
+    ;
     String appVersion = "app.version";
 
     Chart apiChart1 =
@@ -343,7 +354,8 @@ class AdminControllerTest {
   @Test
   void testUpdate_201AllFields() throws Exception {
     String chartName1 = "chart-name";
-    String chartVersion = ChartTestUtils.makeChartVersion(0);;
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
+    ;
     String appVersion = "app.version";
 
     Chart apiChart1 =
@@ -377,7 +389,8 @@ class AdminControllerTest {
   @Test
   void testUpdate_201NoOptionalFields() throws Exception {
     String chartName1 = "chart-name";
-    String chartVersion = ChartTestUtils.makeChartVersion(0);;
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
+    ;
 
     Chart apiChart1 =
         new bio.terra.appmanager.api.model.Chart().name(chartName1).version(chartVersion);
@@ -404,7 +417,8 @@ class AdminControllerTest {
   @Test
   void testUpdate_404() throws Exception {
     String chartName1 = "chart-name";
-    String chartVersion = ChartTestUtils.makeChartVersion(0);;
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
+    ;
 
     mockMvc
         .perform(
