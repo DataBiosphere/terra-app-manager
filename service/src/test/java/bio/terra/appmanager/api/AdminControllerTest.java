@@ -40,7 +40,7 @@ class AdminControllerTest {
 
   private MockMvc mockMvc;
 
-  @Captor ArgumentCaptor<List<bio.terra.appmanager.model.ChartVersion>> capture_chartVersions;
+  @Captor ArgumentCaptor<List<bio.terra.appmanager.model.Chart>> capture_Charts;
   @Captor ArgumentCaptor<String> capture_chartName;
 
   private AutoCloseable closeable;
@@ -66,40 +66,39 @@ class AdminControllerTest {
 
     mockMvc
         .perform(
-            post("/api/admin/v1/charts/versions")
+            post("/api/admin/v1/charts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     "[{"
-                        + "\"chartName\": \""
+                        + "\"name\": \""
                         + chartName
                         + "\","
-                        + "\"chartVersion\": \""
+                        + "\"version\": \""
                         + chartVersion
                         + "\""
                         + "}]"))
         .andExpect(status().isNoContent());
 
-    verify(serviceMock).createVersions(capture_chartVersions.capture());
-    assert (capture_chartVersions.getValue().size() == 1);
-    verifyChartVersion(
-        capture_chartVersions.getValue().get(0), chartName, chartVersion, null, null, null);
+    verify(serviceMock).createCharts(capture_Charts.capture());
+    assert (capture_Charts.getValue().size() == 1);
+    verifyChart(capture_Charts.getValue().get(0), chartName, chartVersion, null, null, null);
   }
 
   @Test
-  void testCreate_invalidChartVersion() throws Exception {
+  void testCreate_invalidChart() throws Exception {
     String chartName = "chart-name-here";
     String chartVersion = "invalid-chart-version$";
 
     mockMvc
         .perform(
-            post("/api/admin/v1/charts/versions")
+            post("/api/admin/v1/charts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     "[{"
-                        + "\"chartName\": \""
+                        + "\"name\": \""
                         + chartName
                         + "\","
-                        + "\"chartVersion\": \""
+                        + "\"version\": \""
                         + chartVersion
                         + "\""
                         + "}]"))
@@ -113,14 +112,14 @@ class AdminControllerTest {
 
     mockMvc
         .perform(
-            post("/api/admin/v1/charts/versions")
+            post("/api/admin/v1/charts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     "[{"
-                        + "\"chartName\": \""
+                        + "\"name\": \""
                         + chartName
                         + "\","
-                        + "\"chartVersion\": \""
+                        + "\"version\": \""
                         + chartVersion
                         + "\""
                         + "}]"))
@@ -133,9 +132,9 @@ class AdminControllerTest {
 
     mockMvc
         .perform(
-            post("/api/admin/v1/charts/versions")
+            post("/api/admin/v1/charts")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("[{" + "\"chartName\": \"" + chartName + "\"" + "}]"))
+                .content("[{" + "\"name\": \"" + chartName + "\"" + "}]"))
         .andExpect(status().isBadRequest());
 
     verifyNoInteractions(serviceMock);
@@ -143,9 +142,9 @@ class AdminControllerTest {
 
   @Test
   void testGet_200_withNoParams() throws Exception {
-    mockMvc.perform(get("/api/admin/v1/charts/versions")).andExpect(status().isOk());
+    mockMvc.perform(get("/api/admin/v1/charts")).andExpect(status().isOk());
 
-    verify(serviceMock).getVersions(List.of(), false);
+    verify(serviceMock).getCharts(List.of(), false);
   }
 
   @Test
@@ -153,10 +152,10 @@ class AdminControllerTest {
     String chartName = "chart-name-here";
 
     mockMvc
-        .perform(get("/api/admin/v1/charts/versions").queryParam("chartName", chartName))
+        .perform(get("/api/admin/v1/charts").queryParam("chartName", chartName))
         .andExpect(status().isOk());
 
-    verify(serviceMock).getVersions(List.of(chartName), false);
+    verify(serviceMock).getCharts(List.of(chartName), false);
   }
 
   @Test
@@ -165,21 +164,21 @@ class AdminControllerTest {
 
     mockMvc
         .perform(
-            get("/api/admin/v1/charts/versions")
+            get("/api/admin/v1/charts")
                 .queryParam("chartName", chartName)
                 .queryParam("includeAll", "true"))
         .andExpect(status().isOk());
 
-    verify(serviceMock).getVersions(List.of(chartName), true);
+    verify(serviceMock).getCharts(List.of(chartName), true);
   }
 
   @Test
   void testGet_200_WithNoNameAndIncludeAll() throws Exception {
     mockMvc
-        .perform(get("/api/admin/v1/charts/versions").queryParam("includeAll", "true"))
+        .perform(get("/api/admin/v1/charts").queryParam("includeAll", "true"))
         .andExpect(status().isOk());
 
-    verify(serviceMock).getVersions(List.of(), true);
+    verify(serviceMock).getCharts(List.of(), true);
   }
 
   @Test
@@ -203,7 +202,7 @@ class AdminControllerTest {
     String chartName = "chart-name-here";
 
     mockMvc
-        .perform(delete("/api/admin/v1/charts/versions").queryParam("chartName", chartName))
+        .perform(delete("/api/admin/v1/charts").queryParam("chartName", chartName))
         .andExpect(status().isNoContent());
 
     verify(serviceMock).deleteVersion(capture_chartName.capture());
@@ -219,38 +218,38 @@ class AdminControllerTest {
   }
 
   @Test
-  void testGet_ChartVersionModelToApi() {
+  void testGet_ChartModelToApi() {
     String chartName = "chart-name-here";
     String chartVersion = "chartVersion";
-    bio.terra.appmanager.model.ChartVersion chart =
-        new bio.terra.appmanager.model.ChartVersion(chartName, chartVersion);
+    bio.terra.appmanager.model.Chart chart =
+        new bio.terra.appmanager.model.Chart(chartName, chartVersion);
     chart = chart.activate(new Date()).inactivate(new Date());
 
-    List<bio.terra.appmanager.model.ChartVersion> chartNames = List.of(chart);
+    List<bio.terra.appmanager.model.Chart> chartNames = List.of(chart);
 
-    when(serviceMock.getVersions(List.of(chartName), true)).thenReturn(chartNames);
-    ChartArray chartArray = controller.getChartVersions(chartName, true).getBody();
-    bio.terra.appmanager.api.model.ChartVersion apiVersion = chartArray.get(0);
+    when(serviceMock.getCharts(List.of(chartName), true)).thenReturn(chartNames);
+    ChartArray chartArray = controller.getCharts(chartName, true).getBody();
+    bio.terra.appmanager.api.model.Chart apiVersion = chartArray.get(0);
 
     assertEquals(1, chartArray.size());
-    verifyChartVersion(
+    verifyChart(
         chart,
-        apiVersion.getChartName(),
-        apiVersion.getChartVersion(),
+        apiVersion.getName(),
+        apiVersion.getVersion(),
         apiVersion.getAppVersion(),
         apiVersion.getActiveAt(),
         apiVersion.getInactiveAt());
   }
 
-  private void verifyChartVersion(
-      bio.terra.appmanager.model.ChartVersion version,
+  private void verifyChart(
+      bio.terra.appmanager.model.Chart version,
       String chartName,
       String chartVersion,
       String appVersion,
       Date activeAt,
       Date inactiveAt) {
-    assertEquals(version.chartName(), chartName);
-    assertEquals(version.chartVersion(), chartVersion);
+    assertEquals(version.name(), chartName);
+    assertEquals(version.version(), chartVersion);
     assertEquals(version.appVersion(), appVersion);
     assertEquals(version.activeAt(), activeAt);
     assertEquals(version.inactiveAt(), inactiveAt);

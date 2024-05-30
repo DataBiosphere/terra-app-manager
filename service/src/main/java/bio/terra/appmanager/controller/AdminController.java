@@ -1,8 +1,8 @@
 package bio.terra.appmanager.controller;
 
 import bio.terra.appmanager.api.AdminApi;
+import bio.terra.appmanager.api.model.Chart;
 import bio.terra.appmanager.api.model.ChartArray;
-import bio.terra.appmanager.api.model.ChartVersion;
 import bio.terra.appmanager.service.ChartService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -17,20 +17,20 @@ public class AdminController implements AdminApi {
   }
 
   @Override
-  public ResponseEntity<Void> createChartVersions(List<ChartVersion> body) {
-    List<bio.terra.appmanager.model.ChartVersion> versions = List.of();
+  public ResponseEntity<Void> createCharts(List<Chart> body) {
+    List<bio.terra.appmanager.model.Chart> charts = List.of();
     try {
-      versions = body.stream().map((bio.terra.appmanager.model.ChartVersion::fromApi)).toList();
+      charts = body.stream().map((bio.terra.appmanager.model.Chart::fromApi)).toList();
     } catch (NullPointerException npe) {
       return ResponseEntity.badRequest().build();
     }
 
-    this.chartService.createVersions(versions);
+    this.chartService.createCharts(charts);
     return ResponseEntity.noContent().build();
   }
 
   @Override
-  public ResponseEntity<Void> deleteChartVersion(String body) {
+  public ResponseEntity<Void> deleteChart(String body) {
     this.chartService.deleteVersion(body);
     return ResponseEntity.noContent().build();
   }
@@ -38,16 +38,16 @@ public class AdminController implements AdminApi {
   // Note that this method's implementation relies on `includeAll` having a default value and being
   // not null
   @Override
-  public ResponseEntity<ChartArray> getChartVersions(String chartName, Boolean includeAll) {
+  public ResponseEntity<ChartArray> getCharts(String chartName, Boolean includeAll) {
     List<String> versions = chartName == null ? List.of() : List.of(chartName);
-    List<bio.terra.appmanager.model.ChartVersion> dbResult =
-        this.chartService.getVersions(versions, includeAll);
+    List<bio.terra.appmanager.model.Chart> dbResult =
+        this.chartService.getCharts(versions, includeAll);
 
-    List<bio.terra.appmanager.api.model.ChartVersion> apiChartVersions =
-        dbResult.stream().map(bio.terra.appmanager.model.ChartVersion::toApi).toList();
+    List<bio.terra.appmanager.api.model.Chart> apiCharts =
+        dbResult.stream().map(bio.terra.appmanager.model.Chart::toApi).toList();
 
     ChartArray apiResult = new ChartArray();
-    apiResult.addAll(apiChartVersions);
+    apiResult.addAll(apiCharts);
 
     return ResponseEntity.ok(apiResult);
   }

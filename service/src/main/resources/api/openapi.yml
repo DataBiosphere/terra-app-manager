@@ -38,11 +38,11 @@ paths:
 
   # README /docs/api_versioning.md
   #
-  /api/admin/v1/charts/versions:
+  /api/admin/v1/charts:
     post:
       tags: [ admin ]
-      summary: Create new ChartVersion(s) to track
-      operationId: createChartVersions
+      summary: Create new Charts(s) to track
+      operationId: createCharts
       security: [ ] # TODO: remove this to turn on "security"
       requestBody:
         required: true
@@ -52,7 +52,7 @@ paths:
               $ref: '#/components/schemas/ChartArray'
       responses:
         '201':
-          description: ChartVersion(s) have been successfully created
+          description: Chart(s) have been successfully created
         '400':
           $ref: '#/components/responses/BadRequest'
         '403':
@@ -61,43 +61,43 @@ paths:
           $ref: '#/components/responses/ServerError'
     delete:
       tags: [ admin ]
-      summary: Delete ChartVersion
-      operationId: deleteChartVersion
+      summary: Delete Chart
+      operationId: deleteChart
       security: [ ] # TODO: remove this to turn on "security"
       parameters:
         - in: query
           name: chartName
-          description: ChartName to delete.
+          description: Name of chart to delete
           required: true
           schema:
             type: string
       responses:
         '204':
-          description: ChartVersion has been successfully deleted
+          description: Chart has been successfully deleted
         '403':
           description: Request did not come from an admin
         '500':
           $ref: '#/components/responses/ServerError'
     get:
       tags: [ admin ]
-      summary: Get ChartVersion(s)
-      operationId: getChartVersions
+      summary: Get Chart(s)
+      operationId: getCharts
       security: [ ] # TODO: remove this to turn on "security"
       parameters:
         - in: query
           name: chartName
-          description: The optional chartName to return. If omitted, will return all chart versions for all charts.
+          description: Optional name of the chart to return. If omitted, all active charts shall be returned.
           schema:
             type: string
         - in: query
           name: includeAll
-          description: If selected and no chartName is provided, will return all chart versions including inactive ones.
+          description: Return active and inactive charts if set to true
           schema:
             type: boolean
             default: false
       responses:
         '200':
-          description: Chart version(s) specified
+          description: Chart(s) specified
           content:
             application/json:
               schema:
@@ -152,7 +152,6 @@ components:
         statusCode:
           type: integer
 
-
     SystemStatus:
       required: [ ok, systems ]
       type: object
@@ -184,13 +183,13 @@ components:
         build:
           type: string
 
-    ChartVersion:
+    Chart:
       type: object
       required: [ chartName ]
       properties:
-        chartName:
+        name:
           type: string
-        chartVersion:
+        version:
           type: string
         appVersion:
           type: string
@@ -203,7 +202,7 @@ components:
     ChartArray:
       type: array
       items:
-        $ref: '#/components/schemas/ChartVersion'
+        $ref: '#/components/schemas/Chart'
 
   securitySchemes:
     bearerAuth:
