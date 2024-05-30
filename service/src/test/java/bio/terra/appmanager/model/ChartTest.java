@@ -11,7 +11,7 @@ class ChartTest {
 
   @Test
   void testChartNameValidation() {
-    String controlChartVersion = "version";
+    String controlChartVersion = "0.0.0";
     String goodChartName1 = "good";
     String goodChartName2 = "also-good";
     String goodChartName3 = "numbers1";
@@ -40,18 +40,20 @@ class ChartTest {
   @Test
   void testChartVersionValidation() {
     String controlChartName = "chart-name";
-    String goodChartVersion1 = "good";
-    String goodChartVersion2 = "alsoGood";
+    String goodChartVersion1 = "0.0.0";
+    String goodChartVersion2 = "01.01.02";
+    String goodChartVersion3 = "30.10.20";
 
-    String badChartVersion1 = "UpperCaseStart";
-    String badChartVersion2 = "numbers1";
+    String badChartVersion1 = "..";
+    String badChartVersion2 = "0.0.";
     String badChartVersion3 = "specialchar$";
     String badChartVersion4 = "dash-es";
-    String badChartVersion5 = "tooooooooooooooooooolooooooooooooooooooooooooooooooooooong";
+    String badChartVersion5 = "00000000000000000000.3333333333333333333333.33333333333333";
     String badChartVersion6 = "twoUPpercase";
 
     assertDoesNotThrow(() -> new Chart(controlChartName, goodChartVersion1));
     assertDoesNotThrow(() -> new Chart(controlChartName, goodChartVersion2));
+    assertDoesNotThrow(() -> new Chart(controlChartName, goodChartVersion3));
     Exception ex1 =
         assertThrows(
             InconsistentFieldsException.class, () -> new Chart(controlChartName, badChartVersion1));

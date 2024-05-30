@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import bio.terra.appmanager.api.model.ChartArray;
 import bio.terra.appmanager.controller.AdminController;
 import bio.terra.appmanager.controller.GlobalExceptionHandler;
+import bio.terra.appmanager.model.ChartTestUtils;
 import bio.terra.appmanager.service.ChartService;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +63,7 @@ class AdminControllerTest {
   @Test
   void testCreate_204() throws Exception {
     String chartName = "chart-name-here";
-    String chartVersion = "chartVersionHere";
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
 
     mockMvc
         .perform(
@@ -108,7 +109,7 @@ class AdminControllerTest {
   @Test
   void testCreate_invalidChartName() throws Exception {
     String chartName = "invalidChartName$";
-    String chartVersion = "validChartVersion";
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
 
     mockMvc
         .perform(
@@ -220,7 +221,7 @@ class AdminControllerTest {
   @Test
   void testGet_ChartModelToApi() {
     String chartName = "chart-name-here";
-    String chartVersion = "chartVersion";
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
     bio.terra.appmanager.model.Chart chart =
         new bio.terra.appmanager.model.Chart(chartName, chartVersion);
     chart = chart.activate(new Date()).inactivate(new Date());
