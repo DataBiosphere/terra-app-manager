@@ -18,7 +18,7 @@ class ChartDaoTest extends BaseDaoTest {
   @Test
   void testSingleVersionUpsert() {
     String chartName = "chart-name-here";
-    String chartVersion = "0.0.1";
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
     Chart version = new Chart(chartName, chartVersion);
 
     chartDao.upsert(version);
@@ -34,10 +34,10 @@ class ChartDaoTest extends BaseDaoTest {
   void testMultiVersionUpsert() {
     String chartName = "chart-name-here";
 
-    String chartVersion1 = "0.0.1";
+    String chartVersion1 = ChartTestUtils.makeChartVersion(0);
     Chart version1 = new Chart(chartName, chartVersion1);
 
-    String chartVersion2 = "0.0.2";
+    String chartVersion2 = ChartTestUtils.makeChartVersion(1);
     Chart version2 = new Chart(chartName, chartVersion2);
 
     chartDao.upsert(version1);
@@ -59,20 +59,20 @@ class ChartDaoTest extends BaseDaoTest {
   @Test
   void testMultiNameGet() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = "0.0.1";
-    String chartVersion1_2 = "0.0.2";
+    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
+    String chartVersion1_2 = ChartTestUtils.makeChartVersion(1);
     Chart version1_1 = new Chart(chartName1, chartVersion1_1);
     Chart version1_2 = new Chart(chartName1, chartVersion1_2);
 
     String chartName2 = "chart-name-here-too";
-    String chartVersion2_1 = "0.0.3";
-    String chartVersion2_2 = "0.0.4";
+    String chartVersion2_1 = ChartTestUtils.makeChartVersion(2);
+    String chartVersion2_2 = ChartTestUtils.makeChartVersion(3);
     Chart version2_1 = new Chart(chartName2, chartVersion2_1);
     Chart version2_2 = new Chart(chartName2, chartVersion2_2);
 
     String chartName3 = "chart-name";
-    String chartVersion3_1 = "0.0.5";
-    String chartVersion3_2 = "0.0.6";
+    String chartVersion3_1 = ChartTestUtils.makeChartVersion(4);
+    String chartVersion3_2 = ChartTestUtils.makeChartVersion(5);
     Chart version3_1 = new Chart(chartName3, chartVersion3_1);
     Chart version3_2 = new Chart(chartName3, chartVersion3_2);
 
