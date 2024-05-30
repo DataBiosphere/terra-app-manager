@@ -88,4 +88,14 @@ class ChartServiceTest extends BaseSpringBootTest {
     chartService.getCharts(chartNameList, includeAll);
     inOrder.verify(chartDao, calls(1)).get(chartNameList, includeAll);
   }
+
+  @Test
+  void testUpdateVersion() {
+    String chartName1 = "chart-name-here";
+    String chartVersion = "chartVersion";
+    Chart chart = new Chart(chartName1, chartVersion);
+
+    chartService.updateVersions(List.of(chart));
+    verify(chartDao, times(1)).upsert(chart);
+  }
 }

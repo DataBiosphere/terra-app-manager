@@ -28,8 +28,8 @@ public class ChartService {
   }
 
   /**
-   * Update chart entries with associated chart and application versions.
-   * It is assumed that the caller of this validates whether the versions exist, and this method `upserts` for all records
+   * Update chart entries with associated chart and application versions. It is assumed that the
+   * caller of this validates whether the versions exist, and this method `upserts` for all records
    *
    * @param versions non-null list of {@link Chart}s to update
    */

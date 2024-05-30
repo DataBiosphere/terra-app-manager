@@ -26,8 +26,7 @@ public class GlobalExceptionHandler extends AbstractGlobalExceptionHandler<Error
   }
 
   @ExceptionHandler(ChartNotFoundException.class)
-  public ResponseEntity<ErrorReport> chartNotFoundExceptionHandler(
-      ChartNotFoundException ex) {
+  public ResponseEntity<ErrorReport> chartNotFoundExceptionHandler(ChartNotFoundException ex) {
     ErrorReport errorReport =
         new ErrorReport().message(ex.getMessage()).statusCode(HttpStatus.NOT_FOUND.value());
     return new ResponseEntity<>(errorReport, HttpStatus.NOT_FOUND);

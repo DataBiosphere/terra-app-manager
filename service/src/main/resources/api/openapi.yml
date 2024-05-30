@@ -207,7 +207,7 @@ components:
 
     Chart:
       type: object
-      required: [ chartName ]
+      required: [ name ]
       properties:
         name:
           type: string

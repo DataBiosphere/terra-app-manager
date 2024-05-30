@@ -35,7 +35,7 @@ public class AdminController implements AdminApi {
 
     List<bio.terra.appmanager.model.Chart> existingVersions;
     List<String> nonexistentVersions = new ArrayList();
-    for(Chart chart: body) {
+    for (Chart chart : body) {
       existingVersions = this.chartService.getCharts(List.of(chart.getName()), true);
       if (existingVersions.isEmpty()) {
         nonexistentVersions.add(chart.getName());
@@ -43,9 +43,10 @@ public class AdminController implements AdminApi {
     }
 
     if (!nonexistentVersions.isEmpty()) {
-      throw new ChartNotFoundException("The chart(s) you attempted to update do not currently exist, please create first: " + nonexistentVersions);
+      throw new ChartNotFoundException(
+          "The chart(s) you attempted to update do not currently exist, please create first: "
+              + nonexistentVersions);
     }
-
 
     List<bio.terra.appmanager.model.Chart> versions = List.of();
     try {
@@ -80,5 +81,4 @@ public class AdminController implements AdminApi {
 
     return ResponseEntity.ok(apiResult);
   }
-
 }
