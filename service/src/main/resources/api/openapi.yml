@@ -59,6 +59,28 @@ paths:
           description: Request did not come from an admin
         '500':
           $ref: '#/components/responses/ServerError'
+    patch:
+      tags: [ admin ]
+      summary: Update existing Chart(s)
+      operationId: updateChart
+      security: [ ] # TODO: remove this to turn on "security"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChartArray'
+      responses:
+        '201':
+          description: ChartVersion(s) have been successfully created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          description: Request did not come from an admin
+        '404':
+          description: Chart not found
+        '500':
+          $ref: '#/components/responses/ServerError'
     delete:
       tags: [ admin ]
       summary: Delete Chart

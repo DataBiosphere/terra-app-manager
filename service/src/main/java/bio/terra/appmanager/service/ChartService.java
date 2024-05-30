@@ -28,6 +28,17 @@ public class ChartService {
   }
 
   /**
+   * Update chart entries with associated chart and application versions.
+   * It is assumed that the caller of this validates whether the versions exist, and this method `upserts` for all records
+   *
+   * @param versions non-null list of {@link Chart}s to update
+   */
+  @WriteTransaction
+  public void updateVersions(@NotNull List<Chart> versions) {
+    versions.forEach(chartDao::upsert);
+  }
+
+  /**
    * Soft-delete the specified chart entries with associated name.
    *
    * @param name non-null chart name to delete
