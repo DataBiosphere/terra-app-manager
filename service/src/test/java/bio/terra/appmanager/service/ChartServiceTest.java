@@ -92,7 +92,7 @@ class ChartServiceTest extends BaseSpringBootTest {
   @Test
   void testUpdateVersion() {
     String chartName1 = "chart-name-here";
-    String chartVersion = "chartVersion";
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
     Chart chart = new Chart(chartName1, chartVersion);
 
     chartService.updateVersions(List.of(chart));
