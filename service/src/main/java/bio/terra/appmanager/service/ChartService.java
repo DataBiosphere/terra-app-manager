@@ -39,7 +39,7 @@ public class ChartService {
   public void updateVersions(@NotNull List<Chart> versions) {
 
     List<Chart> existingVersions;
-    List<String> nonexistentVersions = new ArrayList();
+    List<String> nonexistentVersions = List.of();
     for (Chart chart : versions) {
       existingVersions = getCharts(List.of(chart.name()), true);
       if (existingVersions.isEmpty()) {

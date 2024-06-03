@@ -196,7 +196,7 @@ class AdminControllerTest {
 
   @Test
   @Disabled("Enable when Authorization is implemented")
-  void testCreate_403() throws Exception {
+  void testCreate_403() {
     // we need to do this when we put in authorization
     // this will fail if someone removes @Disabled(...)
     fail("force whomever removes @Disabled(...) to implement test");
@@ -248,14 +248,14 @@ class AdminControllerTest {
 
   @Test
   @Disabled("Enable when Authorization is implemented")
-  void testUpdate_403() throws Exception {
+  void testUpdate_403() {
     // we need to do this when we put in authorization
     // this will fail if someone removes @Disabled(...)
     fail("force whomever removes @Disabled(...) to implement test");
   }
 
   @Test
-  void testUpdate_ControllerCall_200() throws Exception {
+  void testUpdate_ControllerCall_200() {
     String chartName1 = "chart-name";
     String chartName2 = "chart-name2";
     String chartVersion = ChartTestUtils.makeChartVersion(0);
@@ -283,7 +283,7 @@ class AdminControllerTest {
   }
 
   @Test
-  void testUpdate_ControllerCall_200EmptyList() throws Exception {
+  void testUpdate_ControllerCall_200EmptyList() {
     List<bio.terra.appmanager.model.Chart> chartNames = List.of();
 
     controller.updateChart(List.of());
