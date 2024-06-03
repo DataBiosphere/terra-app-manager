@@ -1,8 +1,8 @@
 package bio.terra.appmanager.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -259,7 +259,6 @@ class AdminControllerTest {
     String chartName1 = "chart-name";
     String chartName2 = "chart-name2";
     String chartVersion = ChartTestUtils.makeChartVersion(0);
-    ;
     String appVersion = "app.version";
 
     Chart apiChart1 =
@@ -278,10 +277,6 @@ class AdminControllerTest {
         List.of(
             bio.terra.appmanager.model.Chart.fromApi(apiChart1),
             bio.terra.appmanager.model.Chart.fromApi(apiChart2));
-    when(serviceMock.getCharts(List.of(chartName1), true))
-        .thenReturn(List.of(bio.terra.appmanager.model.Chart.fromApi(apiChart1)));
-    when(serviceMock.getCharts(List.of(chartName2), true))
-        .thenReturn(List.of(bio.terra.appmanager.model.Chart.fromApi(apiChart2)));
 
     controller.updateChart(List.of(apiChart1, apiChart2));
     verify(serviceMock).updateVersions(chartNames);
@@ -296,76 +291,11 @@ class AdminControllerTest {
   }
 
   @Test
-  void testUpdate_ControllerCall_simple404() throws Exception {
-    String chartName = "chart-name";
-    String chartVersion = ChartTestUtils.makeChartVersion(0);
-    ;
-    String appVersion = "app.version";
-
-    Chart apiChart =
-        new bio.terra.appmanager.api.model.Chart()
-            .name(chartName)
-            .version(chartVersion)
-            .appVersion(appVersion);
-
-    assertThrows(ChartNotFoundException.class, () -> controller.updateChart(List.of(apiChart)));
-  }
-
-  @Test
-  void testUpdate_ControllerCall_multiple404() throws Exception {
-    String chartName1 = "chart-name";
-    String chartName2 = "chart-name2";
-    String chartName3 = "chart-name3";
-    String chartVersion = ChartTestUtils.makeChartVersion(0);
-    ;
-    String appVersion = "app.version";
-
-    Chart apiChart1 =
-        new bio.terra.appmanager.api.model.Chart()
-            .name(chartName1)
-            .version(chartVersion)
-            .appVersion(appVersion);
-
-    Chart apiChart2 =
-        new bio.terra.appmanager.api.model.Chart()
-            .name(chartName2)
-            .version(chartVersion)
-            .appVersion(appVersion);
-
-    Chart apiChart3 =
-        new bio.terra.appmanager.api.model.Chart()
-            .name(chartName3)
-            .version(chartVersion)
-            .appVersion(appVersion);
-
-    when(serviceMock.getCharts(List.of(chartName1), true))
-        .thenReturn(List.of(bio.terra.appmanager.model.Chart.fromApi(apiChart1)));
-
-    ChartNotFoundException ex =
-        assertThrows(
-            ChartNotFoundException.class,
-            () -> controller.updateChart(List.of(apiChart1, apiChart2, apiChart3)));
-    assertEquals(
-        "The chart(s) you attempted to update do not currently exist, please create first: "
-            + List.of(chartName2, chartName3),
-        ex.getMessage());
-  }
-
-  @Test
   void testUpdate_201AllFields() throws Exception {
     String chartName1 = "chart-name";
     String chartVersion = ChartTestUtils.makeChartVersion(0);
-    ;
+
     String appVersion = "app.version";
-
-    Chart apiChart1 =
-        new bio.terra.appmanager.api.model.Chart()
-            .name(chartName1)
-            .version(chartVersion)
-            .appVersion(appVersion);
-
-    when(serviceMock.getCharts(List.of(chartName1), true))
-        .thenReturn(List.of(bio.terra.appmanager.model.Chart.fromApi(apiChart1)));
 
     mockMvc
         .perform(
@@ -390,13 +320,6 @@ class AdminControllerTest {
   void testUpdate_201NoOptionalFields() throws Exception {
     String chartName1 = "chart-name";
     String chartVersion = ChartTestUtils.makeChartVersion(0);
-    ;
-
-    Chart apiChart1 =
-        new bio.terra.appmanager.api.model.Chart().name(chartName1).version(chartVersion);
-
-    when(serviceMock.getCharts(List.of(chartName1), true))
-        .thenReturn(List.of(bio.terra.appmanager.model.Chart.fromApi(apiChart1)));
 
     mockMvc
         .perform(
@@ -418,7 +341,12 @@ class AdminControllerTest {
   void testUpdate_404() throws Exception {
     String chartName1 = "chart-name";
     String chartVersion = ChartTestUtils.makeChartVersion(0);
-    ;
+    bio.terra.appmanager.model.Chart chart =
+        new bio.terra.appmanager.model.Chart(chartName1, chartVersion);
+
+    doThrow(new ChartNotFoundException("test exception"))
+        .when(serviceMock)
+        .updateVersions(List.of(chart));
 
     mockMvc
         .perform(
