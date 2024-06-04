@@ -108,8 +108,9 @@ class ChartServiceTest extends BaseSpringBootTest {
     String chartName = "chart-name";
     String chartVersion = ChartTestUtils.makeChartVersion(0);
     Chart chart = new Chart(chartName, chartVersion);
+    List<Chart> charts = List.of(chart);
 
-    assertThrows(ChartNotFoundException.class, () -> chartService.updateVersions(List.of(chart)));
+    assertThrows(ChartNotFoundException.class, () -> chartService.updateVersions(charts));
   }
 
   @Test
