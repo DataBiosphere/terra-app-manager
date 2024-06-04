@@ -127,9 +127,8 @@ class ChartServiceTest extends BaseSpringBootTest {
     when(chartDao.get(List.of(chartName1), true)).thenReturn(List.of(chart1));
 
     ChartNotFoundException ex =
-        assertThrows(
-            ChartNotFoundException.class,
-            () -> chartService.updateVersions(charts));
+        assertThrows(ChartNotFoundException.class, () -> chartService.updateVersions(charts));
+
     assertEquals(
         "The chart(s) you attempted to update do not currently exist, please create first: "
             + notPresentCharts,

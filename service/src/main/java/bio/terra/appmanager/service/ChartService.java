@@ -6,7 +6,6 @@ import bio.terra.appmanager.model.Chart;
 import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
 import jakarta.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
