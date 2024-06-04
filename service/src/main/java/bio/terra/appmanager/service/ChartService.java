@@ -6,6 +6,7 @@ import bio.terra.appmanager.model.Chart;
 import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class ChartService {
   public void updateVersions(@NotNull List<Chart> versions) {
 
     List<Chart> existingVersions;
-    List<String> nonexistentVersions = List.of();
+    ArrayList<String> nonexistentVersions = new ArrayList();
     for (Chart chart : versions) {
       existingVersions = getCharts(List.of(chart.name()), true);
       if (existingVersions.isEmpty()) {

@@ -104,7 +104,7 @@ class ChartServiceTest extends BaseSpringBootTest {
   }
 
   @Test
-  void testUpdateVersions_ChartNotFound() {
+  void testUpdateVersions_chartNotFound() {
     String chartName = "chart-name";
     String chartVersion = ChartTestUtils.makeChartVersion(0);
     Chart chart = new Chart(chartName, chartVersion);
@@ -113,7 +113,7 @@ class ChartServiceTest extends BaseSpringBootTest {
   }
 
   @Test
-  void testUpdate_ControllerCall_multiple404() {
+  void testUpdate_multipleChartNotFound() {
     String chartName1 = "chart-name";
     String chartName2 = "chart-name2";
     String chartName3 = "chart-name3";
