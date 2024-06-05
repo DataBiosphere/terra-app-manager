@@ -30,6 +30,19 @@ public class AdminController implements AdminApi {
   }
 
   @Override
+  public ResponseEntity<Void> updateChart(List<Chart> body) {
+    List<bio.terra.appmanager.model.Chart> versions = List.of();
+    try {
+      versions = body.stream().map((bio.terra.appmanager.model.Chart::fromApi)).toList();
+    } catch (NullPointerException npe) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    this.chartService.updateVersions(versions);
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
   public ResponseEntity<Void> deleteChart(String body) {
     this.chartService.deleteVersion(body);
     return ResponseEntity.noContent().build();

@@ -2,9 +2,11 @@ package bio.terra.appmanager.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import bio.terra.appmanager.BaseSpringBootTest;
+import bio.terra.appmanager.controller.ChartNotFoundException;
 import bio.terra.appmanager.dao.ChartDao;
 import bio.terra.appmanager.model.Chart;
 import bio.terra.appmanager.model.ChartTestUtils;
@@ -87,5 +89,50 @@ class ChartServiceTest extends BaseSpringBootTest {
     InOrder inOrder = inOrder(chartDao);
     chartService.getCharts(chartNameList, includeAll);
     inOrder.verify(chartDao, calls(1)).get(chartNameList, includeAll);
+  }
+
+  @Test
+  void testUpdateVersions() {
+    String chartName1 = "chart-name-here";
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
+    Chart chart = new Chart(chartName1, chartVersion);
+
+    when(chartDao.get(List.of(chartName1), true)).thenReturn(List.of(chart));
+
+    chartService.updateVersions(List.of(chart));
+    verify(chartDao, times(1)).upsert(chart);
+  }
+
+  @Test
+  void testUpdateVersions_chartNotFound() {
+    String chartName = "chart-name";
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
+    Chart chart = new Chart(chartName, chartVersion);
+    List<Chart> charts = List.of(chart);
+
+    assertThrows(ChartNotFoundException.class, () -> chartService.updateVersions(charts));
+  }
+
+  @Test
+  void testUpdate_multipleChartNotFound() {
+    String chartName1 = "chart-name";
+    String chartName2 = "chart-name2";
+    String chartName3 = "chart-name3";
+    String chartVersion = ChartTestUtils.makeChartVersion(0);
+    Chart chart1 = new Chart(chartName1, chartVersion);
+    Chart chart2 = new Chart(chartName2, chartVersion);
+    Chart chart3 = new Chart(chartName3, chartVersion);
+    List<Chart> charts = List.of(chart1, chart2, chart3);
+    List<String> notPresentCharts = List.of(chartName2, chartName3);
+
+    when(chartDao.get(List.of(chartName1), true)).thenReturn(List.of(chart1));
+
+    ChartNotFoundException ex =
+        assertThrows(ChartNotFoundException.class, () -> chartService.updateVersions(charts));
+
+    assertEquals(
+        "The chart(s) you attempted to update do not currently exist, please create first: "
+            + notPresentCharts,
+        ex.getMessage());
   }
 }
