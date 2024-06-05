@@ -28,4 +28,11 @@ public class GlobalExceptionHandler extends AbstractGlobalExceptionHandler<Error
         new ErrorReport().message(ex.getMessage()).statusCode(HttpStatus.BAD_REQUEST.value());
     return new ResponseEntity<>(errorReport, HttpStatus.BAD_REQUEST);
   }
+
+  @ExceptionHandler(ChartNotFoundException.class)
+  public ResponseEntity<ErrorReport> chartNotFoundExceptionHandler(ChartNotFoundException ex) {
+    ErrorReport errorReport =
+        new ErrorReport().message(ex.getMessage()).statusCode(HttpStatus.NOT_FOUND.value());
+    return new ResponseEntity<>(errorReport, HttpStatus.NOT_FOUND);
+  }
 }

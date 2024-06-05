@@ -1,6 +1,6 @@
 package bio.terra.appmanager.dao;
 
-import bio.terra.appmanager.model.ChartVersion;
+import bio.terra.appmanager.model.Chart;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -12,106 +12,104 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ChartVersionDao {
+public class ChartDao {
 
-  private static final RowMapper<ChartVersion> CHART_VERSION_ROW_MAPPER =
+  private static final RowMapper<Chart> CHART_ROW_MAPPER =
       (rs, rowNum) ->
-          new ChartVersion(
-              rs.getString("chart_name"),
-              rs.getString("chart_version"),
+          new Chart(
+              rs.getString("name"),
+              rs.getString("version"),
               rs.getString("app_version"),
               rs.getDate("created_at"),
               rs.getDate("deleted_at"));
 
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
-  public ChartVersionDao(NamedParameterJdbcTemplate jdbcTemplate) {
+  public ChartDao(NamedParameterJdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  private void deleteActiveVersions(List<String> chartVersionNames, Date inactiveDate) {
-    if (chartVersionNames.isEmpty()) {
+  private void deleteActiveVersions(List<String> chartNames, Date inactiveDate) {
+    if (chartNames.isEmpty()) {
       return; // nothing to invalidate
     }
 
     var query =
-        "UPDATE chart_versions"
+        "UPDATE charts"
             + " SET deleted_at = :deletedAt"
-            + " WHERE chart_name in (:chartNames)"
+            + " WHERE name in (:chartNames)"
             + " AND deleted_at is null";
 
     var namedParameters =
         new MapSqlParameterSource()
             .addValue("deletedAt", inactiveDate)
-            .addValue("chartNames", chartVersionNames);
+            .addValue("chartNames", chartNames);
 
     jdbcTemplate.update(query, namedParameters);
   }
 
   /**
-   * @param version {@link ChartVersion} to add to the repository
+   * @param chart {@link Chart} to add to the repository
    */
   @WithSpan
-  public void upsert(ChartVersion version) {
+  public void upsert(Chart chart) {
     // make sure the activeDate and inactiveDate(s) are the same date/time
     Date currentDate = new Date();
-    deleteActiveVersions(List.of(version.chartName()), currentDate);
+    deleteActiveVersions(List.of(chart.name()), currentDate);
 
     var query =
-        "INSERT INTO chart_versions (chart_name, chart_version, app_version, created_at)"
+        "INSERT INTO charts (name, version, app_version, created_at)"
             + " VALUES (:chartName, :chartVersion, :appVersion, :createdAt)";
 
     var namedParameters =
         new MapSqlParameterSource()
-            .addValue("chartName", version.chartName())
-            .addValue("chartVersion", version.chartVersion())
-            .addValue("appVersion", version.appVersion())
+            .addValue("chartName", chart.name())
+            .addValue("chartVersion", chart.version())
+            .addValue("appVersion", chart.appVersion())
             .addValue("createdAt", currentDate);
 
     jdbcTemplate.update(query, namedParameters);
   }
 
   /**
-   * @return list of ACTIVE {@link ChartVersion}s
+   * @return list of ACTIVE {@link Chart}s
    */
-  public List<ChartVersion> get() {
+  public List<Chart> get() {
     return get(false);
   }
 
   /**
    * @param includeAll {@code true} if we should return all versions, including inactive {@link
-   *     ChartVersion}s.
-   * @return list of {@link ChartVersion}s based on the parameters provided
+   *     Chart}s.
+   * @return list of {@link Chart}s based on the parameters provided
    */
-  public List<ChartVersion> get(boolean includeAll) {
+  public List<Chart> get(boolean includeAll) {
     return get(List.of(), includeAll);
   }
 
   /**
    * @param chartNames non-null list of chartNames to filter the return results.
-   * @return list of ACTIVE {@link ChartVersion}s based on the parameters provided
+   * @return list of ACTIVE {@link Chart}s based on the parameters provided
    */
-  public List<ChartVersion> get(List<String> chartNames) {
+  public List<Chart> get(List<String> chartNames) {
     return get(chartNames, false);
   }
 
   /**
    * @param chartNames non-null list of chartNames to filter the return results.
    * @param includeAll {@code true} if we should return all versions, including inactive {@link
-   *     ChartVersion}s.
-   * @return list of {@link ChartVersion}s based on the parameters provided
+   *     Chart}s.
+   * @return list of {@link Chart}s based on the parameters provided
    */
   @WithSpan
-  public List<ChartVersion> get(@NotNull List<String> chartNames, boolean includeAll) {
-    var query =
-        "SELECT chart_name, chart_version, app_version, created_at, deleted_at"
-            + " FROM chart_versions";
+  public List<Chart> get(@NotNull List<String> chartNames, boolean includeAll) {
+    var query = "SELECT name, version, app_version, created_at, deleted_at" + " FROM charts";
 
     var namedParameters = new MapSqlParameterSource();
     var conditions = new ArrayList<String>();
 
     if (!chartNames.isEmpty()) {
-      conditions.add(" chart_name in (:chartNames)");
+      conditions.add(" name in (:chartNames)");
       namedParameters.addValue("chartNames", chartNames);
     }
 
@@ -123,11 +121,11 @@ public class ChartVersionDao {
       query += " WHERE" + String.join(" AND", conditions);
     }
 
-    return jdbcTemplate.queryForStream(query, namedParameters, CHART_VERSION_ROW_MAPPER).toList();
+    return jdbcTemplate.queryForStream(query, namedParameters, CHART_ROW_MAPPER).toList();
   }
 
   /**
-   * Soft-delete all {@link ChartVersion}s for the {@code chartNames} provided
+   * Soft-delete all {@link Chart}s for the {@code chartNames} provided
    *
    * @param chartNames list of chart names to delete.
    */

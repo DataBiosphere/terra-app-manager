@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: "20240429_create_chart_versions"
+      id: "20240429_create_charts_table"
       author: pate
       changes:
         - createTable:
-            tableName: chart_versions
+            tableName: charts
             columns:
               - column:
                   name: id
@@ -14,12 +14,12 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: chart_name
+                  name: name
                   type: text
                   constraints:
                     nullable: false
               - column:
-                  name: chart_version
+                  name: version
                   type: text
                   constraints:
                     nullable: false

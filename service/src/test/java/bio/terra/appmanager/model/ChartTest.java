@@ -7,11 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import bio.terra.common.exception.InconsistentFieldsException;
 import org.junit.jupiter.api.Test;
 
-class ChartVersionValidationTest {
+class ChartTest {
 
   @Test
   void testChartNameValidation() {
-    String controlChartVersion = "chartVersion";
+    String controlChartVersion = "0.0.0";
     String goodChartName1 = "good";
     String goodChartName2 = "also-good";
     String goodChartName3 = "numbers1";
@@ -20,70 +20,63 @@ class ChartVersionValidationTest {
     String badChartName2 = "specialchar$";
     String badChartName3 = "tooooooooooooooooooolooooooooooooooooooooooooooooooooooong";
 
-    assertDoesNotThrow(() -> new ChartVersion(goodChartName1, controlChartVersion));
-    assertDoesNotThrow(() -> new ChartVersion(goodChartName2, controlChartVersion));
-    assertDoesNotThrow(() -> new ChartVersion(goodChartName3, controlChartVersion));
+    assertDoesNotThrow(() -> new Chart(goodChartName1, controlChartVersion));
+    assertDoesNotThrow(() -> new Chart(goodChartName2, controlChartVersion));
+    assertDoesNotThrow(() -> new Chart(goodChartName3, controlChartVersion));
     Exception ex1 =
         assertThrows(
-            InconsistentFieldsException.class,
-            () -> new ChartVersion(badChartName1, controlChartVersion));
+            InconsistentFieldsException.class, () -> new Chart(badChartName1, controlChartVersion));
     assertTrue(ex1.getMessage().contains(getPartialChartNameExceptionMessage(badChartName1)));
     Exception ex2 =
         assertThrows(
-            InconsistentFieldsException.class,
-            () -> new ChartVersion(badChartName2, controlChartVersion));
+            InconsistentFieldsException.class, () -> new Chart(badChartName2, controlChartVersion));
     assertTrue(ex2.getMessage().contains(getPartialChartNameExceptionMessage(badChartName2)));
     Exception ex3 =
         assertThrows(
-            InconsistentFieldsException.class,
-            () -> new ChartVersion(badChartName3, controlChartVersion));
+            InconsistentFieldsException.class, () -> new Chart(badChartName3, controlChartVersion));
     assertTrue(ex3.getMessage().contains(getPartialChartNameExceptionMessage(badChartName3)));
   }
 
   @Test
   void testChartVersionValidation() {
     String controlChartName = "chart-name";
-    String goodChartVersion1 = "good";
-    String goodChartVersion2 = "alsoGood";
+    String goodChartVersion1 = "0.0.0";
+    String goodChartVersion2 = "01.01.02";
+    String goodChartVersion3 = "30.10.20";
 
-    String badChartVersion1 = "UpperCaseStart";
-    String badChartVersion2 = "numbers1";
+    String badChartVersion1 = "..";
+    String badChartVersion2 = "0.0.";
     String badChartVersion3 = "specialchar$";
     String badChartVersion4 = "dash-es";
-    String badChartVersion5 = "tooooooooooooooooooolooooooooooooooooooooooooooooooooooong";
+    String badChartVersion5 = "00000000000000000000.3333333333333333333333.33333333333333";
     String badChartVersion6 = "twoUPpercase";
 
-    assertDoesNotThrow(() -> new ChartVersion(controlChartName, goodChartVersion1));
-    assertDoesNotThrow(() -> new ChartVersion(controlChartName, goodChartVersion2));
+    assertDoesNotThrow(() -> new Chart(controlChartName, goodChartVersion1));
+    assertDoesNotThrow(() -> new Chart(controlChartName, goodChartVersion2));
+    assertDoesNotThrow(() -> new Chart(controlChartName, goodChartVersion3));
     Exception ex1 =
         assertThrows(
-            InconsistentFieldsException.class,
-            () -> new ChartVersion(controlChartName, badChartVersion1));
+            InconsistentFieldsException.class, () -> new Chart(controlChartName, badChartVersion1));
     assertTrue(ex1.getMessage().contains(getPartialChartVersionExceptionMessage(badChartVersion1)));
     Exception ex2 =
         assertThrows(
-            InconsistentFieldsException.class,
-            () -> new ChartVersion(controlChartName, badChartVersion2));
+            InconsistentFieldsException.class, () -> new Chart(controlChartName, badChartVersion2));
     assertTrue(ex2.getMessage().contains(getPartialChartVersionExceptionMessage(badChartVersion2)));
     Exception ex3 =
         assertThrows(
-            InconsistentFieldsException.class,
-            () -> new ChartVersion(controlChartName, badChartVersion3));
+            InconsistentFieldsException.class, () -> new Chart(controlChartName, badChartVersion3));
     assertTrue(ex3.getMessage().contains(getPartialChartVersionExceptionMessage(badChartVersion3)));
     Exception ex4 =
         assertThrows(
-            InconsistentFieldsException.class,
-            () -> new ChartVersion(controlChartName, badChartVersion4));
+            InconsistentFieldsException.class, () -> new Chart(controlChartName, badChartVersion4));
     assertTrue(ex4.getMessage().contains(getPartialChartVersionExceptionMessage(badChartVersion4)));
     Exception ex5 =
         assertThrows(
-            InconsistentFieldsException.class,
-            () -> new ChartVersion(controlChartName, badChartVersion5));
+            InconsistentFieldsException.class, () -> new Chart(controlChartName, badChartVersion5));
     assertTrue(ex5.getMessage().contains(getPartialChartVersionExceptionMessage(badChartVersion5)));
     Exception ex6 =
         assertThrows(
-            InconsistentFieldsException.class,
-            () -> new ChartVersion(controlChartName, badChartVersion6));
+            InconsistentFieldsException.class, () -> new Chart(controlChartName, badChartVersion6));
     assertTrue(ex6.getMessage().contains(getPartialChartVersionExceptionMessage(badChartVersion6)));
   }
 
