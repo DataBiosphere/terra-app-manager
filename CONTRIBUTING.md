@@ -20,7 +20,9 @@ This section describes the steps necessary to finish setting up and
 contributing to this repo.
 If you would like more information about the design and reasons "why"
 this repo is structured like it is,
-please continue reading in the [DESIGN.md](./DESIGN.md)-document located in this directory.
+please continue reading the [DESIGN.md](./DESIGN.md)-document located in
+this directory to get your bearings for the anatomy of the service
+and where the associated code lives.
 
 This document assumes you've completed the steps located
 in [Environment setup](./README.md#environment-setup) for how to `setup` and `run` the service.
@@ -87,6 +89,10 @@ IntelliJ will detect that this is a `gradle`-based project and
 start compiling your repo.
 
 ### Impersonating a Service Account for `/admin` access
+
+Following the details outlined in the [DESIGN.md](./DESIGN.md),
+this service assumes all requests are authenticated by the time they reach this service.
+To test this functionality locally, you need to make sure the Apache proxy is running locally.
 
 The `/admin`-endpoints are locked down to only allow specific service accounts to access them.
 
