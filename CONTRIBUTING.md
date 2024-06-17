@@ -42,24 +42,24 @@ there are a series of scripts available in the `./scripts` directory.
 
 ```mermaid
 flowchart LR
-   e[[setup]]
-   v[develop]
-   e --> v
-   b[["build docker"]]
-   rt[[run tests]]
-   v --> rt
-   rt --> v
+  e[[setup]]
+  v[develop]
+  e --> v
+  b[["build docker"]]
+  rt[[run tests]]
+  v --> rt
+  rt --> v
 
-   subgraph docker / k8s
-      rd[[run docker]]
-   end
-   b --> rd
-   v -- lint / test --> b
-   ri[[run integration]]
-   ri --> rc
-   ri --> rd
-   rc[[run local]]
-   v --> rc
+  subgraph docker / k8s
+    rd[[run docker]]
+  end
+  b --> rd
+  v -- lint / test --> b
+  ri[[run integration]]
+  ri --> rc
+  ri --> rd
+  rc[[run local]]
+  v --> rc
 ```
 
 The double walled boxes in the diagram above represent scripts
@@ -85,6 +85,25 @@ With IntelliJ IDEA open, perform the following steps to set up your IDE:
 
 IntelliJ will detect that this is a `gradle`-based project and
 start compiling your repo.
+
+### Impersonating a Service Account for `/admin` access
+
+The `/admin`-endpoints are locked down to only allow specific service accounts to access them.
+
+To impersonate service account in development, one must:
+
+```shell
+gcloud config set auth/impersonate_service_account appmanager-dev@broad-dsde-dev.iam.gserviceaccount.com
+export GCLOUD_ACCESS_TOKEN=gcloud auth print-access-token
+```
+
+The `GCLOUD_ACCESS_TOKEN` can then be used in the swagger-ui to authenticate.
+
+If you'd like to see the contents of the google bearer token, you can use the following command:
+
+```shell
+curl "https://oauth2.googleapis.com/tokeninfo?access_token=$GCLOUD_ACCESS_TOKEN"
+```
 
 ## Frequently Asked Questions (FAQ)
 
