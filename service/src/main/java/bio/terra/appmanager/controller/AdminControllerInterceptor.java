@@ -17,10 +17,17 @@ public class AdminControllerInterceptor implements HandlerInterceptor {
             "leonardo-dev@broad-dsde-dev.iam.gserviceaccount.com");
 
     var oauthEmail = request.getHeader("oauth2_claim_email");
+    System.out.println("HELLO COMPUTER: " + oauthEmail);
 
-    System.out.println("oauthEmail: " + oauthEmail);
-    return (!isAdminPath(request)
-        || (isAdminPath(request) && oauthEmail != null && authorizedEmails.contains(oauthEmail)));
+    if (!authorizedEmails.contains(oauthEmail)) {
+      response.sendError(
+          HttpServletResponse.SC_FORBIDDEN,
+          "Request did not come from an authorized Service Account");
+      return false;
+    }
+    ;
+
+    return true;
   }
 
   private boolean isAdminPath(HttpServletRequest request) {

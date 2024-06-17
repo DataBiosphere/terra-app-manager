@@ -80,17 +80,6 @@ public class AdminController implements AdminApi {
 
   @Override
   public ResponseEntity<ChartArray> getCharts(String chartName, Boolean includeAll) {
-    request
-        .getHeaderNames()
-        .asIterator()
-        .forEachRemaining(name -> System.out.println(name + ": " + request.getHeader(name)));
-
-    //    System.out.println(samUser.getEmail());
-    //    System.out.println(samUser.getSubjectId());
-    //    if (!samUser.getEmail().equals("leonardo-dev@broad-dsde-dev.iam.gserviceaccount.com")) {
-    //      return ResponseEntity.status(417).build();
-    //    }
-
     List<String> versions = chartName == null ? List.of() : List.of(chartName);
     List<bio.terra.appmanager.model.Chart> dbResult =
         this.chartService.getCharts(versions, includeAll);
