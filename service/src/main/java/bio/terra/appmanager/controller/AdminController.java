@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
  * requests are authenticated and security is enforced.
  *
  * @see AdminControllerInterceptor
- * @see AdminControllerInterceptorConfig
+ * @see AdminControllerInterceptorConfigurer
  */
 @Controller
 public class AdminController implements AdminApi {

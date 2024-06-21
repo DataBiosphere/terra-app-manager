@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Component
-public class AdminControllerInterceptorConfig implements WebMvcConfigurer {
+public class AdminControllerInterceptorConfigurer implements WebMvcConfigurer {
 
   @Autowired AdminControllerInterceptor adminControllerInterceptor;
 

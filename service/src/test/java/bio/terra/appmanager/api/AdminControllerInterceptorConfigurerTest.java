@@ -27,7 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
  * and not other endpoints
  */
 @SpringBootTest()
-class AdminControllerInterceptorConfigTest {
+class AdminControllerInterceptorConfigurerTest {
 
   @Autowired private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
