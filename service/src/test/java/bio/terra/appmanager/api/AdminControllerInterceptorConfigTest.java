@@ -1,5 +1,6 @@
 package bio.terra.appmanager.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -35,7 +36,7 @@ class AdminControllerInterceptorConfigTest {
         !requestMappingInfo.getMethodsCondition().isEmpty(),
         "assume admin endpoints have HTTP verb");
     Set<RequestMethod> httpMethods = requestMappingInfo.getMethodsCondition().getMethods();
-    assertTrue(httpMethods.size() == 1, "assume admin endpoints have HTTP verb");
+    assertEquals(1, httpMethods.size(), "assume admin endpoints have HTTP verb");
     return httpMethods.iterator().next().asHttpMethod();
   }
 
@@ -48,7 +49,7 @@ class AdminControllerInterceptorConfigTest {
   }
 
   @Test
-  public void validateRequiredForAdminEndpoints() {
+  void validateRequiredForAdminEndpoints() {
     requestMappingHandlerMapping.getHandlerMethods().keySet().stream()
         .filter(
             requestMappingInfo -> {
@@ -86,7 +87,7 @@ class AdminControllerInterceptorConfigTest {
   }
 
   @Test
-  public void validateNonAdminEndpoints() throws Exception {
+  void validateNonAdminEndpoints() throws Exception {
 
     MockHttpServletRequest request = new MockHttpServletRequest("GET", "/status");
 

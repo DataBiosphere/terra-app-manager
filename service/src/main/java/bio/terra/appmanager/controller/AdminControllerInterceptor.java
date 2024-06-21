@@ -31,8 +31,6 @@ public class AdminControllerInterceptor implements HandlerInterceptor {
           HttpServletResponse.SC_FORBIDDEN,
           "Request did not come from an authorized Service Account");
       return false;
-    } else {
-
     }
 
     return true;
