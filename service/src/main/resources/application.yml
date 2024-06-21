@@ -3,7 +3,7 @@
 
 env:
   admin:
-    service_accounts: ${SERVICE_ACCOUNT_ADMINS:}
+    service_accounts: ${SERVICE_ACCOUNT_ADMINS:test@nowhere.com}
   db:
     host: ${DATABASE_HOSTNAME:127.0.0.1}:5432
     init: ${INIT_DB:false}
