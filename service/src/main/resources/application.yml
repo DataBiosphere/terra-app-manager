@@ -2,6 +2,8 @@
 # This is for deployment-specific values, which may be managed by other teams
 
 env:
+  admin:
+    service_accounts: ${SERVICE_ACCOUNT_ADMINS:}
   db:
     host: ${DATABASE_HOSTNAME:127.0.0.1}:5432
     init: ${INIT_DB:false}
@@ -63,6 +65,8 @@ management:
         include: "*"
 
 appmanager:
+  admin:
+    service_accounts: ${env.admin.service_accounts}
   ingress:
     # Default value that's overridden by Helm.
     domainName: localhost:8080
