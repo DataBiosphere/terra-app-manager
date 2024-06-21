@@ -20,7 +20,7 @@ public class AdminControllerInterceptor implements HandlerInterceptor {
   private List<String> authorizedEmails;
 
   public AdminControllerInterceptor(AdminControllerConfiguration adminControllerConfiguration) {
-    this.authorizedEmails = List.of(adminControllerConfiguration.serviceAccounts());
+    this.authorizedEmails = adminControllerConfiguration.serviceAccounts();
     if (authorizedEmails.isEmpty()) {
       throw new IllegalArgumentException("service_accounts configuration is required");
     }
