@@ -32,7 +32,7 @@ public class AdminControllerInterceptor implements HandlerInterceptor {
 
     var oauthEmail = request.getHeader("oauth2_claim_email");
 
-    if (authorizedEmails.contains(oauthEmail)) {
+    if (oauthEmail != null && authorizedEmails.contains(oauthEmail)) {
       return true;
     }
 
