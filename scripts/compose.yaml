@@ -17,6 +17,7 @@ services:
   service:
     image: terra-app-manager
     depends_on:
+      - proxy
       - database
     environment:
       - DATABASE_HOSTNAME=database
