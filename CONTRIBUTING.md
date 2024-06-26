@@ -100,7 +100,7 @@ To impersonate service account in development, one must:
 
 ```shell
 gcloud config set auth/impersonate_service_account appmanager-dev@broad-dsde-dev.iam.gserviceaccount.com
-export GCLOUD_ACCESS_TOKEN=gcloud auth print-access-token
+export GCLOUD_ACCESS_TOKEN=$(gcloud auth print-access-token)
 ```
 
 The `GCLOUD_ACCESS_TOKEN` can then be used in the swagger-ui to authenticate.
