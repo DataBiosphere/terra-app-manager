@@ -111,6 +111,12 @@ If you'd like to see the contents of the google bearer token, you can use the fo
 curl "https://oauth2.googleapis.com/tokeninfo?access_token=$GCLOUD_ACCESS_TOKEN"
 ```
 
+And to STOP impersonating a service_account, you need to run the following:
+
+```shell
+gcloud config unset auth/impersonate_service_account
+```
+
 ## Frequently Asked Questions (FAQ)
 
 (build out this section based on questions asked of the team)
