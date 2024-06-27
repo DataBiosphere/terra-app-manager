@@ -32,9 +32,22 @@ After running the `setup`-script,
 There are two flavors for running the service, either `local`-ly or in a `docker` container.
 Both flavors of execution have been scripted for your convenience.
 
-Running either command will get start your api,
+Running the `local`-command will get start the `service` locally,
 and you should be able to access your running instance at:
-http://localhost:8080
+- http://localhost:8080
+
+Running the `docker`-command will start the `service` in a docker container,
+and you should be able to access your running instance at one of:
+- http://localhost:8080
+- http://local.dsde-dev.broadinstitute.org/swagger-ui.html
+
+To access the `service` through the `web-proxy`,
+you will need to make sure the following has been added to your `/etc/hosts` file.
+
+```shell
+...
+127.0.0.1       local.dsde-dev.broadinstitute.org
+```
 
 ### Local execution
 

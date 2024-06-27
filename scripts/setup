@@ -26,7 +26,7 @@ clean_db_opt=""
 die() { log_error "$*" >&2; echo ""; usage; exit 2; }  # complain to STDERR and exit with error
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
 
-while getopts h-: OPT; do  # allow -h and -- "with arg"
+while getopts ch-: OPT; do  # allow -h and -- "with arg"
   # support long options: https://stackoverflow.com/a/28466267/519360
   if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
     OPT="${OPTARG%%=*}"       # extract long option name
@@ -50,9 +50,37 @@ log() {
   log_info "$MSG_PREFIX ${@}"
 }
 
+generate_web_proxy_config() {
+  local _cluster=terra-dev
+  local _outdir=${TMP_DIR}/web-proxy-configs
+  mkdir -p ${_outdir}
+
+  echo "Configuring access to ${_cluster}..."
+  echo "(Note: non-split-tunnel VPN is required when working remotely)"
+  gcloud container clusters get-credentials --zone us-central1-a --project broad-dsde-dev ${_cluster}
+
+  kubectl -n terra-dev get configmap appmanager-oauth2-configmap -o 'go-template={{index .data "oauth2.conf"}}' > ${_outdir}/oauth2.conf
+  ## Local dev uses a macOS-specific docker replacement hostname for locahost, so replace all instances in the proxy config.
+  kubectl -n terra-dev get configmap appmanager-site-configmap -o 'go-template={{index .data "site.conf"}}' | sed 's/localhost/host\.docker\.internal/g' > ${_outdir}/site.conf
+  #
+  ## local.dsde-dev.broadinstitute.org cert
+  kubectl -n local-dev get secrets local-dev-cert -o 'go-template={{ index .data "tls.crt" | base64decode }}' > ${_outdir}/server.crt
+  kubectl -n local-dev get secrets local-dev-cert -o 'go-template={{ index .data "tls.key" | base64decode }}' > ${_outdir}/server.key
+  #
+  ## Get proxy env vars
+  {
+    echo B2C_APPLICATION_ID=$(kubectl -n terra-dev get secret appmanager-proxy-b2c-secrets-eso -o 'go-template={{ index .data "application-id" }}' | base64 --decode)
+  } > ${_outdir}/web-proxy.env
+}
+
 log "verifying required tools are installed"
 check_required_tools "${TOOLS[@]}" || exit 1;
-log_info ""
+log ""
+
+log "generating web-proxy information"
+generate_web_proxy_config
+log ""
+
 
 log "setting up service database"
 $(dirname $0)/run-db ${clean_db_opt} start

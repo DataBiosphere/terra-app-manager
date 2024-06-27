@@ -5,7 +5,7 @@ source $(dirname $0)/utils.sh
 # shared variables across all scripts
 ROOT_DIR="$(cd "$(dirname "$0")/.."; pwd)"
 SCRIPTS_DIR=${SCRIPTS_DIR:-${ROOT_DIR}/scripts}
-TMP_DIR=${TMP_DIR:-${ROOT_DIR}/build/tmp}
+TMP_DIR=${TMP_DIR:-${ROOT_DIR}/tmp}
 
 DEBUG_OPTS=""
 
@@ -13,4 +13,6 @@ DEBUG_OPTS=""
 GRADLE_OPTS=${GRADLE_OPTS}
 if [ "$CI" == "true" ]; then
   GRADLE_OPTS="--build-cache"
+else
+  SERVICE_ACCOUNT_ADMINS="${USER}@broadinstitute.org"
 fi

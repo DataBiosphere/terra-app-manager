@@ -1,7 +1,6 @@
 package bio.terra.appmanager.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -23,7 +22,6 @@ import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -187,22 +185,6 @@ class AdminControllerTest {
   }
 
   @Test
-  @Disabled("Enable when Authorization is implemented")
-  void testGet_403() {
-    // we need to do this when we put in authorization
-    // this will fail if someone removes @Disabled(...)
-    fail("force whomever removes @Disabled(...) to implement test");
-  }
-
-  @Test
-  @Disabled("Enable when Authorization is implemented")
-  void testCreate_403() {
-    // we need to do this when we put in authorization
-    // this will fail if someone removes @Disabled(...)
-    fail("force whomever removes @Disabled(...) to implement test");
-  }
-
-  @Test
   void testDelete_204() throws Exception {
     String chartName = "chart-name-here";
 
@@ -212,14 +194,6 @@ class AdminControllerTest {
 
     verify(serviceMock).deleteVersion(capture_chartName.capture());
     assertEquals(capture_chartName.getValue(), chartName);
-  }
-
-  @Test
-  @Disabled("Enable when Authorization is implemented")
-  void testDelete_403() throws Exception {
-    // we need to do this when we put in authorization
-    // this will fail if someone removes @Disabled(...)
-    fail("force whomever removes @Disabled(...) to implement test");
   }
 
   @Test
@@ -244,14 +218,6 @@ class AdminControllerTest {
         apiVersion.getAppVersion(),
         apiVersion.getActiveAt(),
         apiVersion.getInactiveAt());
-  }
-
-  @Test
-  @Disabled("Enable when Authorization is implemented")
-  void testUpdate_403() {
-    // we need to do this when we put in authorization
-    // this will fail if someone removes @Disabled(...)
-    fail("force whomever removes @Disabled(...) to implement test");
   }
 
   @Test

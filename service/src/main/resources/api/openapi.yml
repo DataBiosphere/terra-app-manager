@@ -43,7 +43,6 @@ paths:
       tags: [ admin ]
       summary: Create new Charts(s) to track
       operationId: createCharts
-      security: [ ] # TODO: remove this to turn on "security"
       requestBody:
         required: true
         content:
@@ -51,7 +50,7 @@ paths:
             schema:
               $ref: '#/components/schemas/ChartArray'
       responses:
-        '201':
+        '204':
           description: Chart(s) have been successfully created
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -63,7 +62,6 @@ paths:
       tags: [ admin ]
       summary: Update existing Chart(s)
       operationId: updateChart
-      security: [ ] # TODO: remove this to turn on "security"
       requestBody:
         required: true
         content:
@@ -71,7 +69,7 @@ paths:
             schema:
               $ref: '#/components/schemas/ChartArray'
       responses:
-        '201':
+        '204':
           description: ChartVersion(s) have been successfully created
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -85,7 +83,6 @@ paths:
       tags: [ admin ]
       summary: Delete Chart
       operationId: deleteChart
-      security: [ ] # TODO: remove this to turn on "security"
       parameters:
         - in: query
           name: chartName
@@ -104,7 +101,6 @@ paths:
       tags: [ admin ]
       summary: Get Chart(s)
       operationId: getCharts
-      security: [ ] # TODO: remove this to turn on "security"
       parameters:
         - in: query
           name: chartName

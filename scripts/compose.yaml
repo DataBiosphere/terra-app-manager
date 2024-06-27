@@ -2,12 +2,26 @@ name: appmanager
 
 services:
 
+  proxy:
+    build:
+      context: ..
+      dockerfile: Dockerfile-proxy
+    ports:
+      - "20080:80"
+      - "443:443"
+    # run ./scripts/setup to generate this file
+    # see: ./scripts/setup:generate_web_proxy_config
+    env_file: ../tmp/web-proxy-configs/web-proxy.env
+    restart: always
+
   service:
     image: terra-app-manager
     depends_on:
+      - proxy
       - database
     environment:
       - DATABASE_HOSTNAME=database
+      - SERVICE_ACCOUNT_ADMINS=${SERVICE_ACCOUNT_ADMINS}
     ports:
       - "8080:8080"
 
@@ -20,5 +34,5 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ../build/tmp/postgres-data:/var/lib/postgresql/data
+      - ../tmp/postgres-data:/var/lib/postgresql/data
       - ./init-db/postgres-init.sql:/docker-entrypoint-initdb.d/postgres-init.sql

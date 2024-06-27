@@ -8,6 +8,13 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+/**
+ * Please see the ./DESIGN.md document (located in the repo-root) for more information about how
+ * requests are authenticated and security is enforced.
+ *
+ * @see AdminControllerInterceptor
+ * @see AdminControllerInterceptorConfigurer
+ */
 @Controller
 public class AdminController implements AdminApi {
   private final ChartService chartService;
@@ -48,8 +55,11 @@ public class AdminController implements AdminApi {
     return ResponseEntity.noContent().build();
   }
 
-  // Note that this method's implementation relies on `includeAll` having a default value and being
-  // not null
+  /**
+   * @param chartName optional name of chart to return values for, otherwise return all charts
+   * @param includeAll non-null indicator to include deleted charts as well as active
+   * @return {@link ChartArray} of charts matching input criteria
+   */
   @Override
   public ResponseEntity<ChartArray> getCharts(String chartName, Boolean includeAll) {
     List<String> versions = chartName == null ? List.of() : List.of(chartName);

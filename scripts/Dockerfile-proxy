@@ -1,0 +1,8 @@
+FROM us.gcr.io/broad-dsp-gcr-public/openidc-terra-proxy:v0.1.17
+
+# run ./scripts/setup to generate these files
+# see: ./scripts/setup:generate_web_proxy_config
+COPY ./tmp/web-proxy-configs/server.crt /etc/ssl/certs/server.crt
+COPY ./tmp/web-proxy-configs/server.key /etc/ssl/private/server.key
+COPY ./tmp/web-proxy-configs/oauth2.conf /etc/apache2/mods-enabled/oauth2.conf
+COPY ./tmp/web-proxy-configs/site.conf /etc/apache2/sites-available/site.conf
