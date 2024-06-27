@@ -88,14 +88,27 @@ With IntelliJ IDEA open, perform the following steps to set up your IDE:
 IntelliJ will detect that this is a `gradle`-based project and
 start compiling your repo.
 
-### Impersonating a Service Account for `/admin` access
+### `admin`-endpoint security setup
 
 Following the details outlined in the [DESIGN.md](./DESIGN.md),
 this service assumes all requests are authenticated by the time they reach this service.
-To test this functionality locally, you need to make sure the Apache proxy is running locally.
+To test any functionality that depends on this capability locally,
+you need to make sure the Apache proxy is running locally.
 
-The `/admin`-endpoints are locked down to only allow specific service accounts to access them.
+The `/admin`-endpoints are locked down to only allow specific service accounts to access them and
+are [configured in helm](https://github.com/broadinstitute/terra-helmfile)
+with each release.
 
+As a part of running `./scripts`,
+the `SERVICE_ACCOUNT_ADMINS` are configured to be `@USER@broadinstitute.org`.
+
+If you wish to impersonate an actual service account,
+you will need to export `SERVICE_ACCOUNT_ADMINS` into the terminal that
+you are running `service` from with the desired list values.
+
+Below details how to impersonate the `appmanager-dev` service account.
+
+#### Imperonsating a Service Account for `/admin` access
 To impersonate service account in development, one must:
 
 ```shell

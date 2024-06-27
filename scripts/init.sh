@@ -13,4 +13,6 @@ DEBUG_OPTS=""
 GRADLE_OPTS=${GRADLE_OPTS}
 if [ "$CI" == "true" ]; then
   GRADLE_OPTS="--build-cache"
+else
+  SERVICE_ACCOUNT_ADMINS="${USER}@broadinstitute.org"
 fi

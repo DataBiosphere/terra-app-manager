@@ -55,6 +55,9 @@ spring:
           mustRevalidate: true
         useLastModified: false
       staticLocations: classpath:/api/
+  mvc:
+    favicon:
+      enabled: false
 
 management:
   server:

@@ -21,6 +21,7 @@ services:
       - database
     environment:
       - DATABASE_HOSTNAME=database
+      - SERVICE_ACCOUNT_ADMINS=${SERVICE_ACCOUNT_ADMINS}
     ports:
       - "8080:8080"
 
