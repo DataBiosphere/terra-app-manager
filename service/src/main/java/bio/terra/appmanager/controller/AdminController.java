@@ -55,6 +55,11 @@ public class AdminController implements AdminApi {
     return ResponseEntity.noContent().build();
   }
 
+  /**
+   * @param chartName optional name of chart to return values for, otherwise return all charts
+   * @param includeAll non-null indicator to include deleted charts as well as active
+   * @return {@link ChartArray} of charts matching input criteria
+   */
   @Override
   public ResponseEntity<ChartArray> getCharts(String chartName, Boolean includeAll) {
     List<String> versions = chartName == null ? List.of() : List.of(chartName);
