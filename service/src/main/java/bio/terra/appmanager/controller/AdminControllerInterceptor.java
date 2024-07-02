@@ -1,6 +1,5 @@
 package bio.terra.appmanager.controller;
 
-import bio.terra.appmanager.config.AdminControllerConfiguration;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -15,12 +14,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * security is explicitly handled here.
  */
 @Component
-public class AdminControllerInterceptor implements HandlerInterceptor {
+public abstract class AdminControllerInterceptor implements HandlerInterceptor {
 
   private List<String> authorizedEmails;
 
-  public AdminControllerInterceptor(AdminControllerConfiguration adminControllerConfiguration) {
-    this.authorizedEmails = adminControllerConfiguration.serviceAccounts();
+  protected AdminControllerInterceptor(List<String> authorizedEmails) {
+    this.authorizedEmails = authorizedEmails;
     if (authorizedEmails.isEmpty()) {
       throw new IllegalArgumentException("service_accounts configuration is required");
     }

@@ -3,7 +3,8 @@
 
 env:
   admin:
-    service_accounts: ${SERVICE_ACCOUNT_ADMINS:test@nowhere.com}
+    service_accounts_for_read: ${SERVICE_ACCOUNT_ADMINS_FOR_READ:test@readnowhere.com}
+    service_accounts_for_write: ${SERVICE_ACCOUNT_ADMINS_FOR_WRITE:test@writenowhere.com}
   db:
     host: ${DATABASE_HOSTNAME:127.0.0.1}:5432
     init: ${INIT_DB:false}
@@ -69,7 +70,9 @@ management:
 
 appmanager:
   admin:
-    service_accounts: ${env.admin.service_accounts}
+    service_accounts_for_read: ${env.admin.service_accounts_for_read}
+    service_accounts_for_write: ${env.admin.service_accounts_for_write}
+
   ingress:
     # Default value that's overridden by Helm.
     domainName: localhost:8080

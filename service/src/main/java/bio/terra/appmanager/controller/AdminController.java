@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
  * Please see the ./DESIGN.md document (located in the repo-root) for more information about how
  * requests are authenticated and security is enforced.
  *
- * @see AdminControllerInterceptor
+ * @see AdminControllerWriteInterceptor
  * @see AdminControllerInterceptorConfigurer
  */
 @Controller

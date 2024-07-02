@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import bio.terra.appmanager.controller.AdminController;
 import bio.terra.appmanager.controller.AdminControllerInterceptor;
+import bio.terra.appmanager.controller.AdminControllerWriteInterceptor;
 import java.util.Optional;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
@@ -96,7 +97,7 @@ class AdminControllerInterceptorConfigurerTest {
     assert chain != null;
     Optional<HandlerInterceptor> adminInterceptor =
         chain.getInterceptorList().stream()
-            .filter(AdminControllerInterceptor.class::isInstance)
+            .filter(AdminControllerWriteInterceptor.class::isInstance)
             .findFirst();
 
     assertTrue(adminInterceptor.isEmpty());
