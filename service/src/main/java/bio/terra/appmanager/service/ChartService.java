@@ -90,7 +90,6 @@ public class ChartService {
 
   private void checkChartName(Chart chart) {
     if (!allowedChartNames.contains(chart.name())) {
-      System.out.println(allowedChartNames.toString());
       throw new IllegalArgumentException("unrecogrnized chartName provided");
     }
   }
