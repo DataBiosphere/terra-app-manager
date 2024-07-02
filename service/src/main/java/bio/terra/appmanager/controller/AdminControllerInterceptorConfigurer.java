@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Component
 public class AdminControllerInterceptorConfigurer implements WebMvcConfigurer {
 
-  @Autowired AdminControllerWriteInterceptor adminControllerReadInterceptor;
+  @Autowired AdminControllerReadInterceptor adminControllerReadInterceptor;
   @Autowired AdminControllerWriteInterceptor adminControllerWriteInterceptor;
 
   @Override
