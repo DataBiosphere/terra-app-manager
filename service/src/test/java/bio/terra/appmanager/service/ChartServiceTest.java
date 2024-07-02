@@ -3,9 +3,16 @@ package bio.terra.appmanager.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.calls;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 import bio.terra.appmanager.BaseSpringBootTest;
+import bio.terra.appmanager.config.ChartServiceConfiguration;
 import bio.terra.appmanager.controller.ChartNotFoundException;
 import bio.terra.appmanager.dao.ChartDao;
 import bio.terra.appmanager.model.Chart;
@@ -15,17 +22,39 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 
 class ChartServiceTest extends BaseSpringBootTest {
+
   @MockBean ChartDao chartDao;
 
-  @Autowired ChartService chartService;
+  @Autowired
+  @Qualifier("mockService")
+  ChartService chartService;
 
   @Test
-  void createChart_withEmptyList() {
+  void testCreateChart_withEmptyList() {
     chartService.createCharts(List.of());
     verifyNoInteractions(chartDao);
+  }
+
+  @Test
+  void testCreateChart_unknownChartName() {
+    String chartName1 = "unknown-chart";
+    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
+    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
+
+    Exception exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> {
+              chartService.createCharts(List.of(version1_1));
+            });
+
+    assertTrue(exception.getMessage().contains("unrecogrnized chartName provided"));
   }
 
   @Test
@@ -104,6 +133,22 @@ class ChartServiceTest extends BaseSpringBootTest {
   }
 
   @Test
+  void testUpdateChart_unknownChartName() {
+    String chartName1 = "unknown-chart";
+    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
+    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
+
+    Exception exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> {
+              chartService.updateVersions(List.of(version1_1));
+            });
+
+    assertTrue(exception.getMessage().contains("unrecogrnized chartName provided"));
+  }
+
+  @Test
   void testUpdateVersions_chartNotFound() {
     String chartName = "chart-name";
     String chartVersion = ChartTestUtils.makeChartVersion(0);
@@ -134,5 +179,16 @@ class ChartServiceTest extends BaseSpringBootTest {
         "The chart(s) you attempted to update do not currently exist, please create first: "
             + notPresentCharts,
         ex.getMessage());
+  }
+
+  @TestConfiguration
+  public static class MockChartServiceConfiguration {
+    @Bean(name = "mockService")
+    public ChartService getChartService(ChartDao chartDao) {
+      return new ChartService(
+          new ChartServiceConfiguration(
+              List.of("chart-name-here", "chart-name", "chart-name2", "chart-name3")),
+          chartDao);
+    }
   }
 }
