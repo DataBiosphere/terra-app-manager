@@ -49,10 +49,7 @@ class ChartServiceTest extends BaseSpringBootTest {
 
     Exception exception =
         assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-              chartService.createCharts(List.of(version1_1));
-            });
+            IllegalArgumentException.class, () -> chartService.createCharts(List.of(version1_1)));
 
     assertTrue(exception.getMessage().contains("unrecogrnized chartName provided"));
   }
