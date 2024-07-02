@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdminControllerReadInterceptor extends AdminControllerInterceptor {
 
-  private List<String> authorizedEmails;
-
   public AdminControllerReadInterceptor(AdminControllerConfiguration adminControllerConfiguration) {
     super(adminControllerConfiguration.serviceAccountsForRead());
   }
