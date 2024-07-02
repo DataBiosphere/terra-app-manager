@@ -46,10 +46,10 @@ class ChartServiceTest extends BaseSpringBootTest {
     String chartName1 = "unknown-chart";
     String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
     Chart version1_1 = new Chart(chartName1, chartVersion1_1);
+    List<Chart> chartList = List.of(version1_1);
 
     Exception exception =
-        assertThrows(
-            IllegalArgumentException.class, () -> chartService.createCharts(List.of(version1_1)));
+        assertThrows(IllegalArgumentException.class, () -> chartService.createCharts(chartList));
 
     assertTrue(exception.getMessage().contains("unrecogrnized chartName provided"));
   }
@@ -134,10 +134,10 @@ class ChartServiceTest extends BaseSpringBootTest {
     String chartName1 = "unknown-chart";
     String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
     Chart version1_1 = new Chart(chartName1, chartVersion1_1);
+    List<Chart> chartList = List.of(version1_1);
 
     Exception exception =
-        assertThrows(
-            IllegalArgumentException.class, () -> chartService.updateVersions(List.of(version1_1)));
+        assertThrows(IllegalArgumentException.class, () -> chartService.updateVersions(chartList));
 
     assertTrue(exception.getMessage().contains("unrecogrnized chartName provided"));
   }
