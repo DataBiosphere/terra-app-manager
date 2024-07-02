@@ -1,10 +1,11 @@
 package bio.terra.appmanager.controller;
 
+import bio.terra.appmanager.config.AdminControllerConfiguration;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * This class is responsible for ensuring that authorized service accounts are the only requests
@@ -14,30 +15,24 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * security is explicitly handled here.
  */
 @Component
-public abstract class AdminControllerInterceptor implements HandlerInterceptor {
+public class AdminControllerReadInterceptor extends AdminControllerInterceptor {
 
   private List<String> authorizedEmails;
 
-  public AdminControllerInterceptor(List<String> authorizedEmails) {
-    this.authorizedEmails = authorizedEmails;
-    if (authorizedEmails.isEmpty()) {
-      throw new IllegalArgumentException("service_accounts configuration is required");
-    }
+  public AdminControllerReadInterceptor(AdminControllerConfiguration adminControllerConfiguration) {
+    super(adminControllerConfiguration.serviceAccountsForRead());
   }
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
       throws Exception {
 
-    var oauthEmail = request.getHeader("oauth2_claim_email");
-
-    if (oauthEmail != null && authorizedEmails.contains(oauthEmail)) {
+    // APPLY this interceptor to GET (read: read) requests ONLY
+    // meaning, if the request is NOT a GET, then let it pass
+    if (!request.getMethod().equals(HttpMethod.GET.name())) {
       return true;
     }
 
-    response.sendError(
-        HttpServletResponse.SC_FORBIDDEN,
-        "Request did not come from an authorized Service Account");
-    return false;
+    return super.preHandle(request, response, handler);
   }
 }

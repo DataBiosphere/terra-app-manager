@@ -100,10 +100,10 @@ are [configured in helm](https://github.com/broadinstitute/terra-helmfile)
 with each release.
 
 As a part of running `./scripts`,
-the `SERVICE_ACCOUNT_ADMINS` are configured to be `@USER@broadinstitute.org`.
+the `SERVICE_ACCOUNT_ADMINS_FOR_[READ|WRITE]` are configured to be `@USER@broadinstitute.org`.
 
 If you wish to impersonate an actual service account,
-you will need to export `SERVICE_ACCOUNT_ADMINS` into the terminal that
+you will need to export `SERVICE_ACCOUNT_ADMINS_FOR_[READ|WRITE]` into the terminal that
 you are running `service` from with the desired list values.
 
 Below details how to impersonate the `appmanager-dev` service account.
