@@ -3,7 +3,6 @@ package bio.terra.appmanager.controller;
 import bio.terra.appmanager.config.AdminControllerConfiguration;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
