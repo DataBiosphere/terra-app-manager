@@ -7,6 +7,7 @@ plugins {
 
     id 'com.gorylenko.gradle-git-properties' version '2.3.1'
     id 'org.liquibase.gradle' version '2.2.2'
+    id "io.sentry.jvm.gradle" version "4.6.0"
 }
 
 apply from: 'generators.gradle'
@@ -63,6 +64,25 @@ liquibase {
         }
     }
 }
+
+//sentry {
+//    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+//    // This enables source context, allowing you to see your source code
+//    // as part of your stack traces in Sentry.
+//    includeSourceContext = true
+//
+//    org = "broad-institute"
+//    projectName = "terra-app-manager"
+//    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+//}
+//
+//generateSentryBundleIdJava {
+//    dependsOn(generateSwaggerCode)
+//}
+//
+//sentryCollectSourcesJava {
+//    dependsOn(generateSwaggerCode)
+//}
 
 srcclr {
     scope = 'runtimeClasspath'
