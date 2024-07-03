@@ -57,38 +57,38 @@ class ChartServiceTest extends BaseSpringBootTest {
   @Test
   void testCreateChart_singleElement() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
+    String chartVersion1 = ChartTestUtils.makeChartVersion(0);
+    Chart version1 = new Chart(chartName1, chartVersion1);
 
     ArgumentCaptor<Chart> argument = ArgumentCaptor.forClass(Chart.class);
 
-    chartService.createCharts(List.of(version1_1));
+    chartService.createCharts(List.of(version1));
     verify(chartDao, times(1)).upsert(argument.capture());
-    assertEquals(version1_1.name(), argument.getValue().name());
-    assertEquals(version1_1.version(), argument.getValue().version());
+    assertEquals(version1.name(), argument.getValue().name());
+    assertEquals(version1.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
   }
 
   @Test
   void testCreateChart_multipleElement() {
     String chartName1 = "chart-name-here";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    String chartVersion1_2 = ChartTestUtils.makeChartVersion(1);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
-    Chart version1_2 = new Chart(chartName1, chartVersion1_2);
+    String chartVersion1 = ChartTestUtils.makeChartVersion(0);
+    String chartVersion2 = ChartTestUtils.makeChartVersion(1);
+    Chart version1 = new Chart(chartName1, chartVersion1);
+    Chart version2 = new Chart(chartName1, chartVersion2);
 
     ArgumentCaptor<Chart> argument = ArgumentCaptor.forClass(Chart.class);
 
     InOrder inOrder = inOrder(chartDao);
-    chartService.createCharts(List.of(version1_1, version1_2));
+    chartService.createCharts(List.of(version1, version2));
     inOrder.verify(chartDao, calls(1)).upsert(argument.capture());
-    assertEquals(version1_1.name(), argument.getValue().name());
-    assertEquals(version1_1.version(), argument.getValue().version());
+    assertEquals(version1.name(), argument.getValue().name());
+    assertEquals(version1.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
 
     inOrder.verify(chartDao, calls(1)).upsert(argument.capture());
-    assertEquals(version1_2.name(), argument.getValue().name());
-    assertEquals(version1_2.version(), argument.getValue().version());
+    assertEquals(version2.name(), argument.getValue().name());
+    assertEquals(version2.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
   }
 
