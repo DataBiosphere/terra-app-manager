@@ -43,10 +43,10 @@ class ChartServiceTest extends BaseSpringBootTest {
 
   @Test
   void testCreateChart_unknownChartName() {
-    String chartName1 = "unknown-chart";
-    String chartVersion1 = ChartTestUtils.makeChartVersion(0);
-    Chart version1 = new Chart(chartName1, chartVersion1);
-    List<Chart> chartList = List.of(version1);
+    String chart1Name = "unknown-chart";
+    String chart1Version = ChartTestUtils.makeChartVersion(0);
+    Chart chart1 = new Chart(chart1Name, chart1Version);
+    List<Chart> chartList = List.of(chart1);
 
     Exception exception =
         assertThrows(IllegalArgumentException.class, () -> chartService.createCharts(chartList));
@@ -56,61 +56,58 @@ class ChartServiceTest extends BaseSpringBootTest {
 
   @Test
   void testCreateChart_singleElement() {
-    String chartName1 = "chart-name-here";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
+    String chart1Name = "chart-name-here";
+    String chart1Version = ChartTestUtils.makeChartVersion(0);
+    Chart chart1 = new Chart(chart1Name, chart1Version);
 
     ArgumentCaptor<Chart> argument = ArgumentCaptor.forClass(Chart.class);
 
-    chartService.createCharts(List.of(version1_1));
+    chartService.createCharts(List.of(chart1));
     verify(chartDao, times(1)).upsert(argument.capture());
-    assertEquals(version1_1.name(), argument.getValue().name());
-    assertEquals(version1_1.version(), argument.getValue().version());
+    assertEquals(chart1.name(), argument.getValue().name());
+    assertEquals(chart1.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
   }
 
   @Test
   void testCreateChart_multipleElement() {
-    String chartName1 = "chart-name-here";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    String chartVersion1_2 = ChartTestUtils.makeChartVersion(1);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
-    Chart version1_2 = new Chart(chartName1, chartVersion1_2);
+    String chart1Name = "chart-name-here";
+    String chart1Version1 = ChartTestUtils.makeChartVersion(0);
+    String chart1Version2 = ChartTestUtils.makeChartVersion(1);
+    Chart oldChart1 = new Chart(chart1Name, chart1Version1);
+    Chart newChart1 = new Chart(chart1Name, chart1Version2);
 
     ArgumentCaptor<Chart> argument = ArgumentCaptor.forClass(Chart.class);
 
     InOrder inOrder = inOrder(chartDao);
-    chartService.createCharts(List.of(version1_1, version1_2));
+    chartService.createCharts(List.of(oldChart1, newChart1));
     inOrder.verify(chartDao, calls(1)).upsert(argument.capture());
-    assertEquals(version1_1.name(), argument.getValue().name());
-    assertEquals(version1_1.version(), argument.getValue().version());
+    assertEquals(oldChart1.name(), argument.getValue().name());
+    assertEquals(oldChart1.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
 
     inOrder.verify(chartDao, calls(1)).upsert(argument.capture());
-    assertEquals(version1_2.name(), argument.getValue().name());
-    assertEquals(version1_2.version(), argument.getValue().version());
+    assertEquals(newChart1.name(), argument.getValue().name());
+    assertEquals(newChart1.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
   }
 
   @Test
   void testDeleteVersion() {
-    String chartName1 = "chart-name-here";
+    String chart1Name = "chart-name-here";
 
     ArgumentCaptor<List<String>> argument = ArgumentCaptor.forClass(List.class);
 
-    chartService.deleteVersion(chartName1);
+    chartService.deleteVersion(chart1Name);
     verify(chartDao, times(1)).delete(argument.capture());
     assertEquals(1, argument.getValue().size());
-    assertEquals(chartName1, argument.getValue().get(0));
+    assertEquals(chart1Name, argument.getValue().get(0));
   }
 
   @Test
   void testGetVersions() {
     List<String> chartNameList = List.of("chart-name-here");
     Boolean includeAll = true;
-
-    ArgumentCaptor<List<String>> argument1 = ArgumentCaptor.forClass(List.class);
-    ArgumentCaptor<Boolean> argument2 = ArgumentCaptor.forClass(Boolean.class);
 
     InOrder inOrder = inOrder(chartDao);
     chartService.getCharts(chartNameList, includeAll);
@@ -119,22 +116,22 @@ class ChartServiceTest extends BaseSpringBootTest {
 
   @Test
   void testUpdateVersions() {
-    String chartName1 = "chart-name-here";
-    String chartVersion = ChartTestUtils.makeChartVersion(0);
-    Chart chart = new Chart(chartName1, chartVersion);
+    String chart1Name = "chart-name-here";
+    String chart1Version = ChartTestUtils.makeChartVersion(0);
+    Chart chart1 = new Chart(chart1Name, chart1Version);
 
-    when(chartDao.get(List.of(chartName1), true)).thenReturn(List.of(chart));
+    when(chartDao.get(List.of(chart1Name), true)).thenReturn(List.of(chart1));
 
-    chartService.updateVersions(List.of(chart));
-    verify(chartDao, times(1)).upsert(chart);
+    chartService.updateVersions(List.of(chart1));
+    verify(chartDao, times(1)).upsert(chart1);
   }
 
   @Test
   void testUpdateChart_unknownChartName() {
-    String chartName1 = "unknown-chart";
-    String chartVersion1 = ChartTestUtils.makeChartVersion(0);
-    Chart version1 = new Chart(chartName1, chartVersion1);
-    List<Chart> chartList = List.of(version1);
+    String chart1Name = "unknown-chart";
+    String chart1Version = ChartTestUtils.makeChartVersion(0);
+    Chart chart1 = new Chart(chart1Name, chart1Version);
+    List<Chart> chartList = List.of(chart1);
 
     Exception exception =
         assertThrows(IllegalArgumentException.class, () -> chartService.updateVersions(chartList));
@@ -144,27 +141,27 @@ class ChartServiceTest extends BaseSpringBootTest {
 
   @Test
   void testUpdateVersions_chartNotFound() {
-    String chartName = "chart-name";
-    String chartVersion = ChartTestUtils.makeChartVersion(0);
-    Chart chart = new Chart(chartName, chartVersion);
-    List<Chart> charts = List.of(chart);
+    String chart1Name = "chart-name";
+    String chart1Version = ChartTestUtils.makeChartVersion(0);
+    Chart chart1 = new Chart(chart1Name, chart1Version);
+    List<Chart> charts = List.of(chart1);
 
     assertThrows(ChartNotFoundException.class, () -> chartService.updateVersions(charts));
   }
 
   @Test
   void testUpdate_multipleChartNotFound() {
-    String chartName1 = "chart-name";
-    String chartName2 = "chart-name2";
-    String chartName3 = "chart-name3";
+    String chart1Name = "chart-name";
+    String chart2Name = "chart-name2";
+    String chart3Name = "chart-name3";
     String chartVersion = ChartTestUtils.makeChartVersion(0);
-    Chart chart1 = new Chart(chartName1, chartVersion);
-    Chart chart2 = new Chart(chartName2, chartVersion);
-    Chart chart3 = new Chart(chartName3, chartVersion);
+    Chart chart1 = new Chart(chart1Name, chartVersion);
+    Chart chart2 = new Chart(chart2Name, chartVersion);
+    Chart chart3 = new Chart(chart3Name, chartVersion);
     List<Chart> charts = List.of(chart1, chart2, chart3);
-    List<String> notPresentCharts = List.of(chartName2, chartName3);
+    List<String> notPresentCharts = List.of(chart2Name, chart3Name);
 
-    when(chartDao.get(List.of(chartName1), true)).thenReturn(List.of(chart1));
+    when(chartDao.get(List.of(chart1Name), true)).thenReturn(List.of(chart1));
 
     ChartNotFoundException ex =
         assertThrows(ChartNotFoundException.class, () -> chartService.updateVersions(charts));

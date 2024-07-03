@@ -37,7 +37,7 @@ public record Chart(
   // Must follow chart value conventions:
   // https://helm.sh/docs/chart_best_practices/conventions/#version-numbers
   // Semver conventions, with digits only
-  static final String chartValueRegex = "^([0-9]\\d*)\\.([0-9]\\d*)\\.([0-9]\\d*)$";
+  static final String chartValueRegex = "^(\\d+)\\.(\\d+)\\.(\\d+)$";
   static final Pattern chartVersionPattern = Pattern.compile(chartValueRegex);
 
   public static boolean isChartNameValid(String chartName) {

@@ -58,73 +58,73 @@ class ChartDaoTest extends BaseDaoTest {
 
   @Test
   void testMultiNameGet() {
-    String chartName1 = "chart-name-here";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    String chartVersion1_2 = ChartTestUtils.makeChartVersion(1);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
-    Chart version1_2 = new Chart(chartName1, chartVersion1_2);
+    String chart1Name = "chart-name-here";
+    String chart1Version1 = ChartTestUtils.makeChartVersion(0);
+    String chart1Version2 = ChartTestUtils.makeChartVersion(1);
+    Chart oldChart1 = new Chart(chart1Name, chart1Version1);
+    Chart newChart1 = new Chart(chart1Name, chart1Version2);
 
-    String chartName2 = "chart-name-here-too";
-    String chartVersion2_1 = ChartTestUtils.makeChartVersion(2);
-    String chartVersion2_2 = ChartTestUtils.makeChartVersion(3);
-    Chart version2_1 = new Chart(chartName2, chartVersion2_1);
-    Chart version2_2 = new Chart(chartName2, chartVersion2_2);
+    String chart2Name = "chart-name-here-too";
+    String chart2Version1 = ChartTestUtils.makeChartVersion(2);
+    String chart2Version2 = ChartTestUtils.makeChartVersion(3);
+    Chart oldChart2 = new Chart(chart2Name, chart2Version1);
+    Chart newChart2 = new Chart(chart2Name, chart2Version2);
 
-    String chartName3 = "chart-name";
-    String chartVersion3_1 = ChartTestUtils.makeChartVersion(4);
-    String chartVersion3_2 = ChartTestUtils.makeChartVersion(5);
-    Chart version3_1 = new Chart(chartName3, chartVersion3_1);
-    Chart version3_2 = new Chart(chartName3, chartVersion3_2);
+    String chart3Name = "chart-name";
+    String chart3Version1 = ChartTestUtils.makeChartVersion(4);
+    String chart3Version2 = ChartTestUtils.makeChartVersion(5);
+    Chart oldChart3 = new Chart(chart3Name, chart3Version1);
+    Chart newChart3 = new Chart(chart3Name, chart3Version2);
 
-    chartDao.upsert(version1_1);
-    chartDao.upsert(version1_2);
-    chartDao.upsert(version2_1);
-    chartDao.upsert(version2_2);
-    chartDao.upsert(version3_1);
-    chartDao.upsert(version3_2);
+    chartDao.upsert(oldChart1);
+    chartDao.upsert(newChart1);
+    chartDao.upsert(oldChart2);
+    chartDao.upsert(newChart2);
+    chartDao.upsert(oldChart3);
+    chartDao.upsert(newChart3);
 
-    List<Chart> storedVersions = chartDao.get((List.of(chartName1, chartName2)));
+    List<Chart> storedVersions = chartDao.get((List.of(chart1Name, chart2Name)));
     assertEquals(2, storedVersions.size());
 
     List<Chart> targetCharts =
-        storedVersions.stream().filter(version -> chartName1.equals(version.name())).toList();
+        storedVersions.stream().filter(version -> chart1Name.equals(version.name())).toList();
     assertEquals(1, targetCharts.size());
     Chart targetVersion = targetCharts.get(0);
-    assertEquals(chartVersion1_2, targetVersion.version());
+    assertEquals(chart1Version2, targetVersion.version());
 
     targetCharts =
-        storedVersions.stream().filter(version -> chartName2.equals(version.name())).toList();
+        storedVersions.stream().filter(version -> chart2Name.equals(version.name())).toList();
     assertEquals(1, targetCharts.size());
     targetVersion = targetCharts.get(0);
-    assertEquals(chartVersion2_2, targetVersion.version());
+    assertEquals(chart2Version2, targetVersion.version());
   }
 
   @Test
   void testGetAll() {
-    String chartName1 = "chart-name-here";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    String chartVersion1_2 = ChartTestUtils.makeChartVersion(1);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
-    Chart version1_2 = new Chart(chartName1, chartVersion1_2);
+    String chart1Name = "chart-name-here";
+    String chart1Version1 = ChartTestUtils.makeChartVersion(0);
+    String chart1Version2 = ChartTestUtils.makeChartVersion(1);
+    Chart oldChart1 = new Chart(chart1Name, chart1Version1);
+    Chart newChart1 = new Chart(chart1Name, chart1Version2);
 
-    String chartName2 = "chart-name-here-too";
-    String chartVersion2_1 = ChartTestUtils.makeChartVersion(3);
-    String chartVersion2_2 = ChartTestUtils.makeChartVersion(4);
-    Chart version2_1 = new Chart(chartName2, chartVersion2_1);
-    Chart version2_2 = new Chart(chartName2, chartVersion2_2);
+    String chart2Name = "chart-name-here-too";
+    String chart2Version1 = ChartTestUtils.makeChartVersion(3);
+    String chart2Version2 = ChartTestUtils.makeChartVersion(4);
+    Chart oldChart2 = new Chart(chart2Name, chart2Version1);
+    Chart newChart2 = new Chart(chart2Name, chart2Version2);
 
-    String chartName3 = "chart-name-here-again";
-    String chartVersion3_1 = ChartTestUtils.makeChartVersion(5);
-    String chartVersion3_2 = ChartTestUtils.makeChartVersion(6);
-    Chart version3_1 = new Chart(chartName3, chartVersion3_1);
-    Chart version3_2 = new Chart(chartName3, chartVersion3_2);
+    String chart3Name = "chart-name-here-again";
+    String chart3Version1 = ChartTestUtils.makeChartVersion(5);
+    String chart3Version2 = ChartTestUtils.makeChartVersion(6);
+    Chart oldChart3 = new Chart(chart3Name, chart3Version1);
+    Chart newChart3 = new Chart(chart3Name, chart3Version2);
 
-    chartDao.upsert(version1_1);
-    chartDao.upsert(version1_2);
-    chartDao.upsert(version2_1);
-    chartDao.upsert(version2_2);
-    chartDao.upsert(version3_1);
-    chartDao.upsert(version3_2);
+    chartDao.upsert(oldChart1);
+    chartDao.upsert(newChart1);
+    chartDao.upsert(oldChart2);
+    chartDao.upsert(newChart2);
+    chartDao.upsert(oldChart3);
+    chartDao.upsert(newChart3);
 
     List<Chart> storedVersions = chartDao.get(true);
     assertEquals(6, storedVersions.size());
@@ -132,12 +132,12 @@ class ChartDaoTest extends BaseDaoTest {
 
   @Test
   void testDelete() {
-    String chartName1 = "chart-name-here";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
+    String chart1Name = "chart-name-here";
+    String chart1Version1 = ChartTestUtils.makeChartVersion(0);
+    Chart chart1 = new Chart(chart1Name, chart1Version1);
 
-    chartDao.upsert(version1_1);
-    chartDao.delete(List.of(chartName1));
+    chartDao.upsert(chart1);
+    chartDao.delete(List.of(chart1Name));
     List<Chart> deletedVersions = chartDao.get(true);
 
     assertEquals(1, deletedVersions.size());
@@ -147,61 +147,64 @@ class ChartDaoTest extends BaseDaoTest {
 
   @Test
   void testDelete_noNames() {
-    final String chartName1 = "chart-name-here";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
+    final String chart1Name = "chart-name-here";
+    String chart1Version1 = ChartTestUtils.makeChartVersion(0);
+    Chart chart1 = new Chart(chart1Name, chart1Version1);
 
-    chartDao.upsert(version1_1);
+    chartDao.upsert(chart1);
     chartDao.delete(List.of());
     List<Chart> versions = chartDao.get();
 
     assertNotNull(versions);
     assertEquals(1, versions.size());
-    assertEquals(chartName1, versions.get(0).name());
-    assertEquals(chartVersion1_1, versions.get(0).version());
+    assertEquals(chart1Name, versions.get(0).name());
+    assertEquals(chart1Version1, versions.get(0).version());
   }
 
   @Test
   void testMultiDelete() {
-    final String chartName1 = "chart-name-here";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    String chartVersion1_2 = ChartTestUtils.makeChartVersion(1);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
-    Chart version1_2 = new Chart(chartName1, chartVersion1_2);
+    final String chart1Name = "chart-name-here";
+    String chart1Version1 = ChartTestUtils.makeChartVersion(0);
+    String chart1Version2 = ChartTestUtils.makeChartVersion(1);
+    Chart oldChart1 = new Chart(chart1Name, chart1Version1);
+    Chart newChart1 = new Chart(chart1Name, chart1Version2);
 
-    final String chartName2 = "chart-name-here-too";
-    String chartVersion2_1 = ChartTestUtils.makeChartVersion(2);
-    String chartVersion2_2 = ChartTestUtils.makeChartVersion(3);
-    Chart version2_1 = new Chart(chartName2, chartVersion2_1);
-    Chart version2_2 = new Chart(chartName2, chartVersion2_2);
+    final String chart2Name = "chart-name-here-too";
+    String chart2Version1 = ChartTestUtils.makeChartVersion(2);
+    String chart2Version2 = ChartTestUtils.makeChartVersion(3);
+    Chart oldChart2 = new Chart(chart2Name, chart2Version1);
+    Chart newChart2 = new Chart(chart2Name, chart2Version2);
 
-    final String chartName3 = "chart-version-name-again";
-    String chartVersion3_1 = ChartTestUtils.makeChartVersion(4);
-    String chartVersion3_2 = ChartTestUtils.makeChartVersion(5);
-    Chart version3_1 = new Chart(chartName3, chartVersion3_1);
-    Chart version3_2 = new Chart(chartName3, chartVersion3_2);
+    final String chart3Name = "chart-version-name-again";
+    String chart3Version1 = ChartTestUtils.makeChartVersion(4);
+    String chart3Version2 = ChartTestUtils.makeChartVersion(5);
+    Chart oldChart3 = new Chart(chart3Name, chart3Version1);
+    Chart newChart3 = new Chart(chart3Name, chart3Version2);
 
-    chartDao.upsert(version1_1);
-    chartDao.upsert(version1_2);
-    chartDao.upsert(version2_1);
-    chartDao.upsert(version2_2);
-    chartDao.upsert(version3_1);
-    chartDao.upsert(version3_2);
+    chartDao.upsert(oldChart1);
+    chartDao.upsert(newChart1);
+    chartDao.upsert(oldChart2);
+    chartDao.upsert(newChart2);
+    chartDao.upsert(oldChart3);
+    chartDao.upsert(newChart3);
 
-    chartDao.delete(List.of(chartName1, chartName2));
+    chartDao.delete(List.of(chart1Name, chart2Name));
 
     List<Chart> allVersions = chartDao.get(true);
     for (Chart version : allVersions) {
       switch (version.name()) {
-        case chartName1, chartName2:
+        case chart1Name, chart2Name:
           assertNotNull(version.inactiveAt());
           break;
-        case chartName3:
-          if (chartVersion3_2.equals(version.version())) {
+        case chart3Name:
+          if (chart3Version2.equals(version.version())) {
             assertNull(version.inactiveAt());
           } else {
             assertNotNull(version.inactiveAt());
           }
+          break;
+        default:
+          throw new IllegalStateException("unexpected chartName encountered");
       }
     }
   }

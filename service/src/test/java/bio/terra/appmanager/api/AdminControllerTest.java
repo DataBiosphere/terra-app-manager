@@ -43,8 +43,8 @@ class AdminControllerTest {
 
   private MockMvc mockMvc;
 
-  @Captor ArgumentCaptor<List<bio.terra.appmanager.model.Chart>> capture_Charts;
-  @Captor ArgumentCaptor<String> capture_chartName;
+  @Captor ArgumentCaptor<List<bio.terra.appmanager.model.Chart>> captureCharts;
+  @Captor ArgumentCaptor<String> captureChartName;
 
   private AutoCloseable closeable;
 
@@ -82,9 +82,9 @@ class AdminControllerTest {
                         + "}]"))
         .andExpect(status().isNoContent());
 
-    verify(serviceMock).createCharts(capture_Charts.capture());
-    assert (capture_Charts.getValue().size() == 1);
-    verifyChart(capture_Charts.getValue().get(0), chartName, chartVersion, null, null, null);
+    verify(serviceMock).createCharts(captureCharts.capture());
+    assert (captureCharts.getValue().size() == 1);
+    verifyChart(captureCharts.getValue().get(0), chartName, chartVersion, null, null, null);
   }
 
   @Test
@@ -192,8 +192,8 @@ class AdminControllerTest {
         .perform(delete("/api/admin/v1/charts").queryParam("chartName", chartName))
         .andExpect(status().isNoContent());
 
-    verify(serviceMock).deleteVersion(capture_chartName.capture());
-    assertEquals(capture_chartName.getValue(), chartName);
+    verify(serviceMock).deleteVersion(captureChartName.capture());
+    assertEquals(captureChartName.getValue(), chartName);
   }
 
   @Test
