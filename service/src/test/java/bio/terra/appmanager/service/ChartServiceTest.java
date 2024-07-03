@@ -109,9 +109,6 @@ class ChartServiceTest extends BaseSpringBootTest {
     List<String> chartNameList = List.of("chart-name-here");
     Boolean includeAll = true;
 
-    ArgumentCaptor<List<String>> argument1 = ArgumentCaptor.forClass(List.class);
-    ArgumentCaptor<Boolean> argument2 = ArgumentCaptor.forClass(Boolean.class);
-
     InOrder inOrder = inOrder(chartDao);
     chartService.getCharts(chartNameList, includeAll);
     inOrder.verify(chartDao, calls(1)).get(chartNameList, includeAll);
