@@ -44,9 +44,9 @@ class ChartServiceTest extends BaseSpringBootTest {
   @Test
   void testCreateChart_unknownChartName() {
     String chartName1 = "unknown-chart";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
-    List<Chart> chartList = List.of(version1_1);
+    String chartVersion1 = ChartTestUtils.makeChartVersion(0);
+    Chart version1 = new Chart(chartName1, chartVersion1);
+    List<Chart> chartList = List.of(version1);
 
     Exception exception =
         assertThrows(IllegalArgumentException.class, () -> chartService.createCharts(chartList));
@@ -132,9 +132,9 @@ class ChartServiceTest extends BaseSpringBootTest {
   @Test
   void testUpdateChart_unknownChartName() {
     String chartName1 = "unknown-chart";
-    String chartVersion1_1 = ChartTestUtils.makeChartVersion(0);
-    Chart version1_1 = new Chart(chartName1, chartVersion1_1);
-    List<Chart> chartList = List.of(version1_1);
+    String chartVersion1 = ChartTestUtils.makeChartVersion(0);
+    Chart version1 = new Chart(chartName1, chartVersion1);
+    List<Chart> chartList = List.of(version1);
 
     Exception exception =
         assertThrows(IllegalArgumentException.class, () -> chartService.updateVersions(chartList));
