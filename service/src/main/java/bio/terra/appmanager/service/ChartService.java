@@ -1,5 +1,6 @@
 package bio.terra.appmanager.service;
 
+import bio.terra.appmanager.config.ChartServiceConfiguration;
 import bio.terra.appmanager.controller.ChartNotFoundException;
 import bio.terra.appmanager.dao.ChartDao;
 import bio.terra.appmanager.model.Chart;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChartService {
 
+  private final List<String> allowedChartNames;
   private final ChartDao chartDao;
 
-  public ChartService(ChartDao chartDao) {
+  public ChartService(ChartServiceConfiguration chartServiceConfiguration, ChartDao chartDao) {
+    this.allowedChartNames = chartServiceConfiguration.allowedNames();
     this.chartDao = chartDao;
   }
 
@@ -23,10 +26,15 @@ public class ChartService {
    * Create chart entries with associated chart and application versions.
    *
    * @param charts non-null list of {@link Chart}s to create
+   * @throws IllegalArgumentException if Chart.name is not an allowed value
    */
   @WriteTransaction
   public void createCharts(@NotNull List<Chart> charts) {
-    charts.forEach(chartDao::upsert);
+    charts.forEach(
+        chart -> {
+          checkChartName(chart);
+          chartDao.upsert(chart);
+        });
   }
 
   /**
@@ -34,6 +42,7 @@ public class ChartService {
    * caller of this validates whether the versions exist, and this method `upserts` for all records
    *
    * @param versions non-null list of {@link Chart}s to update
+   * @throws IllegalArgumentException if Chart.name is not an allowed value
    */
   @WriteTransaction
   public void updateVersions(@NotNull List<Chart> versions) {
@@ -41,6 +50,7 @@ public class ChartService {
     List<Chart> existingVersions;
     ArrayList<String> nonexistentVersions = new ArrayList<>();
     for (Chart chart : versions) {
+      checkChartName(chart);
       existingVersions = getCharts(List.of(chart.name()), true);
       if (existingVersions.isEmpty()) {
         nonexistentVersions.add(chart.name());
@@ -61,6 +71,7 @@ public class ChartService {
    *
    * @param name non-null chart name to delete
    */
+  @WriteTransaction
   public void deleteVersion(@NotNull String name) {
     chartDao.delete(List.of(name));
   }
@@ -75,5 +86,11 @@ public class ChartService {
   @ReadTransaction
   public List<Chart> getCharts(@NotNull List<String> names, @NotNull Boolean includeAll) {
     return chartDao.get(names, includeAll);
+  }
+
+  private void checkChartName(Chart chart) {
+    if (!allowedChartNames.contains(chart.name())) {
+      throw new IllegalArgumentException("unrecogrnized chartName provided");
+    }
   }
 }

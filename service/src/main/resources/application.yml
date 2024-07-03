@@ -73,6 +73,16 @@ appmanager:
     service_accounts_for_read: ${env.admin.service_accounts_for_read}
     service_accounts_for_write: ${env.admin.service_accounts_for_write}
 
+  charts:
+    allowedNames:
+    - leonardo/hail-batch-terra-azure
+    - leonardo/terra-app-setup
+    - cromwell-helm/cromwell-on-azure
+    - terra-helm/cromwell-runner-app
+    - terra-helm/listener
+    - terra-helm/wds
+    - terra-helm/workflows-app
+
   ingress:
     # Default value that's overridden by Helm.
     domainName: localhost:8080
