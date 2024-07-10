@@ -3,6 +3,7 @@ package bio.terra.appmanager.service;
 import bio.terra.appmanager.config.ChartServiceConfiguration;
 import bio.terra.appmanager.controller.ChartNotFoundException;
 import bio.terra.appmanager.dao.ChartDao;
+import bio.terra.appmanager.dao.PublisherDao;
 import bio.terra.appmanager.model.Chart;
 import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
@@ -16,10 +17,15 @@ public class ChartService {
 
   private final List<String> allowedChartNames;
   private final ChartDao chartDao;
+  private final PublisherDao publisherDao;
 
-  public ChartService(ChartServiceConfiguration chartServiceConfiguration, ChartDao chartDao) {
+  public ChartService(
+      ChartServiceConfiguration chartServiceConfiguration,
+      ChartDao chartDao,
+      PublisherDao publisherDao) {
     this.allowedChartNames = chartServiceConfiguration.allowedNames();
     this.chartDao = chartDao;
+    this.publisherDao = publisherDao;
   }
 
   /**
@@ -34,6 +40,10 @@ public class ChartService {
         chart -> {
           checkChartName(chart);
           chartDao.upsert(chart);
+          // TODO: use proper message typing here, depends on
+          // https://broadworkbench.atlassian.net/browse/IA-5018 and
+          // https://broadworkbench.atlassian.net/browse/IA-5019
+          publisherDao.publish("chart created");
         });
   }
 
@@ -63,7 +73,14 @@ public class ChartService {
               + nonexistentVersions);
     }
 
-    versions.forEach(chartDao::upsert);
+    versions.forEach(
+        version -> {
+          chartDao.upsert(version);
+          // TODO: use proper message typing here, depends on
+          // https://broadworkbench.atlassian.net/browse/IA-5018 and
+          // https://broadworkbench.atlassian.net/browse/IA-5019
+          publisherDao.publish("chart updated");
+        });
   }
 
   /**
@@ -74,6 +91,10 @@ public class ChartService {
   @WriteTransaction
   public void deleteVersion(@NotNull String name) {
     chartDao.delete(List.of(name));
+    // TODO: use proper message typing here, depends on
+    // https://broadworkbench.atlassian.net/browse/IA-5018 and
+    // https://broadworkbench.atlassian.net/browse/IA-5019
+    publisherDao.publish("chart deleted");
   }
 
   /**
@@ -90,7 +111,7 @@ public class ChartService {
 
   private void checkChartName(Chart chart) {
     if (!allowedChartNames.contains(chart.name())) {
-      throw new IllegalArgumentException("unrecogrnized chartName provided");
+      throw new IllegalArgumentException("unrecognized chartName provided");
     }
   }
 }

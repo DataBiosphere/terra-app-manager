@@ -15,6 +15,7 @@ import bio.terra.appmanager.BaseSpringBootTest;
 import bio.terra.appmanager.config.ChartServiceConfiguration;
 import bio.terra.appmanager.controller.ChartNotFoundException;
 import bio.terra.appmanager.dao.ChartDao;
+import bio.terra.appmanager.dao.PublisherDao;
 import bio.terra.appmanager.model.Chart;
 import bio.terra.appmanager.model.ChartTestUtils;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.springframework.context.annotation.Bean;
 class ChartServiceTest extends BaseSpringBootTest {
 
   @MockBean ChartDao chartDao;
+  @MockBean PublisherDao publisherDao;
 
   @Autowired
   @Qualifier("mockService")
@@ -39,6 +41,7 @@ class ChartServiceTest extends BaseSpringBootTest {
   void testCreateChart_withEmptyList() {
     chartService.createCharts(List.of());
     verifyNoInteractions(chartDao);
+    verifyNoInteractions(publisherDao);
   }
 
   @Test
@@ -51,7 +54,7 @@ class ChartServiceTest extends BaseSpringBootTest {
     Exception exception =
         assertThrows(IllegalArgumentException.class, () -> chartService.createCharts(chartList));
 
-    assertTrue(exception.getMessage().contains("unrecogrnized chartName provided"));
+    assertTrue(exception.getMessage().contains("unrecognized chartName provided"));
   }
 
   @Test
@@ -67,6 +70,8 @@ class ChartServiceTest extends BaseSpringBootTest {
     assertEquals(chart1.name(), argument.getValue().name());
     assertEquals(chart1.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
+
+    verify(publisherDao, times(1)).publish("chart created");
   }
 
   @Test
@@ -80,13 +85,16 @@ class ChartServiceTest extends BaseSpringBootTest {
     ArgumentCaptor<Chart> argument = ArgumentCaptor.forClass(Chart.class);
 
     InOrder inOrder = inOrder(chartDao);
+    InOrder inOrderPublish = inOrder(publisherDao);
     chartService.createCharts(List.of(oldChart1, newChart1));
     inOrder.verify(chartDao, calls(1)).upsert(argument.capture());
+    inOrderPublish.verify(publisherDao, calls(1)).publish("chart created");
     assertEquals(oldChart1.name(), argument.getValue().name());
     assertEquals(oldChart1.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
 
     inOrder.verify(chartDao, calls(1)).upsert(argument.capture());
+    inOrderPublish.verify(publisherDao, calls(1)).publish("chart created");
     assertEquals(newChart1.name(), argument.getValue().name());
     assertEquals(newChart1.version(), argument.getValue().version());
     assertNull(argument.getValue().activeAt());
@@ -100,6 +108,7 @@ class ChartServiceTest extends BaseSpringBootTest {
 
     chartService.deleteVersion(chart1Name);
     verify(chartDao, times(1)).delete(argument.capture());
+    verify(publisherDao, times(1)).publish("chart deleted");
     assertEquals(1, argument.getValue().size());
     assertEquals(chart1Name, argument.getValue().get(0));
   }
@@ -124,6 +133,7 @@ class ChartServiceTest extends BaseSpringBootTest {
 
     chartService.updateVersions(List.of(chart1));
     verify(chartDao, times(1)).upsert(chart1);
+    verify(publisherDao, times(1)).publish("chart updated");
   }
 
   @Test
@@ -136,7 +146,7 @@ class ChartServiceTest extends BaseSpringBootTest {
     Exception exception =
         assertThrows(IllegalArgumentException.class, () -> chartService.updateVersions(chartList));
 
-    assertTrue(exception.getMessage().contains("unrecogrnized chartName provided"));
+    assertTrue(exception.getMessage().contains("unrecognized chartName provided"));
   }
 
   @Test
@@ -175,11 +185,12 @@ class ChartServiceTest extends BaseSpringBootTest {
   @TestConfiguration
   public static class MockChartServiceConfiguration {
     @Bean(name = "mockService")
-    public ChartService getChartService(ChartDao chartDao) {
+    public ChartService getChartService(ChartDao chartDao, PublisherDao publisherDao) {
       return new ChartService(
           new ChartServiceConfiguration(
               List.of("chart-name-here", "chart-name", "chart-name2", "chart-name3")),
-          chartDao);
+          chartDao,
+          publisherDao);
     }
   }
 }
