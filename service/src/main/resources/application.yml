@@ -97,8 +97,9 @@ appmanager:
     basePath: ${env.sam.basePath}
 
   publisher:
-    topicId: "replace-me"
-    projectId: "replace-me"
+    chart:
+      topicId: "replace-me"
+      projectId: "replace-me"
 
 terra.common:
   kubernetes:

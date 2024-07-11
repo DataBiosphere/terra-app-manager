@@ -1,6 +1,6 @@
 package bio.terra.appmanager.dao;
 
-import bio.terra.appmanager.config.PublisherConfiguration;
+import bio.terra.appmanager.config.ChartPublisherConfiguration;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
@@ -22,7 +22,7 @@ public class PublisherDao implements Closeable {
 
   private final Publisher publisher;
 
-  public PublisherDao(PublisherConfiguration config) {
+  public PublisherDao(ChartPublisherConfiguration config) {
     TopicName topicName = TopicName.of(config.topicId(), config.projectId());
     try {
       publisher = Publisher.newBuilder(topicName).build();
