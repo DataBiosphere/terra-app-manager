@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import bio.terra.appmanager.BaseSpringBootTest;
-import bio.terra.appmanager.config.PublisherConfiguration;
+import bio.terra.appmanager.config.ChartPublisherConfiguration;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;
@@ -21,7 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class PublisherDaoTest extends BaseSpringBootTest {
 
   PublisherDao testPublisherDao =
-      new PublisherDao(new PublisherConfiguration("topicId", "projectId"));
+      new PublisherDao(new ChartPublisherConfiguration("topicId", "projectId"));
 
   @Mock Publisher publisher;
 
