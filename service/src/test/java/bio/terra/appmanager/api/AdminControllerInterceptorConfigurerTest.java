@@ -7,12 +7,14 @@ import static org.junit.jupiter.api.Assertions.fail;
 import bio.terra.appmanager.controller.AdminController;
 import bio.terra.appmanager.controller.AdminControllerInterceptor;
 import bio.terra.appmanager.controller.AdminControllerWriteInterceptor;
+import bio.terra.appmanager.dao.PublisherDao;
 import java.util.Optional;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -31,6 +33,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 class AdminControllerInterceptorConfigurerTest {
 
   @Autowired private RequestMappingHandlerMapping requestMappingHandlerMapping;
+  @MockBean PublisherDao publisherDao;
 
   private static HttpMethod getRequestMethod(RequestMappingInfo requestMappingInfo) {
     assertTrue(

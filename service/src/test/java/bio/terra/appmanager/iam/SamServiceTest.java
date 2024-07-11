@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import bio.terra.appmanager.BaseSpringBootTest;
+import bio.terra.appmanager.dao.PublisherDao;
 import org.broadinstitute.dsde.workbench.client.sam.ApiException;
 import org.broadinstitute.dsde.workbench.client.sam.api.StatusApi;
 import org.broadinstitute.dsde.workbench.client.sam.model.SystemStatus;
@@ -19,6 +20,7 @@ class SamServiceTest extends BaseSpringBootTest {
 
   @MockBean private SamClient samClient;
   @MockBean private StatusApi statusApi;
+  @MockBean PublisherDao publisherDao;
 
   @Autowired private SamService samService;
 

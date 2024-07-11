@@ -6,7 +6,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import bio.terra.appmanager.BaseSpringBootTest;
-import bio.terra.appmanager.config.ChartPublisherConfiguration;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;
@@ -14,21 +13,23 @@ import com.google.pubsub.v1.PubsubMessage;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 
 public class PublisherDaoTest extends BaseSpringBootTest {
 
-  PublisherDao testPublisherDao =
-      new PublisherDao(new ChartPublisherConfiguration("topicId", "projectId"));
+  @Autowired
+  @Qualifier("mockChartPublisherDao")
+  PublisherDao testPublisherDao;
 
-  @Mock Publisher publisher;
+  @MockBean Publisher publisher;
 
   @Test
   void testPublish() {
-    ReflectionTestUtils.setField(testPublisherDao, "publisher", publisher);
-
     String msg = "test message";
     ByteString data = ByteString.copyFromUtf8(msg);
     PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
@@ -41,10 +42,16 @@ public class PublisherDaoTest extends BaseSpringBootTest {
 
   @Test
   void testClose() throws InterruptedException {
-    ReflectionTestUtils.setField(testPublisherDao, "publisher", publisher);
-
     testPublisherDao.close();
     verify(publisher, times(1)).shutdown();
     verify(publisher, times(1)).awaitTermination(1, TimeUnit.MINUTES);
+  }
+
+  @TestConfiguration
+  public static class MockChartPublisherConfiguration {
+    @Bean(name = "mockChartPublisherDao")
+    public PublisherDao getChartPublisherDao(Publisher publisher) {
+      return new PublisherDao(publisher);
+    }
   }
 }

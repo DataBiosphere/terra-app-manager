@@ -1,6 +1,5 @@
 package bio.terra.appmanager.dao;
 
-import bio.terra.appmanager.config.ChartPublisherConfiguration;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
@@ -8,9 +7,7 @@ import com.google.cloud.pubsub.v1.Publisher;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
-import com.google.pubsub.v1.TopicName;
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,15 +17,10 @@ import org.springframework.stereotype.Repository;
 public class PublisherDao implements Closeable {
   private static final Logger logger = LoggerFactory.getLogger(PublisherDao.class);
 
-  private final Publisher publisher;
+  private Publisher publisher;
 
-  public PublisherDao(ChartPublisherConfiguration config) {
-    TopicName topicName = TopicName.of(config.topicId(), config.projectId());
-    try {
-      publisher = Publisher.newBuilder(topicName).build();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+  public PublisherDao(Publisher publisher) {
+    this.publisher = publisher;
   }
 
   // TODO: use proper message typing here, depends on
