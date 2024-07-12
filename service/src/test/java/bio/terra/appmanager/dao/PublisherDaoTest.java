@@ -15,16 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 
 public class PublisherDaoTest extends BaseSpringBootTest {
 
-  @Autowired
-  @Qualifier("mockChartPublisherDao")
-  PublisherDao testPublisherDao;
+  @Autowired PublisherDao testPublisherDao;
 
   @MockBean Publisher publisher;
 
@@ -45,13 +40,5 @@ public class PublisherDaoTest extends BaseSpringBootTest {
     testPublisherDao.close();
     verify(publisher, times(1)).shutdown();
     verify(publisher, times(1)).awaitTermination(1, TimeUnit.MINUTES);
-  }
-
-  @TestConfiguration
-  public static class MockChartPublisherConfiguration {
-    @Bean(name = "mockChartPublisherDao")
-    public PublisherDao getChartPublisherDao(Publisher publisher) {
-      return new PublisherDao(publisher);
-    }
   }
 }

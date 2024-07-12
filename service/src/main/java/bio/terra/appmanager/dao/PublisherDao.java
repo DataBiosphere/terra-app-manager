@@ -1,5 +1,6 @@
 package bio.terra.appmanager.dao;
 
+import bio.terra.appmanager.config.GooglePublisherConfiguration;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
@@ -17,10 +18,14 @@ import org.springframework.stereotype.Repository;
 public class PublisherDao implements Closeable {
   private static final Logger logger = LoggerFactory.getLogger(PublisherDao.class);
 
-  private Publisher publisher;
+  private final Publisher publisher;
+  // The config is not actually used in the DAO of the time of writing, but it is included here with
+  // a getter such that it can be inspected after the `Publisher` construction
+  private final GooglePublisherConfiguration config;
 
-  public PublisherDao(Publisher publisher) {
+  public PublisherDao(Publisher publisher, GooglePublisherConfiguration config) {
     this.publisher = publisher;
+    this.config = config;
   }
 
   // TODO: use proper message typing here, depends on
@@ -59,5 +64,9 @@ public class PublisherDao implements Closeable {
         throw new RuntimeException(e);
       }
     }
+  }
+
+  public GooglePublisherConfiguration getConfig() {
+    return config;
   }
 }
