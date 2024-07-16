@@ -4,4 +4,6 @@ public interface GooglePublisherConfiguration {
   String getTopicId();
 
   String getProjectId();
+
+  String getEnvironment();
 }

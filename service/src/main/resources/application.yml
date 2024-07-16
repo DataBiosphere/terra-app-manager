@@ -100,6 +100,7 @@ appmanager:
     chart:
       topicId: "replace-me"
       projectId: "replace-me"
+      environment: "BEE"
 
 terra.common:
   kubernetes:
