@@ -14,11 +14,11 @@ import org.springframework.context.annotation.Configuration;
 public class PubsubConfig {
 
   @Bean
-  public EventTopicName getEventTopicName(ChartPublisherConfig config, PubsubBeeConfig beeConfig) {
+  public EventTopicName getEventTopicName(PubsubBeeConfig beeConfig, PubsubGoogleConfig googleConfig) {
     if (beeConfig.isActive()) {
-      return TopicCreatorFactory.createCreateEventTopicIfNotExist(config.getTopicId());
+      return TopicCreatorFactory.createCreateEventTopicIfNotExist(googleConfig.projectId());
     } else {
-      return TopicCreatorFactory.createEventTopicMustBeAlreadyCreated(config.getTopicId());
+      return TopicCreatorFactory.createEventTopicMustBeAlreadyCreated(googleConfig.projectId());
     }
   }
 
