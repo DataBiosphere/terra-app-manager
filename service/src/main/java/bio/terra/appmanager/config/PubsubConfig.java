@@ -14,9 +14,8 @@ import org.springframework.context.annotation.Configuration;
 public class PubsubConfig {
 
   @Bean
-  public EventTopicName getEventTopicName(ChartPublisherConfig config) {
-
-    if (config.getEnvironment().equals("BEE")) {
+  public EventTopicName getEventTopicName(ChartPublisherConfig config, PubsubBeeConfig beeConfig) {
+    if (beeConfig.isActive()) {
       return TopicCreatorFactory.createCreateEventTopicIfNotExist(config.getTopicId());
     } else {
       return TopicCreatorFactory.createEventTopicMustBeAlreadyCreated(config.getTopicId());
@@ -26,7 +25,6 @@ public class PubsubConfig {
   @Bean
   @Autowired
   public Publisher chartPublisherDao(ChartPublisherConfig config, EventTopicName eventTopicName) {
-
     Publisher publisher;
     try {
       TopicName topicName = eventTopicName.getEventTopicName(config);

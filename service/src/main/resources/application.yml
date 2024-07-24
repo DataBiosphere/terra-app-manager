@@ -2,6 +2,12 @@
 # This is for deployment-specific values, which may be managed by other teams
 
 env:
+  pubsub:
+    google:
+      projectId: ${SERVICE_GOOGLE_PROJECT:broad-dsde-dev}
+    bee:
+      name: ${BEE_NAME:notabeeenv}
+      isActive: ${IS_BEE:false}
   admin:
     service_accounts_for_read: ${SERVICE_ACCOUNT_ADMINS_FOR_READ:test@readnowhere.com}
     service_accounts_for_write: ${SERVICE_ACCOUNT_ADMINS_FOR_WRITE:test@writenowhere.com}
@@ -96,11 +102,12 @@ appmanager:
   sam:
     basePath: ${env.sam.basePath}
 
-  publisher:
-    chart:
-      topicId: "replace-me"
-      projectId: "replace-me"
-      environment: "BEE"
+  pubsub:
+    google:
+      projectId: ${env.pubsub.google.projectId}
+    bee:
+      name: ${env.pubsub.bee.name}
+      isActive: ${env.pubsub.bee.isActive}
 
 terra.common:
   kubernetes:

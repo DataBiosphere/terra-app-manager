@@ -1,22 +1,29 @@
 package bio.terra.appmanager.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-@ConfigurationProperties(prefix = "appmanager.publisher.chart")
-public record ChartPublisherConfig(String topicId, String projectId, String environment)
-    implements GooglePublisherConfiguration {
+@Configuration
+public class ChartPublisherConfig implements GooglePublisherConfiguration {
+
+  PubsubGoogleConfig googleConfig;
+  PubsubBeeConfig beeConfig;
+
+  public ChartPublisherConfig(PubsubGoogleConfig googleConfig, PubsubBeeConfig beeConfig) {
+    this.googleConfig = googleConfig;
+    this.beeConfig = beeConfig;
+  }
+
+  @Override
+  public String getBaseName() {
+    return "event-charts";
+  }
+
   @Override
   public String getTopicId() {
-    return topicId;
-  }
-
-  @Override
-  public String getProjectId() {
-    return projectId;
-  }
-
-  @Override
-  public String getEnvironment() {
-    return environment;
+    if (beeConfig.isActive()) {
+      return getBaseName() + "-" + beeConfig.name();
+    } else {
+      return getBaseName();
+    }
   }
 }

@@ -23,6 +23,7 @@ public class PublisherDao implements Closeable {
   // a getter such that it can be inspected after the `Publisher` construction
   private final GooglePublisherConfiguration config;
 
+  // TODO: use qualifier to explicitly hook up relevant publisher
   public PublisherDao(Publisher publisher, GooglePublisherConfiguration config) {
     this.publisher = publisher;
     this.config = config;
