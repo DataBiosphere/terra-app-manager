@@ -14,7 +14,8 @@ import org.springframework.context.annotation.Configuration;
 public class PubsubConfig {
 
   @Bean
-  public EventTopicName getEventTopicName(PubsubBeeConfig beeConfig, PubsubGoogleConfig googleConfig) {
+  public EventTopicName getEventTopicName(
+      PubsubBeeConfig beeConfig, PubsubGoogleConfig googleConfig) {
     if (beeConfig.isActive()) {
       return TopicCreatorFactory.createCreateEventTopicIfNotExist(googleConfig.projectId());
     } else {

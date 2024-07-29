@@ -5,7 +5,7 @@ plugins {
     id 'com.srcclr.gradle'
     id 'org.sonarqube'
 
-    id 'com.gorylenko.gradle-git-properties' version '2.3.1'
+    id 'com.gorylenko.gradle-git-properties' version '2.4.2'
     id 'org.liquibase.gradle' version '2.2.2'
     id "io.sentry.jvm.gradle" version "4.6.0"
 }
@@ -26,7 +26,7 @@ dependencies {
     implementation 'org.postgresql:postgresql'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'io.micrometer:micrometer-registry-prometheus:1.10.4'
+    implementation 'io.micrometer:micrometer-registry-meprometheus:1.10.4'
 
     implementation platform('com.google.cloud:libraries-bom:26.42.0')
     implementation 'com.google.cloud:google-cloud-pubsub'
