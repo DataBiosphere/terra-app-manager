@@ -1,6 +1,6 @@
-package bio.terra.appmanager.config;
+package bio.terra.common.events.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "appmanager.pubsub.google")
+@ConfigurationProperties(prefix = "terra.common.pubsub.google")
 public record PubsubGoogleConfig(String projectId) {}

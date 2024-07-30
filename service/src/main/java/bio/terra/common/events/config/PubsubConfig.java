@@ -1,5 +1,6 @@
-package bio.terra.appmanager.config;
+package bio.terra.common.events.config;
 
+import bio.terra.appmanager.config.ChartPublisherConfig;
 import bio.terra.appmanager.dao.EventTopicName;
 import bio.terra.appmanager.dao.TopicCreatorFactory;
 import com.google.cloud.pubsub.v1.Publisher;
@@ -16,6 +17,10 @@ public class PubsubConfig {
   @Bean
   public EventTopicName getEventTopicName(
       PubsubBeeConfig beeConfig, PubsubGoogleConfig googleConfig) {
+
+    System.out.println("name:      " + beeConfig.name());
+    System.out.println("is_active: " + beeConfig.isActive());
+
     if (beeConfig.isActive()) {
       return TopicCreatorFactory.createCreateEventTopicIfNotExist(googleConfig.projectId());
     } else {
