@@ -17,6 +17,7 @@ import bio.terra.appmanager.controller.ChartNotFoundException;
 import bio.terra.appmanager.dao.ChartDao;
 import bio.terra.appmanager.model.Chart;
 import bio.terra.appmanager.model.ChartTestUtils;
+import bio.terra.common.events.client.google.PublisherDao;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -30,15 +31,22 @@ import org.springframework.context.annotation.Bean;
 class ChartServiceTest extends BaseSpringBootTest {
 
   @MockBean ChartDao chartDao;
+  @MockBean PublisherDao publisherDao;
 
   @Autowired
   @Qualifier("mockService")
   ChartService chartService;
 
   @Test
-  void testCreateChart_withEmptyList() {
+  void testCreateChart_withEmptyList_chartDao() {
     chartService.createCharts(List.of());
     verifyNoInteractions(chartDao);
+  }
+
+  @Test
+  void testCreateChart_withEmptyList_publisherDao() {
+    chartService.createCharts(List.of());
+    verifyNoInteractions(publisherDao);
   }
 
   @Test
@@ -51,11 +59,11 @@ class ChartServiceTest extends BaseSpringBootTest {
     Exception exception =
         assertThrows(IllegalArgumentException.class, () -> chartService.createCharts(chartList));
 
-    assertTrue(exception.getMessage().contains("unrecogrnized chartName provided"));
+    assertTrue(exception.getMessage().contains("unrecognized chartName provided"));
   }
 
   @Test
-  void testCreateChart_singleElement() {
+  void testCreateChart_singleElement_chartDao() {
     String chart1Name = "chart-name-here";
     String chart1Version = ChartTestUtils.makeChartVersion(0);
     Chart chart1 = new Chart(chart1Name, chart1Version);
@@ -70,7 +78,17 @@ class ChartServiceTest extends BaseSpringBootTest {
   }
 
   @Test
-  void testCreateChart_multipleElement() {
+  void testCreateChart_singleElement_publisherDao() {
+    String chart1Name = "chart-name-here";
+    String chart1Version = ChartTestUtils.makeChartVersion(0);
+    Chart chart1 = new Chart(chart1Name, chart1Version);
+
+    chartService.createCharts(List.of(chart1));
+    verify(publisherDao, times(1)).publish("chart created");
+  }
+
+  @Test
+  void testCreateChart_multipleElement_chartDao() {
     String chart1Name = "chart-name-here";
     String chart1Version1 = ChartTestUtils.makeChartVersion(0);
     String chart1Version2 = ChartTestUtils.makeChartVersion(1);
@@ -93,7 +111,21 @@ class ChartServiceTest extends BaseSpringBootTest {
   }
 
   @Test
-  void testDeleteVersion() {
+  void testCreateChart_multipleElement_publisherDao() {
+    String chart1Name = "chart-name-here";
+    String chart1Version1 = ChartTestUtils.makeChartVersion(0);
+    String chart1Version2 = ChartTestUtils.makeChartVersion(1);
+    Chart oldChart1 = new Chart(chart1Name, chart1Version1);
+    Chart newChart1 = new Chart(chart1Name, chart1Version2);
+
+    InOrder inOrderPublish = inOrder(publisherDao);
+    chartService.createCharts(List.of(oldChart1, newChart1));
+    inOrderPublish.verify(publisherDao, calls(1)).publish("chart created");
+    inOrderPublish.verify(publisherDao, calls(1)).publish("chart created");
+  }
+
+  @Test
+  void testDeleteVersion_chartDao() {
     String chart1Name = "chart-name-here";
 
     ArgumentCaptor<List<String>> argument = ArgumentCaptor.forClass(List.class);
@@ -102,6 +134,14 @@ class ChartServiceTest extends BaseSpringBootTest {
     verify(chartDao, times(1)).delete(argument.capture());
     assertEquals(1, argument.getValue().size());
     assertEquals(chart1Name, argument.getValue().get(0));
+  }
+
+  @Test
+  void testDeleteVersion_publisherDao() {
+    String chart1Name = "chart-name-here";
+
+    chartService.deleteVersion(chart1Name);
+    verify(publisherDao, times(1)).publish("chart deleted");
   }
 
   @Test
@@ -115,7 +155,7 @@ class ChartServiceTest extends BaseSpringBootTest {
   }
 
   @Test
-  void testUpdateVersions() {
+  void testUpdateVersions_chartDao() {
     String chart1Name = "chart-name-here";
     String chart1Version = ChartTestUtils.makeChartVersion(0);
     Chart chart1 = new Chart(chart1Name, chart1Version);
@@ -124,6 +164,18 @@ class ChartServiceTest extends BaseSpringBootTest {
 
     chartService.updateVersions(List.of(chart1));
     verify(chartDao, times(1)).upsert(chart1);
+  }
+
+  @Test
+  void testUpdateVersions_publisherDao() {
+    String chart1Name = "chart-name-here";
+    String chart1Version = ChartTestUtils.makeChartVersion(0);
+    Chart chart1 = new Chart(chart1Name, chart1Version);
+
+    when(chartDao.get(List.of(chart1Name), true)).thenReturn(List.of(chart1));
+
+    chartService.updateVersions(List.of(chart1));
+    verify(publisherDao, times(1)).publish("chart updated");
   }
 
   @Test
@@ -136,7 +188,7 @@ class ChartServiceTest extends BaseSpringBootTest {
     Exception exception =
         assertThrows(IllegalArgumentException.class, () -> chartService.updateVersions(chartList));
 
-    assertTrue(exception.getMessage().contains("unrecogrnized chartName provided"));
+    assertTrue(exception.getMessage().contains("unrecognized chartName provided"));
   }
 
   @Test
@@ -175,11 +227,12 @@ class ChartServiceTest extends BaseSpringBootTest {
   @TestConfiguration
   public static class MockChartServiceConfiguration {
     @Bean(name = "mockService")
-    public ChartService getChartService(ChartDao chartDao) {
+    public ChartService getChartService(ChartDao chartDao, PublisherDao publisherDao) {
       return new ChartService(
           new ChartServiceConfiguration(
               List.of("chart-name-here", "chart-name", "chart-name2", "chart-name3")),
-          chartDao);
+          chartDao,
+          publisherDao);
     }
   }
 }
