@@ -3,11 +3,11 @@ package bio.terra.common.events.topics;
 import bio.terra.common.events.client.PubsubClient;
 
 /** This class is responsible interacting with the PubsubClient (both publish and subscribe). */
-public abstract class EventClient<T extends EventMessage> {
+public abstract class AbstractEventTopic<T extends EventMessage> {
 
   private PubsubClient client;
 
-  public EventClient(PubsubClient client) {
+  public AbstractEventTopic(PubsubClient client) {
     this.client = client;
   }
 
