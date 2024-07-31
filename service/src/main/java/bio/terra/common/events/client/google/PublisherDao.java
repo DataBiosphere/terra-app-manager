@@ -1,6 +1,5 @@
-package bio.terra.appmanager.dao;
+package bio.terra.common.events.client.google;
 
-import bio.terra.common.events.config.GooglePublisherConfiguration;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;

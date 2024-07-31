@@ -1,4 +1,4 @@
-package bio.terra.appmanager.dao;
+package bio.terra.common.events.client.google;
 
 import bio.terra.appmanager.config.ChartPublisherConfig;
 import com.google.pubsub.v1.TopicName;

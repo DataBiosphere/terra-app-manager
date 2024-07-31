@@ -73,15 +73,6 @@ management:
       exposure:
         include: "*"
 
-terra:
-  common:
-    pubsub:
-      google:
-        project_id: ${env.google.project_id}
-      bee:
-        is_active: ${env.bee.is_active}
-        name: ${env.bee.name}
-
 appmanager:
   admin:
     service_accounts_for_read: ${env.admin.service_accounts_for_read}
@@ -117,8 +108,12 @@ terra.common:
   tracing:
     sampling-ratio: ${env.tracing.samplingRate}
   google:
+    project_id: ${env.google.project_id}
     tracing:
       enabled: ${env.tracing.exportEnabled}
+  bee:
+    is_active: ${env.bee.is_active}
+    name: ${env.bee.name}
 
 otel:
   sdk:

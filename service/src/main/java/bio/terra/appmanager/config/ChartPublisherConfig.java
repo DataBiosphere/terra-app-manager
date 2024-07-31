@@ -1,17 +1,17 @@
 package bio.terra.appmanager.config;
 
-import bio.terra.common.events.config.GooglePublisherConfiguration;
-import bio.terra.common.events.config.PubsubBeeConfig;
-import bio.terra.common.events.config.PubsubGoogleConfig;
+import bio.terra.common.events.client.google.GooglePublisherConfiguration;
+import bio.terra.common.events.config.types.BeeConfig;
+import bio.terra.common.events.config.types.GoogleConfig;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ChartPublisherConfig implements GooglePublisherConfiguration {
 
-  PubsubGoogleConfig googleConfig;
-  PubsubBeeConfig beeConfig;
+  GoogleConfig googleConfig;
+  BeeConfig beeConfig;
 
-  public ChartPublisherConfig(PubsubGoogleConfig googleConfig, PubsubBeeConfig beeConfig) {
+  public ChartPublisherConfig(GoogleConfig googleConfig, BeeConfig beeConfig) {
     this.googleConfig = googleConfig;
     this.beeConfig = beeConfig;
   }

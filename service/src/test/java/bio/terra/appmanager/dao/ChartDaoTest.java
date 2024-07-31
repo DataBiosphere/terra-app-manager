@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import bio.terra.appmanager.model.Chart;
 import bio.terra.appmanager.model.ChartTestUtils;
+import bio.terra.common.events.client.google.PublisherDao;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
