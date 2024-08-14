@@ -1,6 +1,5 @@
 package bio.terra.common.events.client.google;
 
-import bio.terra.appmanager.config.ChartPublisherConfig;
 import com.google.api.gax.rpc.PermissionDeniedException;
 import com.google.cloud.pubsub.v1.TopicAdminClient;
 import com.google.pubsub.v1.Topic;
@@ -21,13 +20,13 @@ public class CreateEventTopicIfNotExist implements EventTopicName {
    * This is called when running on a BEE Verify the topic exists or create the topic if it does not
    * exist Then return the TopicName
    *
-   * @param config
+   * @param name
    * @return TopicName for the Event topic for the environment
    */
   @Override
-  public TopicName getEventTopicName(ChartPublisherConfig config) throws IOException {
+  public TopicName verifyTopicName(String name) throws IOException {
     try (TopicAdminClient topicAdminClient = TopicAdminClient.create()) {
-      TopicName topicName = TopicName.of(projectId, config.getTopicId());
+      TopicName topicName = TopicName.of(projectId, name);
 
       try {
         Topic topic = topicAdminClient.getTopic(topicName);

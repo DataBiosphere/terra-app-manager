@@ -1,6 +1,7 @@
 package bio.terra.common.events.topics;
 
 import bio.terra.common.events.client.PubsubClient;
+import bio.terra.common.events.topics.messages.EventMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.nio.charset.StandardCharsets;
 

@@ -1,4 +1,4 @@
-package bio.terra.common.events.topics;
+package bio.terra.common.events.topics.messages;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

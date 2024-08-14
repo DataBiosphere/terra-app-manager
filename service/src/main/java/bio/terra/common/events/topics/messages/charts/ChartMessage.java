@@ -1,6 +1,6 @@
-package bio.terra.common.events.topics.messages;
+package bio.terra.common.events.topics.messages.charts;
 
-import bio.terra.common.events.topics.EventMessage;
+import bio.terra.common.events.topics.messages.EventMessage;
 
 public abstract class ChartMessage extends EventMessage {
 

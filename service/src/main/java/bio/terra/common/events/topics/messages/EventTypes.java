@@ -1,4 +1,4 @@
-package bio.terra.common.events.topics;
+package bio.terra.common.events.topics.messages;
 
 public enum EventTypes {
   CHART_CREATED,

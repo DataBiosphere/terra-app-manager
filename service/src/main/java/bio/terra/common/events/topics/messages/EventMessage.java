@@ -1,4 +1,4 @@
-package bio.terra.common.events.topics;
+package bio.terra.common.events.topics.messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

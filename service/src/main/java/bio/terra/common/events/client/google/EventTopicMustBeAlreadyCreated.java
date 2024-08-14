@@ -1,6 +1,5 @@
 package bio.terra.common.events.client.google;
 
-import bio.terra.appmanager.config.ChartPublisherConfig;
 import com.google.cloud.pubsub.v1.TopicAdminClient;
 import com.google.pubsub.v1.Topic;
 import com.google.pubsub.v1.TopicName;
@@ -23,22 +22,21 @@ public class EventTopicMustBeAlreadyCreated implements EventTopicName {
    * This is called when running in the Production environment Verify the topic exists or generate a
    * ConfigurationError # Then return the TopicName
    *
-   * @param config
+   * @param name
    * @return TopicName for the Event topic for Production
    */
   @Override
-  public TopicName getEventTopicName(ChartPublisherConfig config)
-      throws ConfigurationException, IOException {
+  public TopicName verifyTopicName(String name) throws ConfigurationException, IOException {
+
     try (TopicAdminClient topicAdminClient = TopicAdminClient.create()) {
-      TopicName topicName = TopicName.of(projectId, config.getTopicId());
+      TopicName topicName = TopicName.of(projectId, name);
       Topic topic = topicAdminClient.getTopic(topicName);
       if (topic != null) {
         return topicName;
       }
       throw new ConfigurationException("Error, Event Topic " + topicName + " must exist");
     } catch (Exception e) {
-      logger.error(
-          "Error getting Event Topic for topic id: " + config.getTopicId() + " " + e.getMessage());
+      logger.error("Error getting Event Topic with topic id: " + name + " " + e.getMessage());
       throw e;
     }
   }
