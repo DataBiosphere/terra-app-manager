@@ -3,10 +3,10 @@ package bio.terra.appmanager.service;
 import bio.terra.appmanager.config.ChartServiceConfiguration;
 import bio.terra.appmanager.controller.ChartNotFoundException;
 import bio.terra.appmanager.dao.ChartDao;
+import bio.terra.appmanager.events.ChartEvents;
 import bio.terra.appmanager.model.Chart;
 import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
-import bio.terra.common.events.client.google.PublisherDao;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +17,17 @@ public class ChartService {
 
   private final List<String> allowedChartNames;
   private final ChartDao chartDao;
-  private final PublisherDao publisherDao;
+  private final ChartEvents chartEvents;
+
+  //  private final PublisherDao publisherDao;
 
   public ChartService(
       ChartServiceConfiguration chartServiceConfiguration,
       ChartDao chartDao,
-      PublisherDao publisherDao) {
+      ChartEvents chartEvents) {
     this.allowedChartNames = chartServiceConfiguration.allowedNames();
     this.chartDao = chartDao;
-    this.publisherDao = publisherDao;
+    this.chartEvents = chartEvents;
   }
 
   /**
@@ -40,10 +42,7 @@ public class ChartService {
         chart -> {
           checkChartName(chart);
           chartDao.upsert(chart);
-          // TODO: use proper message typing here, depends on
-          // https://broadworkbench.atlassian.net/browse/IA-5018 and
-          // https://broadworkbench.atlassian.net/browse/IA-5019
-          publisherDao.publish("chart created");
+          chartEvents.chartCreated(chart.name());
         });
   }
 
@@ -76,10 +75,7 @@ public class ChartService {
     versions.forEach(
         version -> {
           chartDao.upsert(version);
-          // TODO: use proper message typing here, depends on
-          // https://broadworkbench.atlassian.net/browse/IA-5018 and
-          // https://broadworkbench.atlassian.net/browse/IA-5019
-          publisherDao.publish("chart updated");
+          chartEvents.chartUpdated(version.name());
         });
   }
 
@@ -91,10 +87,7 @@ public class ChartService {
   @WriteTransaction
   public void deleteVersion(@NotNull String name) {
     chartDao.delete(List.of(name));
-    // TODO: use proper message typing here, depends on
-    // https://broadworkbench.atlassian.net/browse/IA-5018 and
-    // https://broadworkbench.atlassian.net/browse/IA-5019
-    publisherDao.publish("chart deleted");
+    chartEvents.chartDeleted(name);
   }
 
   /**

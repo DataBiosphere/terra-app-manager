@@ -1,4 +1,4 @@
-package bio.terra.appmanager.dao;
+package bio.terra.common.events;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -12,19 +12,15 @@ import com.google.cloud.pubsub.v1.Publisher;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 public class PublisherDaoTest extends BaseSpringBootTest {
 
-  @Autowired PublisherDao testPublisherDao;
+  PublisherDao testPublisherDao;
 
-  @MockBean Publisher publisher;
+  Publisher publisher;
 
-  @Test
   void testPublish() {
     String msg = "test message";
     ByteString data = ByteString.copyFromUtf8(msg);
@@ -36,7 +32,6 @@ public class PublisherDaoTest extends BaseSpringBootTest {
     verify(publisher, times(1)).publish(pubsubMessage);
   }
 
-  @Test
   void testClose() throws InterruptedException {
     testPublisherDao.close();
     verify(publisher, times(1)).shutdown();

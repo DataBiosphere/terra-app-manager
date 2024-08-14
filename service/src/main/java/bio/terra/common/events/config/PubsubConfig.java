@@ -9,9 +9,7 @@ import com.google.cloud.pubsub.v1.Publisher;
 import com.google.pubsub.v1.TopicName;
 import java.io.IOException;
 import javax.naming.ConfigurationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -33,7 +31,11 @@ public class PubsubConfig {
     this.googleConfig = googleConfig;
   }
 
-  @Bean(name = "eventTopicName")
+  public String publishedBy() {
+    return applicationName;
+  }
+
+  //  @Bean(name = "eventTopicName")
   public EventTopicName getEventTopicName() {
 
     System.out.println("name:             " + beeConfig.name());
@@ -47,8 +49,8 @@ public class PubsubConfig {
     }
   }
 
-  @Bean
-  @Autowired
+  //  @Bean
+  //  @Autowired
   public Publisher chartPublisherDao(ChartPublisherConfig config, EventTopicName eventTopicName) {
     Publisher publisher;
     try {
