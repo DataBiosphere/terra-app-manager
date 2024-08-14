@@ -17,14 +17,16 @@ public class PublisherDao implements Closeable {
   private static final Logger logger = LoggerFactory.getLogger(PublisherDao.class);
 
   private final Publisher publisher;
+
   // The config is not actually used in the DAO of the time of writing, but it is included here with
   // a getter such that it can be inspected after the `Publisher` construction
-  private final GooglePublisherConfiguration config;
+  //  private final GooglePublisherConfiguration config;
 
   // TODO: use qualifier to explicitly hook up relevant publisher
-  public PublisherDao(Publisher publisher, GooglePublisherConfiguration config) {
+  //  public PublisherDao(Publisher publisher, GooglePublisherConfiguration config) {
+  public PublisherDao(Publisher publisher) {
     this.publisher = publisher;
-    this.config = config;
+    //    this.config = config;
   }
 
   // TODO: use proper message typing here, depends on
@@ -63,9 +65,5 @@ public class PublisherDao implements Closeable {
         throw new RuntimeException(e);
       }
     }
-  }
-
-  public GooglePublisherConfiguration getConfig() {
-    return config;
   }
 }
