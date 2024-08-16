@@ -8,7 +8,6 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import java.io.Closeable;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,14 +55,5 @@ public class PublisherDao implements Closeable {
   }
 
   @Override
-  public void close() {
-    if (publisher != null) {
-      publisher.shutdown();
-      try {
-        publisher.awaitTermination(1, TimeUnit.MINUTES);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
-    }
-  }
+  public void close() {}
 }

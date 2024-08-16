@@ -20,7 +20,7 @@ public class EventTopicMustBeAlreadyCreated implements EventTopicName {
 
   /**
    * This is called when running in the Production environment Verify the topic exists or generate a
-   * ConfigurationError # Then return the TopicName
+   * ConfigurationError then return the TopicName
    *
    * @param name
    * @return TopicName for the Event topic for Production

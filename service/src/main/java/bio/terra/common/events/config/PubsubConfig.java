@@ -37,7 +37,7 @@ public class PubsubConfig {
   }
 
   public String nameSuffix() {
-    if (beeConfig != null) {
+    if (beeConfig != null && beeConfig.isActive()) {
       return beeConfig.name();
     }
     return null;

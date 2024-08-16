@@ -1,30 +1,43 @@
 package bio.terra.common.events.topics;
 
+import bio.terra.common.events.client.MessageProcessor;
 import bio.terra.common.events.client.PubsubClient;
+import bio.terra.common.events.client.PubsubClientFactory;
 import bio.terra.common.events.topics.messages.EventMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.nio.charset.StandardCharsets;
 
 /** This class is responsible interacting with the PubsubClient (both publish and subscribe). */
 public abstract class EventTopic<T extends EventMessage> {
 
   private PubsubClient client;
 
-  public EventTopic(PubsubClient client) {
-    this.client = client;
+  public EventTopic(PubsubClientFactory clientFactory, String topicName, String serviceName) {
+    client = clientFactory.createPubsubClient(topicName, serviceName, this::receive);
   }
 
   public void publish(T message) {
     try {
-      client.publish(message.toJson().getBytes(StandardCharsets.UTF_8));
+      client.publish(message.toJson());
     } catch (JsonProcessingException e) {
       System.out.println("ERROR: unable to publish message");
     }
   }
 
-  public void subscribe() {
-    T message = null;
-    process(message);
+  public void subscribe(MessageProcessor processor) {
+    client.subscribe(processor);
+  }
+
+  protected boolean receive(String message) {
+    try {
+      T msg = (T) EventMessage.fromJson(message);
+      return process(msg);
+    } catch (JsonProcessingException e) {
+      System.out.println(e.getMessage());
+      // TODO: what to do with bad messages
+    }
+
+    // TODO: this needs to be changed back to false
+    return true;
   }
 
   /**
@@ -34,5 +47,5 @@ public abstract class EventTopic<T extends EventMessage> {
    * @param message
    * @return
    */
-  protected abstract Boolean process(T message);
+  public abstract boolean process(EventMessage message);
 }

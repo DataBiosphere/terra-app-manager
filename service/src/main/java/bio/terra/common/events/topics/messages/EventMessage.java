@@ -19,12 +19,6 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventMessage {
 
-  public static enum TYPES {
-    CHART_CREATED,
-    CHART_UPDATED,
-    CHART_DELETED
-  }
-
   /**
    * This is the current version of the EventMessage schema, as defined in the spec (see class-level
    * javadoc).
@@ -49,7 +43,7 @@ public class EventMessage {
   String jobId;
 
   @JsonProperty("event_type")
-  TYPES eventType;
+  public EventTypes eventType;
 
   @JsonProperty("entity_id")
   String entityId;
@@ -95,7 +89,7 @@ public class EventMessage {
       String publishedBy,
       Map<String, Object> context,
       String jobId,
-      TYPES eventType,
+      EventTypes eventType,
       String entityId,
       String entityUrl,
       Map<String, String> properties) {
@@ -118,7 +112,7 @@ public class EventMessage {
       String publishedBy,
       Map<String, Object> context,
       String jobId,
-      TYPES eventType,
+      EventTypes eventType,
       String entityId,
       String entityUrl,
       Map<String, String> properties) {
@@ -135,14 +129,22 @@ public class EventMessage {
         properties);
   }
 
-  public EventMessage(String publishedBy, TYPES eventType, String entityId, String entityUrl) {
+  public EventMessage(String publishedBy, EventTypes eventType, String entityId, String entityUrl) {
     this(publishedBy, null, null, eventType, entityId, entityUrl, null);
   }
 
-  public String toJson() throws JsonProcessingException {
-    ObjectMapper mapper = new ObjectMapper();
-    var jsonMsg = mapper.writeValueAsString(this);
-    return jsonMsg;
+  protected EventMessage(EventMessage event) {
+    this(
+        event.id,
+        event.version,
+        event.publishedAt,
+        event.publishedBy,
+        event.context,
+        event.jobId,
+        event.eventType,
+        event.entityId,
+        event.entityUrl,
+        event.properties);
   }
 
   public static EventMessage fromJson(String jsonMessage) throws JsonProcessingException {
@@ -151,11 +153,17 @@ public class EventMessage {
     return em;
   }
 
+  public String toJson() throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper();
+    var jsonMsg = mapper.writeValueAsString(this);
+    return jsonMsg;
+  }
+
   /**
    * Ensure required parameters are set on object.
    *
    * @return <tt>true</tt> if object is valid, <tt>false</tt> otherwise.
-   * @see #EventMessage(String,String,Date,String,Map,String,TYPES,String,String,Map)
+   * @see #EventMessage(String, String, Date, String, Map, String, EventTypes, String, String, Map)
    */
   private void confirmNonNull() {
 
@@ -169,5 +177,11 @@ public class EventMessage {
               "one of version({0}), publishedBy({1}), eventType({2}), entityId({3}), or entityUrl({4}) is missing",
               version, publishedBy, eventType, entityId, entityUrl));
     }
+  }
+
+  public static enum EventTypes {
+    CHART_CREATED,
+    CHART_UPDATED,
+    CHART_DELETED
   }
 }

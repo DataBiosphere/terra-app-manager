@@ -7,16 +7,14 @@ import bio.terra.common.events.topics.messages.charts.ChartDeleted;
 import bio.terra.common.events.topics.messages.charts.ChartMessage;
 import bio.terra.common.events.topics.messages.charts.ChartUpdated;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Repository
-public class ChartTopic extends EventTopic<ChartMessage> {
+public abstract class ChartTopic extends EventTopic<ChartMessage> {
 
-  private String publishedBy;
+  protected String publishedBy;
 
   public ChartTopic(PubsubConfig config, PubsubClientFactory clientFactory) {
-    super(clientFactory.createPubsubClient("charts"));
+    super(clientFactory, "charts", config.publishedBy());
     publishedBy = config.publishedBy();
   }
 
@@ -26,11 +24,6 @@ public class ChartTopic extends EventTopic<ChartMessage> {
         .path("api/admin/v1/charts")
         .queryParam("chartName", entityId)
         .toUriString();
-  }
-
-  @Override
-  protected Boolean process(ChartMessage message) {
-    return Boolean.TRUE;
   }
 
   public void chartCreated(String entityId) {
