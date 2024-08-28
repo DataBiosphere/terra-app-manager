@@ -4,8 +4,11 @@
 env:
   google:
     project_id: ${SERVICE_GOOGLE_PROJECT:broad-dsde-dev}
+    # set value to connect to local pubsub emulator for local development,
+    # otherwise set to a '-'-value to connect to live environment specified by `project_id`
+    pubsub_emulator_target: ${PUBSUB_EMULATOR_HOST:-}
   bee:
-    name: ${BEE_NAME:notabeeenv}
+    name: ${BEE_NAME:not-a-bee-env}
     is_active: ${IS_BEE:false}
   admin:
     service_accounts_for_read: ${SERVICE_ACCOUNT_ADMINS_FOR_READ:test@readnowhere.com}
@@ -109,6 +112,7 @@ terra.common:
     sampling-ratio: ${env.tracing.samplingRate}
   google:
     project_id: ${env.google.project_id}
+    pubsub_emulator_target_for_environment: ${env.google.pubsub_emulator_target}
     tracing:
       enabled: ${env.tracing.exportEnabled}
   bee:

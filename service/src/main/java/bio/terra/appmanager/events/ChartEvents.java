@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
 public class ChartEvents extends ChartTopic {
   public ChartEvents(PubsubConfig config, PubsubClientFactory factory) {
     super(config, factory);
-    // TODO: default to this::receive if you don't provide one
-    subscribe(this::receive);
+    subscribe();
   }
 
   @Override

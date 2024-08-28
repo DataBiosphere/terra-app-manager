@@ -8,11 +8,13 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CreateEventTopicIfNotExist implements EventTopicName {
+public class CreateEventTopicIfNotExist extends EventTopicName {
   private static final Logger logger = LoggerFactory.getLogger(CreateEventTopicIfNotExist.class);
   private final String projectId;
 
-  public CreateEventTopicIfNotExist(String projectId) {
+  public CreateEventTopicIfNotExist(
+      String projectId, boolean connectLocal, String emulatorTargetUrl) {
+    super(connectLocal, emulatorTargetUrl);
     this.projectId = projectId;
   }
 
@@ -25,7 +27,7 @@ public class CreateEventTopicIfNotExist implements EventTopicName {
    */
   @Override
   public TopicName verifyTopicName(String name) throws IOException {
-    try (TopicAdminClient topicAdminClient = TopicAdminClient.create()) {
+    try (TopicAdminClient topicAdminClient = buildTopicAdminClient()) {
       TopicName topicName = TopicName.of(projectId, name);
 
       try {

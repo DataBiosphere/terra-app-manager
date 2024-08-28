@@ -36,11 +36,17 @@ public class GooglePubsubClient extends PubsubClient {
   private Subscriber subscriber;
 
   public GooglePubsubClient(
-      String projectId, String topicId, String subscriptionId, boolean createTopic) {
+      String projectId,
+      String topicId,
+      String subscriptionId,
+      boolean createTopic,
+      boolean connectLocal,
+      String emulatorTarget) {
     this.projectId = projectId;
     this.topicId = topicId;
     this.subscriptionId = subscriptionId;
-    publisher = buildPublisher(projectId, topicId, createTopic);
+
+    publisher = buildPublisher(projectId, topicId, createTopic, connectLocal, emulatorTarget);
   }
 
   @Override
@@ -88,10 +94,16 @@ public class GooglePubsubClient extends PubsubClient {
     closeSubscriber();
   }
 
-  private Publisher buildPublisher(String projectId, String topicName, boolean createTopic) {
+  private Publisher buildPublisher(
+      String projectId,
+      String topicName,
+      boolean createTopic,
+      boolean connectLocal,
+      String emulatorTarget) {
     try {
       logger.info("Building events publisher: " + projectId + ":" + topicName);
-      TopicName topic = verifyTopic(projectId, topicName, createTopic);
+      TopicName topic =
+          verifyTopic(projectId, topicName, createTopic, connectLocal, emulatorTarget);
       return Publisher.newBuilder(topic).build();
     } catch (IOException | ConfigurationException e) {
       throw new RuntimeException(e);
@@ -113,7 +125,7 @@ public class GooglePubsubClient extends PubsubClient {
   private void closeSubscriber() {
     if (subscriber != null) {
       // Allow the subscriber to run for 30s unless an unrecoverable error occurs.
-      subscriber.startAsync();
+      subscriber.stopAsync();
       try {
         subscriber.awaitTerminated(1, TimeUnit.MINUTES);
       } catch (TimeoutException e) {
@@ -122,13 +134,18 @@ public class GooglePubsubClient extends PubsubClient {
     }
   }
 
-  private TopicName verifyTopic(String projectId, String topicName, boolean createTopic)
+  private TopicName verifyTopic(
+      String projectId,
+      String topicName,
+      boolean createTopic,
+      boolean connectLocal,
+      String emulatorTarget)
       throws IOException, ConfigurationException {
     EventTopicName topicCreator = null;
     if (createTopic) {
-      topicCreator = new EventTopicMustBeAlreadyCreated(projectId);
+      topicCreator = new CreateEventTopicIfNotExist(projectId, connectLocal, emulatorTarget);
     } else {
-      topicCreator = new CreateEventTopicIfNotExist(projectId);
+      topicCreator = new EventTopicMustBeAlreadyCreated(projectId, connectLocal, emulatorTarget);
     }
     return topicCreator.verifyTopicName(topicName);
   }

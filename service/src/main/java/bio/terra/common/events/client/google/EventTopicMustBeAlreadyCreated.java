@@ -8,13 +8,15 @@ import javax.naming.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EventTopicMustBeAlreadyCreated implements EventTopicName {
+public class EventTopicMustBeAlreadyCreated extends EventTopicName {
   private static final Logger logger =
       LoggerFactory.getLogger(EventTopicMustBeAlreadyCreated.class);
 
   private final String projectId;
 
-  public EventTopicMustBeAlreadyCreated(String projectId) {
+  public EventTopicMustBeAlreadyCreated(
+      String projectId, boolean connectLocal, String emulatorTargetUrl) {
+    super(connectLocal, emulatorTargetUrl);
     this.projectId = projectId;
   }
 
@@ -28,7 +30,7 @@ public class EventTopicMustBeAlreadyCreated implements EventTopicName {
   @Override
   public TopicName verifyTopicName(String name) throws ConfigurationException, IOException {
 
-    try (TopicAdminClient topicAdminClient = TopicAdminClient.create()) {
+    try (TopicAdminClient topicAdminClient = buildTopicAdminClient()) {
       TopicName topicName = TopicName.of(projectId, name);
       Topic topic = topicAdminClient.getTopic(topicName);
       if (topic != null) {

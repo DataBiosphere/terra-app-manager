@@ -23,6 +23,10 @@ public abstract class EventTopic<T extends EventMessage> {
     }
   }
 
+  public void subscribe() {
+    subscribe(this::receive);
+  }
+
   public void subscribe(MessageProcessor processor) {
     client.subscribe(processor);
   }

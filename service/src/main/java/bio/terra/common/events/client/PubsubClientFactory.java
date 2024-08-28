@@ -36,7 +36,9 @@ public class PubsubClientFactory {
         pubsubConfig.googleConfig().projectId(),
         formatTopicId(topicName),
         formatSubscriptionId(serviceName, topicName),
-        pubsubConfig.createTopic());
+        pubsubConfig.createTopic(),
+        pubsubConfig.connectLocal(),
+        pubsubConfig.emulatorTarget());
   }
 
   private String formatTopicId(String topicName) {

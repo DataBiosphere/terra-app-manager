@@ -31,6 +31,9 @@ dependencies {
     implementation platform('com.google.cloud:libraries-bom:26.42.0')
     implementation 'com.google.cloud:google-cloud-pubsub'
 
+    implementation platform('org.testcontainers:testcontainers-bom:1.20.1')
+    testImplementation "org.testcontainers:gcloud"
+
     liquibaseRuntime 'org.liquibase:liquibase-core'
     liquibaseRuntime 'info.picocli:picocli:4.6.1'
     liquibaseRuntime 'org.postgresql:postgresql'
