@@ -1,5 +1,7 @@
 package bio.terra.common.events.client.google;
 
+import com.google.api.gax.core.CredentialsProvider;
+import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.TopicAdminClient;
 import com.google.pubsub.v1.Topic;
 import com.google.pubsub.v1.TopicName;
@@ -15,8 +17,11 @@ public class EventTopicMustBeAlreadyCreated extends EventTopicName {
   private final String projectId;
 
   public EventTopicMustBeAlreadyCreated(
-      String projectId, boolean connectLocal, String emulatorTargetUrl) {
-    super(connectLocal, emulatorTargetUrl);
+      String projectId,
+      boolean connectLocal,
+      TransportChannelProvider channelProvider,
+      CredentialsProvider credentialsProvider) {
+    super(connectLocal, channelProvider, credentialsProvider);
     this.projectId = projectId;
   }
 

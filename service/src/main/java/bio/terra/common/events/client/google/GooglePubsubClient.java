@@ -5,6 +5,11 @@ import bio.terra.common.events.client.PubsubClient;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.core.CredentialsProvider;
+import com.google.api.gax.core.NoCredentialsProvider;
+import com.google.api.gax.grpc.GrpcTransportChannel;
+import com.google.api.gax.rpc.FixedTransportChannelProvider;
+import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.Publisher;
@@ -14,6 +19,8 @@ import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.ProjectSubscriptionName;
 import com.google.pubsub.v1.PubsubMessage;
 import com.google.pubsub.v1.TopicName;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +43,10 @@ public class GooglePubsubClient extends PubsubClient {
   private Publisher publisher;
   private Subscriber subscriber;
 
+  private boolean connectLocal;
+  private TransportChannelProvider channelProvider;
+  private CredentialsProvider credentialsProvider;
+
   public GooglePubsubClient(
       String projectId,
       String topicId,
@@ -47,7 +58,17 @@ public class GooglePubsubClient extends PubsubClient {
     this.topicId = topicId;
     this.subscriptionId = subscriptionId;
 
-    publisher = buildPublisher(projectId, topicId, createTopic, connectLocal, emulatorTarget);
+    this.connectLocal = connectLocal;
+    if (connectLocal) {
+      ManagedChannel channel =
+          ManagedChannelBuilder.forTarget(emulatorTarget).usePlaintext().build();
+      channelProvider = FixedTransportChannelProvider.create(GrpcTransportChannel.create(channel));
+      credentialsProvider = NoCredentialsProvider.create();
+    }
+
+    publisher =
+        buildPublisher(
+            projectId, topicId, createTopic, connectLocal, channelProvider, credentialsProvider);
   }
 
   @Override
@@ -84,7 +105,11 @@ public class GooglePubsubClient extends PubsubClient {
           }
         };
 
-    subscriber = Subscriber.newBuilder(subscriptionName, receiver).build();
+    Subscriber.Builder builder = Subscriber.newBuilder(subscriptionName, receiver);
+    if (connectLocal) {
+      builder.setChannelProvider(channelProvider).setCredentialsProvider(credentialsProvider);
+    }
+    subscriber = builder.build();
 
     // Start the subscriber.
     subscriber.startAsync().awaitRunning();
@@ -102,12 +127,23 @@ public class GooglePubsubClient extends PubsubClient {
       String topicName,
       boolean createTopic,
       boolean connectLocal,
-      String emulatorTarget) {
+      TransportChannelProvider channelProvider,
+      CredentialsProvider credentialsProvider) {
     try {
       logger.info("Building events publisher: " + projectId + ":" + topicName);
       TopicName topic =
-          verifyTopic(projectId, topicName, createTopic, connectLocal, emulatorTarget);
-      return Publisher.newBuilder(topic).build();
+          verifyTopic(
+              projectId,
+              topicName,
+              createTopic,
+              connectLocal,
+              channelProvider,
+              credentialsProvider);
+      Publisher.Builder builder = Publisher.newBuilder(topic);
+      if (connectLocal) {
+        builder.setChannelProvider(channelProvider).setCredentialsProvider(credentialsProvider);
+      }
+      return builder.build();
     } catch (IOException | ConfigurationException e) {
       throw new RuntimeException(e);
     }
@@ -142,13 +178,18 @@ public class GooglePubsubClient extends PubsubClient {
       String topicName,
       boolean createTopic,
       boolean connectLocal,
-      String emulatorTarget)
+      TransportChannelProvider channelProvider,
+      CredentialsProvider credentialsProvider)
       throws IOException, ConfigurationException {
     EventTopicName topicCreator = null;
     if (createTopic) {
-      topicCreator = new CreateEventTopicIfNotExist(projectId, connectLocal, emulatorTarget);
+      topicCreator =
+          new CreateEventTopicIfNotExist(
+              projectId, connectLocal, channelProvider, credentialsProvider);
     } else {
-      topicCreator = new EventTopicMustBeAlreadyCreated(projectId, connectLocal, emulatorTarget);
+      topicCreator =
+          new EventTopicMustBeAlreadyCreated(
+              projectId, connectLocal, channelProvider, credentialsProvider);
     }
     return topicCreator.verifyTopicName(topicName);
   }
