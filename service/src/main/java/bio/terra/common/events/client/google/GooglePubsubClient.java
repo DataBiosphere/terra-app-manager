@@ -93,7 +93,7 @@ public class GooglePubsubClient implements PubsubClient {
           // Handle incoming message, then ack the received message.
           String eventMsg = message.getData().toStringUtf8();
           if (logger.isDebugEnabled()) {
-            logger.debug("Received: id: {0} data: {1}", message.getMessageId(), eventMsg);
+            logger.debug("Received: id: {} data: {}", message.getMessageId(), eventMsg);
           }
           if (processor.process(eventMsg)) {
             consumer.ack();
@@ -110,7 +110,7 @@ public class GooglePubsubClient implements PubsubClient {
 
     // Start the subscriber.
     subscriber.startAsync().awaitRunning();
-    logger.info("Listening for messages on {0}", subscriptionName.toString());
+    logger.info("Listening for messages on {}", subscriptionName);
   }
 
   @Override
