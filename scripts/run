@@ -46,7 +46,7 @@ RUNTYPE=${1}
 
 run_tests() {
   cd "${ROOT_DIR}"
-  ./gradlew ${GRADLE_OPTS} -i test jacocoTestReport
+  ./gradlew ${GRADLE_OPTS} test jacocoTestReport
 
 #./gradlew --build-cache srcclr
 }
