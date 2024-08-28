@@ -4,7 +4,6 @@ import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.rpc.PermissionDeniedException;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.TopicAdminClient;
-import com.google.pubsub.v1.Topic;
 import com.google.pubsub.v1.TopicName;
 import java.io.IOException;
 import org.slf4j.Logger;
@@ -36,20 +35,17 @@ public class CreateEventTopicIfNotExist extends EventTopicName {
       TopicName topicName = TopicName.of(projectId, name);
 
       try {
-        Topic topic = topicAdminClient.getTopic(topicName);
+        topicAdminClient.getTopic(topicName);
       } catch (com.google.api.gax.rpc.NotFoundException e) {
-        // topic not found, create it
         try {
-          Topic newTopic = topicAdminClient.createTopic(topicName);
+          // topic not found, create it
+          topicAdminClient.createTopic(topicName);
         } catch (PermissionDeniedException denied) {
-          logger.error("Error creating BEE topic " + topicName + " " + denied);
-          // throw denied;
+          logger.error("Error creating BEE topic {0}", topicName, denied);
+          throw denied;
         }
       }
       return topicName;
-    } catch (Exception e) {
-      logger.error("Error getting topic: " + e.getMessage());
-      throw e;
     }
   }
 }

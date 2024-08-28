@@ -14,7 +14,7 @@ import java.io.Closeable;
  *   <li>the topic exists
  * </ul>
  */
-public abstract class PubsubClient implements Closeable {
+public abstract interface PubsubClient extends Closeable {
 
   public abstract void publish(String message);
 

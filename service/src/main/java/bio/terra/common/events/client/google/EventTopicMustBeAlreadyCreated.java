@@ -34,7 +34,6 @@ public class EventTopicMustBeAlreadyCreated extends EventTopicName {
    */
   @Override
   public TopicName verifyTopicName(String name) throws ConfigurationException, IOException {
-
     try (TopicAdminClient topicAdminClient = buildTopicAdminClient()) {
       TopicName topicName = TopicName.of(projectId, name);
       Topic topic = topicAdminClient.getTopic(topicName);
@@ -42,9 +41,6 @@ public class EventTopicMustBeAlreadyCreated extends EventTopicName {
         return topicName;
       }
       throw new ConfigurationException("Error, Event Topic " + topicName + " must exist");
-    } catch (Exception e) {
-      logger.error("Error getting Event Topic with topic id: " + name + " " + e.getMessage());
-      throw e;
     }
   }
 }

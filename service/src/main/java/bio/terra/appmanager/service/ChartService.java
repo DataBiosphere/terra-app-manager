@@ -19,8 +19,6 @@ public class ChartService {
   private final ChartDao chartDao;
   private final ChartEvents chartEvents;
 
-  //  private final PublisherDao publisherDao;
-
   public ChartService(
       ChartServiceConfiguration chartServiceConfiguration,
       ChartDao chartDao,

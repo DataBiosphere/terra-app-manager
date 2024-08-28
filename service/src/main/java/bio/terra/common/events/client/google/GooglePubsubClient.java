@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * This class is responsible for interacting with the Google PubSub infrastructure and handling both
  * publishing to topics and subscribing from topics.
  */
-public class GooglePubsubClient extends PubsubClient {
+public class GooglePubsubClient implements PubsubClient {
 
   private static final Logger logger = LoggerFactory.getLogger(GooglePubsubClient.class);
 

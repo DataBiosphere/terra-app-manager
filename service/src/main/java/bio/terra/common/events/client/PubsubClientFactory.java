@@ -2,7 +2,6 @@ package bio.terra.common.events.client;
 
 import bio.terra.common.events.client.google.GooglePubsubClient;
 import bio.terra.common.events.config.PubsubConfig;
-import bio.terra.common.events.topics.EventSubscriber;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,8 +29,7 @@ public class PubsubClientFactory {
     this.pubsubConfig = config;
   }
 
-  public PubsubClient createPubsubClient(
-      String topicName, String serviceName, EventSubscriber subscriber) {
+  public PubsubClient createPubsubClient(String topicName, String serviceName) {
     return new GooglePubsubClient(
         pubsubConfig.googleConfig().projectId(),
         formatTopicId(topicName),
