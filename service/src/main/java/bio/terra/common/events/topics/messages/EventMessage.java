@@ -23,7 +23,7 @@ public class EventMessage {
    * This is the current version of the EventMessage schema, as defined in the spec (see class-level
    * javadoc).
    */
-  public static String VERSION = "1.0.0";
+  public static String MESSAGE_VERSION = "1.0.0";
 
   @JsonIgnore String id;
 
@@ -118,7 +118,7 @@ public class EventMessage {
       Map<String, String> properties) {
     this(
         null,
-        VERSION,
+        MESSAGE_VERSION,
         null,
         publishedBy,
         context,

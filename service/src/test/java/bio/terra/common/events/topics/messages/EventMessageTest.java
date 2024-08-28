@@ -18,7 +18,7 @@ public class EventMessageTest {
    * @throws Exception
    */
   @Test
-  public void verifyToJson() throws Exception {
+  void verifyToJson() throws Exception {
     EventMessage em =
         new EventMessage("publisher", EventTypes.CHART_CREATED, "entity-id", "entity-url");
 
@@ -27,7 +27,7 @@ public class EventMessageTest {
   }
 
   @Test
-  public void verifyFromJson() throws Exception {
+  void verifyFromJson() throws Exception {
     String jsonMessage =
         "{\"version\":\"1.0.0\",\"published_by\":\"publisher\",\"event_type\":\"CHART_CREATED\",\"entity_id\":\"entity-id\",\"entity_url\":\"entity-url\"}\n";
 
@@ -36,7 +36,7 @@ public class EventMessageTest {
   }
 
   @Test
-  public void requiredParams_publishedBy() {
+  void requiredParams_publishedBy() {
     Exception exception =
         assertThrows(
             IllegalArgumentException.class,
@@ -47,7 +47,7 @@ public class EventMessageTest {
   }
 
   @Test
-  public void requiredParams_eventType() {
+  void requiredParams_eventType() {
     Exception exception =
         assertThrows(
             IllegalArgumentException.class,
@@ -58,7 +58,7 @@ public class EventMessageTest {
   }
 
   @Test
-  public void requiredParams_entityId() {
+  void requiredParams_entityId() {
     Exception exception =
         assertThrows(
             IllegalArgumentException.class,
@@ -69,7 +69,7 @@ public class EventMessageTest {
   }
 
   @Test
-  public void requiredParams_entityUrl() {
+  void requiredParams_entityUrl() {
     Exception exception =
         assertThrows(
             IllegalArgumentException.class,

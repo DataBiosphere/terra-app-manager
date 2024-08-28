@@ -13,7 +13,7 @@ public abstract class ChartTopic extends EventTopic<ChartMessage> {
 
   protected String publishedBy;
 
-  public ChartTopic(PubsubConfig config, PubsubClientFactory clientFactory) {
+  protected ChartTopic(PubsubConfig config, PubsubClientFactory clientFactory) {
     super(clientFactory, "charts", config.publishedBy());
     publishedBy = config.publishedBy();
   }

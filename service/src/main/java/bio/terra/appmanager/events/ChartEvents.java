@@ -20,7 +20,7 @@ public class ChartEvents extends ChartTopic {
 
   @Override
   public boolean process(EventMessage message) {
-    logger.info("Received message: {0}", message.eventType);
+    logger.info("Received message: {}", message.eventType);
     return true;
   }
 }
