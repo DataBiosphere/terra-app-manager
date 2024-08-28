@@ -178,10 +178,4 @@ public class EventMessage {
               version, publishedBy, eventType, entityId, entityUrl));
     }
   }
-
-  public static enum EventTypes {
-    CHART_CREATED,
-    CHART_UPDATED,
-    CHART_DELETED
-  }
 }

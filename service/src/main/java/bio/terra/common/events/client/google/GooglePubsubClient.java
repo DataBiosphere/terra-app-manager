@@ -54,8 +54,6 @@ public class GooglePubsubClient extends PubsubClient {
     if (logger.isDebugEnabled()) {
       logger.debug(message);
     }
-    // TODO: remove me
-    logger.info(message);
     ByteString data = ByteString.copyFromUtf8(message);
     PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
 

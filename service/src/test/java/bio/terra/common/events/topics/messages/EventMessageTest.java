@@ -20,8 +20,7 @@ public class EventMessageTest {
   @Test
   public void verifyToJson() throws Exception {
     EventMessage em =
-        new EventMessage(
-            "publisher", EventMessage.EventTypes.CHART_CREATED, "entity-id", "entity-url");
+        new EventMessage("publisher", EventTypes.CHART_CREATED, "entity-id", "entity-url");
 
     ObjectMapper mapper = new ObjectMapper();
     validateRequiredAttributes(em, mapper.readTree(em.toJson()));
@@ -42,8 +41,7 @@ public class EventMessageTest {
         assertThrows(
             IllegalArgumentException.class,
             () -> {
-              new EventMessage(
-                  null, EventMessage.EventTypes.CHART_CREATED, "entity-id", "entity-url");
+              new EventMessage(null, EventTypes.CHART_CREATED, "entity-id", "entity-url");
             });
     assertTrue(exception.getMessage().contains("publishedBy(null)"));
   }
@@ -65,8 +63,7 @@ public class EventMessageTest {
         assertThrows(
             IllegalArgumentException.class,
             () -> {
-              new EventMessage(
-                  "publisher", EventMessage.EventTypes.CHART_CREATED, null, "entity-url");
+              new EventMessage("publisher", EventTypes.CHART_CREATED, null, "entity-url");
             });
     assertTrue(exception.getMessage().contains("entityId(null)"));
   }
@@ -77,8 +74,7 @@ public class EventMessageTest {
         assertThrows(
             IllegalArgumentException.class,
             () -> {
-              new EventMessage(
-                  "publisher", EventMessage.EventTypes.CHART_CREATED, "entity-id", null);
+              new EventMessage("publisher", EventTypes.CHART_CREATED, "entity-id", null);
             });
     assertTrue(exception.getMessage().contains("entityUrl(null)"));
   }

@@ -5,9 +5,13 @@ import bio.terra.common.events.client.PubsubClient;
 import bio.terra.common.events.client.PubsubClientFactory;
 import bio.terra.common.events.topics.messages.EventMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** This class is responsible interacting with the PubsubClient (both publish and subscribe). */
 public abstract class EventTopic<T extends EventMessage> {
+
+  private static final Logger logger = LoggerFactory.getLogger(EventTopic.class);
 
   private PubsubClient client;
 
@@ -19,7 +23,7 @@ public abstract class EventTopic<T extends EventMessage> {
     try {
       client.publish(message.toJson());
     } catch (JsonProcessingException e) {
-      System.out.println("ERROR: unable to publish message");
+      logger.error("unable to publish event", e);
     }
   }
 
@@ -40,8 +44,7 @@ public abstract class EventTopic<T extends EventMessage> {
       // TODO: what to do with bad messages
     }
 
-    // TODO: this needs to be changed back to false
-    return true;
+    return false;
   }
 
   /**

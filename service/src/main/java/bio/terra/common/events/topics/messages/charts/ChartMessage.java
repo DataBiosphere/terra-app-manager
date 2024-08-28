@@ -1,6 +1,7 @@
 package bio.terra.common.events.topics.messages.charts;
 
 import bio.terra.common.events.topics.messages.EventMessage;
+import bio.terra.common.events.topics.messages.EventTypes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Arrays;
 import java.util.List;
