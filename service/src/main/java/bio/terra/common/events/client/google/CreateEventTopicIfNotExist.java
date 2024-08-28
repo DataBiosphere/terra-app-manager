@@ -37,13 +37,8 @@ public class CreateEventTopicIfNotExist extends EventTopicName {
       try {
         topicAdminClient.getTopic(topicName);
       } catch (com.google.api.gax.rpc.NotFoundException e) {
-        try {
           // topic not found, create it
           topicAdminClient.createTopic(topicName);
-        } catch (PermissionDeniedException denied) {
-          logger.error("Error creating BEE topic {0}", topicName, denied);
-          throw denied;
-        }
       }
       return topicName;
     }
