@@ -10,9 +10,6 @@ public class ChartEventsTest extends BaseEventsTest {
 
   @Test
   public void testPubsub() {
-    System.out.println("PUBSUB_CONTAINER.getEmulatorEndpoint()");
-    System.out.println(PUBSUB_CONTAINER.getEmulatorEndpoint());
-
     events.publish(new ChartCreated("chart-events-test", "some-entity-id", "some-entity-url"));
   }
 }

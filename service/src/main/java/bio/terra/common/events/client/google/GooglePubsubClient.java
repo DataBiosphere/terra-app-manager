@@ -15,6 +15,7 @@ import com.google.pubsub.v1.ProjectSubscriptionName;
 import com.google.pubsub.v1.PubsubMessage;
 import com.google.pubsub.v1.TopicName;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.naming.ConfigurationException;
@@ -71,8 +72,11 @@ public class GooglePubsubClient extends PubsubClient {
         (PubsubMessage message, AckReplyConsumer consumer) -> {
           // Handle incoming message, then ack the received message.
           String eventMsg = message.getData().toStringUtf8();
-          System.out.println("Id: " + message.getMessageId());
-          System.out.println("Data: " + message.getData().toStringUtf8());
+          if (logger.isDebugEnabled()) {
+            logger.debug(
+                MessageFormat.format(
+                    "Received: id: {0} data: {1}", message.getMessageId(), eventMsg));
+          }
           if (processor.process(eventMsg)) {
             consumer.ack();
           } else {
@@ -81,9 +85,10 @@ public class GooglePubsubClient extends PubsubClient {
         };
 
     subscriber = Subscriber.newBuilder(subscriptionName, receiver).build();
+
     // Start the subscriber.
     subscriber.startAsync().awaitRunning();
-    System.out.printf("Listening for messages on %s:\n", subscriptionName.toString());
+    logger.info(MessageFormat.format("Listening for messages on {0}", subscriptionName.toString()));
   }
 
   @Override

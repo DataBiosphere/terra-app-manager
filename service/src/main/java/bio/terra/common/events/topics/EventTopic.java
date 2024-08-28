@@ -40,7 +40,7 @@ public abstract class EventTopic<T extends EventMessage> {
       T msg = (T) EventMessage.fromJson(message);
       return process(msg);
     } catch (JsonProcessingException e) {
-      System.out.println(e.getMessage());
+      logger.error("error while converting message data to EventMessage", e);
       // TODO: what to do with bad messages
     }
 
