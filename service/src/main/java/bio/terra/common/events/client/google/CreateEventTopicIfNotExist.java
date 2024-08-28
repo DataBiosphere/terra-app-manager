@@ -1,7 +1,6 @@
 package bio.terra.common.events.client.google;
 
 import com.google.api.gax.core.CredentialsProvider;
-import com.google.api.gax.rpc.PermissionDeniedException;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.TopicAdminClient;
 import com.google.pubsub.v1.TopicName;
@@ -37,8 +36,8 @@ public class CreateEventTopicIfNotExist extends EventTopicName {
       try {
         topicAdminClient.getTopic(topicName);
       } catch (com.google.api.gax.rpc.NotFoundException e) {
-          // topic not found, create it
-          topicAdminClient.createTopic(topicName);
+        // topic not found, create it
+        topicAdminClient.createTopic(topicName);
       }
       return topicName;
     }

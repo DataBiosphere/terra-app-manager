@@ -7,13 +7,8 @@ import com.google.pubsub.v1.Topic;
 import com.google.pubsub.v1.TopicName;
 import java.io.IOException;
 import javax.naming.ConfigurationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EventTopicMustBeAlreadyCreated extends EventTopicName {
-  private static final Logger logger =
-      LoggerFactory.getLogger(EventTopicMustBeAlreadyCreated.class);
-
   private final String projectId;
 
   public EventTopicMustBeAlreadyCreated(

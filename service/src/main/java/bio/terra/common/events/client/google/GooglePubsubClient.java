@@ -127,7 +127,7 @@ public class GooglePubsubClient implements PubsubClient {
       TransportChannelProvider channelProvider,
       CredentialsProvider credentialsProvider) {
     try {
-      logger.info("Building events publisher: {0}:{1}", projectId, topicName);
+      logger.info("Building events publisher: {}:{}", projectId, topicName);
       TopicName topic =
           verifyTopic(
               projectId,
@@ -148,7 +148,7 @@ public class GooglePubsubClient implements PubsubClient {
 
   private void closePublisher() {
     if (publisher != null) {
-      logger.info("Stopping events publisher: {0}:{1}", projectId, topicId);
+      logger.info("Stopping events publisher: {}:{}", projectId, topicId);
       publisher.shutdown();
       try {
         publisher.awaitTermination(1, TimeUnit.MINUTES);
@@ -195,13 +195,13 @@ public class GooglePubsubClient implements PubsubClient {
     return new ApiFutureCallback<>() {
       @Override
       public void onFailure(Throwable throwable) {
-        logger.error("Error publishing message : {0}", message, throwable);
+        logger.error("Error publishing message : {}", message, throwable);
       }
 
       @Override
       public void onSuccess(String messageId) {
         // Once published, returns server-assigned message ids (unique within the topic)
-        logger.info("Published message ID: {0}", messageId);
+        logger.info("Published message ID: {}", messageId);
       }
     };
   }
