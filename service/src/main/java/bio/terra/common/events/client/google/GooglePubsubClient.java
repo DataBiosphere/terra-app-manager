@@ -22,7 +22,6 @@ import com.google.pubsub.v1.TopicName;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.naming.ConfigurationException;
@@ -94,9 +93,7 @@ public class GooglePubsubClient implements PubsubClient {
           // Handle incoming message, then ack the received message.
           String eventMsg = message.getData().toStringUtf8();
           if (logger.isDebugEnabled()) {
-            logger.debug(
-                MessageFormat.format(
-                    "Received: id: {0} data: {1}", message.getMessageId(), eventMsg));
+            logger.debug("Received: id: {0} data: {1}", message.getMessageId(), eventMsg);
           }
           if (processor.process(eventMsg)) {
             consumer.ack();
@@ -113,7 +110,7 @@ public class GooglePubsubClient implements PubsubClient {
 
     // Start the subscriber.
     subscriber.startAsync().awaitRunning();
-    logger.info(MessageFormat.format("Listening for messages on {0}", subscriptionName.toString()));
+    logger.info("Listening for messages on {0}", subscriptionName.toString());
   }
 
   @Override
@@ -130,7 +127,7 @@ public class GooglePubsubClient implements PubsubClient {
       TransportChannelProvider channelProvider,
       CredentialsProvider credentialsProvider) {
     try {
-      logger.info("Building events publisher: " + projectId + ":" + topicName);
+      logger.info("Building events publisher: {0}:{1}", projectId, topicName);
       TopicName topic =
           verifyTopic(
               projectId,
@@ -151,7 +148,7 @@ public class GooglePubsubClient implements PubsubClient {
 
   private void closePublisher() {
     if (publisher != null) {
-      logger.info("Stopping events publisher: " + projectId + ":" + topicId);
+      logger.info("Stopping events publisher: {0}:{1}", projectId, topicId);
       publisher.shutdown();
       try {
         publisher.awaitTermination(1, TimeUnit.MINUTES);
@@ -198,13 +195,13 @@ public class GooglePubsubClient implements PubsubClient {
     return new ApiFutureCallback<>() {
       @Override
       public void onFailure(Throwable throwable) {
-        logger.error("Error publishing message : " + message, throwable);
+        logger.error("Error publishing message : {0}", message, throwable);
       }
 
       @Override
       public void onSuccess(String messageId) {
         // Once published, returns server-assigned message ids (unique within the topic)
-        logger.info("Published message ID: " + messageId);
+        logger.info("Published message ID: {0}", messageId);
       }
     };
   }

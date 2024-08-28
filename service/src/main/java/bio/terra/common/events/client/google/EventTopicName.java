@@ -15,7 +15,7 @@ public abstract class EventTopicName {
   private TransportChannelProvider channelProvider;
   private CredentialsProvider credentialsProvider;
 
-  public EventTopicName(
+  protected EventTopicName(
       boolean connectLocal,
       TransportChannelProvider channelProvider,
       CredentialsProvider credentialsProvider) {

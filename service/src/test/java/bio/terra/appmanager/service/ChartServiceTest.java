@@ -18,7 +18,6 @@ import bio.terra.appmanager.dao.ChartDao;
 import bio.terra.appmanager.events.ChartEvents;
 import bio.terra.appmanager.model.Chart;
 import bio.terra.appmanager.model.ChartTestUtils;
-import bio.terra.common.events.client.google.PublisherDao;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -32,7 +31,6 @@ import org.springframework.context.annotation.Bean;
 class ChartServiceTest extends BaseSpringBootTest {
 
   @MockBean ChartDao chartDao;
-  @MockBean PublisherDao publisherDao;
 
   @Autowired
   @Qualifier("mockService")
@@ -42,12 +40,6 @@ class ChartServiceTest extends BaseSpringBootTest {
   void testCreateChart_withEmptyList_chartDao() {
     chartService.createCharts(List.of());
     verifyNoInteractions(chartDao);
-  }
-
-  @Test
-  void testCreateChart_withEmptyList_publisherDao() {
-    chartService.createCharts(List.of());
-    verifyNoInteractions(publisherDao);
   }
 
   @Test
@@ -120,7 +112,6 @@ class ChartServiceTest extends BaseSpringBootTest {
     Chart oldChart1 = new Chart(chart1Name, chart1Version1);
     Chart newChart1 = new Chart(chart1Name, chart1Version2);
 
-    InOrder inOrderPublish = inOrder(publisherDao);
     chartService.createCharts(List.of(oldChart1, newChart1));
     // TODO
     //    inOrderPublish.verify(publisherDao, calls(1)).publish("chart created");
