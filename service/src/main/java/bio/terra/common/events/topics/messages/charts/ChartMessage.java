@@ -6,7 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public abstract class ChartMessage extends EventMessage {
 
-  protected ChartMessage(String publishedBy, EventTypes eventType, String entityId, String entityUrl) {
+  protected ChartMessage(
+      String publishedBy, EventTypes eventType, String entityId, String entityUrl) {
     super(publishedBy, eventType, entityId, entityUrl);
   }
 

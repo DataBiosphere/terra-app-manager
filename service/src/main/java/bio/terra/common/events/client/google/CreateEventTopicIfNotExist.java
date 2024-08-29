@@ -5,11 +5,9 @@ import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsub.v1.TopicAdminClient;
 import com.google.pubsub.v1.TopicName;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CreateEventTopicIfNotExist extends EventTopicName {
-  private static final Logger logger = LoggerFactory.getLogger(CreateEventTopicIfNotExist.class);
+
   private final String projectId;
 
   public CreateEventTopicIfNotExist(
