@@ -153,6 +153,7 @@ public class GooglePubsubClient implements PubsubClient {
       try {
         publisher.awaitTermination(1, TimeUnit.MINUTES);
       } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
         throw new RuntimeException(e);
       }
     }
