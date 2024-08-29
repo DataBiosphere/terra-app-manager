@@ -1,8 +1,6 @@
 package bio.terra.common.events.topics;
 
-import bio.terra.common.events.topics.messages.EventMessage;
-
 @FunctionalInterface
-public interface EventSubscriber<T extends EventMessage> {
+public interface EventSubscriber {
   boolean processEvent(String jsonString);
 }

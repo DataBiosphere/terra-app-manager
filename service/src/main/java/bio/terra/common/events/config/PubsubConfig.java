@@ -64,15 +64,15 @@ public class PubsubConfig {
 
   private String determineEmulatorTarget(String emulatorTarget) {
     if (emulatorTarget != null) {
-      logger.info("Emulator target configured via bean: " + emulatorTarget);
+      logger.info("Emulator target configured via bean: {}", emulatorTarget);
       return emulatorTarget;
     } else if (googleConfig.pubsubEmulatorTargetForEnvironment() != null
         && !googleConfig
             .pubsubEmulatorTargetForEnvironment()
             .equalsIgnoreCase(NO_PUBSUB_EMULATOR_HOST_SPECIFIED)) {
       logger.info(
-          "Emulator target configured via environment: "
-              + googleConfig.pubsubEmulatorTargetForEnvironment());
+          "Emulator target configured via environment: {}",
+          googleConfig.pubsubEmulatorTargetForEnvironment());
       return googleConfig.pubsubEmulatorTargetForEnvironment();
     }
     logger.info("NO pubsub emulator configured - GOING LIVE");

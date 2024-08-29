@@ -15,7 +15,7 @@ public abstract class EventTopic<T extends EventMessage> {
 
   private PubsubClient client;
 
-  public EventTopic(PubsubClientFactory clientFactory, String topicName, String serviceName) {
+  protected EventTopic(PubsubClientFactory clientFactory, String topicName, String serviceName) {
     client = clientFactory.createPubsubClient(topicName, serviceName);
   }
 
