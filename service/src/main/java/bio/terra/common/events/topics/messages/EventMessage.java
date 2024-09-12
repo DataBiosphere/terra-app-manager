@@ -22,6 +22,11 @@ public class EventMessage {
   /**
    * This is the current version of the EventMessage schema, as defined in the spec (see class-level
    * javadoc).
+   *
+   * <p>If we update this version, please be sure to make appropriate changes to schema in
+   * Terraform.
+   *
+   * @see:
    */
   public static String MESSAGE_VERSION = "1.0.0";
 
