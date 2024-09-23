@@ -29,22 +29,24 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
       "bio.terra.common.retry.transaction",
       // Scan for tracing-related components & configs
       "bio.terra.common.tracing",
+      // Event-driven architecture related configs
+      "bio.terra.common.events",
       // Scan all service-specific packages beneath the current package
       "bio.terra.appmanager"
     })
-@ConfigurationPropertiesScan("bio.terra.appmanager")
+@ConfigurationPropertiesScan({"bio.terra.common.events", "bio.terra.appmanager"})
 @EnableRetry
 @EnableTransactionManagement
 @EnableConfigurationProperties
 public class App {
-  public static void main(String[] args) {
-    new SpringApplicationBuilder(App.class).initializers(new LoggingInitializer()).run(args);
-  }
-
   private final DataSource dataSource;
 
   public App(DataSource dataSource) {
     this.dataSource = dataSource;
+  }
+
+  public static void main(String[] args) {
+    new SpringApplicationBuilder(App.class).initializers(new LoggingInitializer()).run(args);
   }
 
   @Bean("objectMapper")

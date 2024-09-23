@@ -2,6 +2,14 @@
 # This is for deployment-specific values, which may be managed by other teams
 
 env:
+  google:
+    project_id: ${SERVICE_GOOGLE_PROJECT:broad-dsde-dev}
+    # set value to connect to local pubsub emulator for local development,
+    # otherwise set to a '-'-value to connect to live environment specified by `project_id`
+    pubsub_emulator_target: ${PUBSUB_EMULATOR_HOST:-}
+  bee:
+    name: ${BEE_NAME:not-a-bee-env}
+    is_active: ${IS_BEE:false}
   admin:
     service_accounts_for_read: ${SERVICE_ACCOUNT_ADMINS_FOR_READ:test@readnowhere.com}
     service_accounts_for_write: ${SERVICE_ACCOUNT_ADMINS_FOR_WRITE:test@writenowhere.com}
@@ -103,8 +111,13 @@ terra.common:
   tracing:
     sampling-ratio: ${env.tracing.samplingRate}
   google:
+    project_id: ${env.google.project_id}
+    pubsub_emulator_target_for_environment: ${env.google.pubsub_emulator_target}
     tracing:
       enabled: ${env.tracing.exportEnabled}
+  bee:
+    is_active: ${env.bee.is_active}
+    name: ${env.bee.name}
 
 otel:
   sdk:

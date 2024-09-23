@@ -3,6 +3,7 @@ package bio.terra.appmanager.service;
 import bio.terra.appmanager.config.ChartServiceConfiguration;
 import bio.terra.appmanager.controller.ChartNotFoundException;
 import bio.terra.appmanager.dao.ChartDao;
+import bio.terra.appmanager.events.ChartEvents;
 import bio.terra.appmanager.model.Chart;
 import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
@@ -16,10 +17,15 @@ public class ChartService {
 
   private final List<String> allowedChartNames;
   private final ChartDao chartDao;
+  private final ChartEvents chartEvents;
 
-  public ChartService(ChartServiceConfiguration chartServiceConfiguration, ChartDao chartDao) {
+  public ChartService(
+      ChartServiceConfiguration chartServiceConfiguration,
+      ChartDao chartDao,
+      ChartEvents chartEvents) {
     this.allowedChartNames = chartServiceConfiguration.allowedNames();
     this.chartDao = chartDao;
+    this.chartEvents = chartEvents;
   }
 
   /**
@@ -34,6 +40,7 @@ public class ChartService {
         chart -> {
           checkChartName(chart);
           chartDao.upsert(chart);
+          chartEvents.chartCreated(chart.name());
         });
   }
 
@@ -63,7 +70,11 @@ public class ChartService {
               + nonexistentVersions);
     }
 
-    versions.forEach(chartDao::upsert);
+    versions.forEach(
+        version -> {
+          chartDao.upsert(version);
+          chartEvents.chartUpdated(version.name());
+        });
   }
 
   /**
@@ -74,6 +85,7 @@ public class ChartService {
   @WriteTransaction
   public void deleteVersion(@NotNull String name) {
     chartDao.delete(List.of(name));
+    chartEvents.chartDeleted(name);
   }
 
   /**
@@ -90,7 +102,7 @@ public class ChartService {
 
   private void checkChartName(Chart chart) {
     if (!allowedChartNames.contains(chart.name())) {
-      throw new IllegalArgumentException("unrecogrnized chartName provided");
+      throw new IllegalArgumentException("unrecognized chartName provided");
     }
   }
 }
