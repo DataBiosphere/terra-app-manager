@@ -26,7 +26,7 @@ Assuming your service is managed from the terraform-ap-deployments/ repository, 
 
 Library configuration to connect to our pubsub infrastructure should be consistent across all services. This section details the necessary property configurations, be it via `.yml` or `.properties`.
 
-The following `terra.common` properties need to be configured in order to use the library and connect to various environments. Descriptions of the properties are detailed below. 
+The following `terra.common` properties need to be configured in order to use the library and connect to various environments. Descriptions of the properties are detailed below. The `env.` properties are shown below as items that are useful to override based on specific environment setups. 
 
 ```yml
 env:

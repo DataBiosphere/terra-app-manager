@@ -98,7 +98,7 @@ public class GooglePubsubClient implements PubsubClient {
           if (processor.process(eventMsg)) {
             consumer.ack();
           } else {
-            logger.debug("Received: id: {} data: {}", message.getMessageId(), eventMsg);
+            logger.warn("Failed: id: {}", message.getMessageId());
             consumer.nack();
           }
         };
