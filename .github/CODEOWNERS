@@ -6,4 +6,4 @@
 # the repo. Unless a later match takes precedence,
 # @team-members will be requested for review when someone
 # opens a pull request.
-* @DataBiosphere/broad-interactive-analysis
+* @DataBiosphere/dsp-analysis
